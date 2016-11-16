@@ -9,7 +9,32 @@ openvr_string extends the C++ [OpenVR](https://github.com/ValveSoftware/openvr) 
 
 The **to_string** and **to_qstring** functions work by encoding into a buffer on the stack (falling back onto heap on failure).
 
-## Example 1: Events
+## Example 1: Controller States 
+Suppose you wanted to look at controller states with every frame.
+```
+for( vr::TrackedDeviceIndex_t unDevice = 0; unDevice < vr::k_unMaxTrackedDeviceCount; unDevice++ ) {
+  vr::VRControllerState_t state;
+  if( m_pHMD->GetControllerState( unDevice, &state ) )
+    dprintf("Polled Controller %d State:\n%s", unDevice, to_string(state).c_str());
+}
+```
+Will give you output like the following:
+
+```
+Polled Controller 3 State:
+              unPacketNum: 1827
+          ulButtonPressed: k_EButton_Axis0 (100000000)
+          ulButtonTouched: k_EButton_Axis0 (100000000)
+                 rAxis[0]: 0.065527 -0.724208
+                 rAxis[1]: 0.000000 0.000000
+                 rAxis[2]: 0.000000 0.000000
+                 rAxis[3]: 0.000000 0.000000
+                 rAxis[4]: 0.000000 0.000000
+```
+
+For a full example of this, build and enable the **g_print_polled_controller_state** of the following [hellovr_opengl](https://github.com/spayne/openvr_strings/tree/master/samples/hellovr_opengl) sample.
+
+## Example 2: Events
 
 Suppose you want to log all events processed by the following function:
 ```cpp
@@ -45,7 +70,7 @@ And that's all it takes to get:
               eventDetails: k_EButton_Grip (2)
 ```
 
-## Example 2 Compositor Frame Timing
+## Example 3: Compositor Frame Timing
 
 As another example, output the the Compositor frame timing like this:
 ```cpp
@@ -103,7 +128,8 @@ There is no global state or heap allocated internally.  This means it's thread-s
 
 ## More Examples
 The hellovr_opengl example and the tracked_camera_openvr_sample have been modified and included to show using the openvr_strings.
-* hellovr_opengl now defines a set of global flags that turns on or off the level of logging desired for events, controller and render state.  It uses the std::string to_string conversion routines.
-* tracked_camera_openvr_sample has been modified to use the to_qstring conversion routines instead of the pre-existing Qt formatting for the frame header pose matrix, velocity and anggular velocities.
+
+* [hellovr_opengl](https://github.com/spayne/openvr_strings/tree/master/samples/hellovr_opengl) now defines a set of global flags that turns on or off the level of logging desired for events, controller and render state.  It uses the std::string to_string conversion routines.
+* [tracked_camera_openvr_sample](https://github.com/spayne/openvr_strings/tree/master/samples/tracked_camera_openvr_sample) has been modified to use the to_qstring conversion routines instead of the pre-existing Qt formatting for the frame header pose matrix, velocity and anggular velocities.
 
    

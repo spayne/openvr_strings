@@ -16,5 +16,7 @@ To run it:
 
 So in my case I copied glew32, glut32 icudt52 icuin52, icuuc52.dll, openvr_api.dll and sdl2.dll to my samples/bin/win32 directory.
 
-2. You should then be able to debug from within Visual Studio.
+2. The hellovr_opengl loads cube_texture.png.  Copy it from OPENVR_BASE into your samples/bin
+
+3. You should then be able to debug from within Visual Studio.
 

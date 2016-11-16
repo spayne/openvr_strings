@@ -41,15 +41,17 @@ using namespace openvr_string;
 // Edit the following flags to turn on logging
 //
 
-static bool g_slow_motion = true;				// delay in render loop.   this way it's possible to read the console as it flys by
+static bool g_slow_motion = false;				// delay in render loop.   this way it's possible to read the console as it flys by
 static bool g_print_all_events = false;			// print all events processed in ProcessVREvent
 static bool g_print_property_lookup = false;
-static bool g_print_polled_controller_state = false;
-static bool g_print_controller_poses = false;	// print controller poses
+
+static bool g_print_polled_controller_state = false; // print controller state in the HandleInput phase
+static bool g_print_controller_poses = false;	// print controller poses after WaitGetPoses (render phase)
 static int  g_print_controller_device_index = 3; // which controller to print. if -1 show all
+
 static bool g_print_rendermodel_load = false;
 static bool g_print_render = false;
-static bool g_print_frame_timing = true;
+static bool g_print_frame_timing = false;
 
 #if defined(POSIX)
 #include "unistd.h"
