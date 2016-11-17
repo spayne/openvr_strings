@@ -5,7 +5,7 @@
 // Wrap pre-existing openvr enum converters.
 //  
 //    Since some enum conversions are already provided by openvr, they are wrapped
-//    below to match the declaration structure of the with the ones that are generated
+//    below to match the declaration structure of the ones that are generated
 //    in openvr_string_gen_enums.cpp.  
 //
 #include <openvr.h>
@@ -13,6 +13,10 @@
 using namespace vr;
 namespace openvr_string
 {
+    const char *EVRInitErrorToString(vr::EVRInitError e)
+    {
+		return VR_GetVRInitErrorAsSymbol(e);
+    }
     const char *EVRTrackedCameraErrorToString(vr::EVRTrackedCameraError e)
     {
         return VRTrackedCamera()->GetCameraErrorNameFromEnum(e);

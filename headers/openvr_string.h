@@ -31,7 +31,7 @@ namespace openvr_string
 	uint32_t GetAsString(const VREvent_ScreenshotProgress_t &e, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_ApplicationLaunch_t &e, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_EditingCameraSurface_t &e, VR_OUT_STRING() char *s, uint32_t n);
-	
+
 
 	uint32_t GetAsString(const HmdMatrix34_t h, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const HmdMatrix44_t h, VR_OUT_STRING() char *s, uint32_t n);
@@ -55,106 +55,113 @@ namespace openvr_string
 	uint32_t GetAsString(const NotificationBitmap_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VROverlayIntersectionParams_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VROverlayIntersectionResults_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const IntersectionMaskCircle_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const IntersectionMaskRectangle_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const VROverlayIntersectionMaskPrimitive_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const RenderModel_ComponentState_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const RenderModel_Vertex_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const RenderModel_TextureMap_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const RenderModel_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const RenderModel_ControllerMode_State_t &v, VR_OUT_STRING() char *s, uint32_t n);
 
-	
-	const char *ETrackingResultToString(vr::ETrackingResult e);
-	const char *ETrackedDeviceClassToString(vr::ETrackedDeviceClass e);
-	const char *EVRNotificationErrorToString(vr::EVRNotificationError e);
-	const char *EVRApplicationErrorToString(vr::EVRApplicationError e);
-	const char *ChaperoneCalibrationStateToString(vr::ChaperoneCalibrationState e);
-	const char *EChaperoneImportFlagsToString(vr::EChaperoneImportFlags e);
+	const char *EVRInitErrorToString(vr::EVRInitError e);
+	const char *EVRTrackedCameraErrorToString(vr::EVRTrackedCameraError e);
 	const char *EVRRenderModelErrorToString(vr::EVRRenderModelError e);
-	const char *EVRNotificationStyleToString(vr::EVRNotificationStyle e);
-	const char *EVRScreenshotErrorToString(vr::EVRScreenshotError e);
+	const char *EVROverlayErrorToString(vr::EVROverlayError e);
+	const char *EVRSettingsErrorToString(vr::EVRSettingsError e);
+	const char *EVRApplicationErrorToString(vr::EVRApplicationError e);
+	const char *EVRControllerAxisTypeToString(vr::EVRControllerAxisType e);
+	const char *EVRButtonIdToString(vr::EVRButtonId e);
+	const char *ETrackedPropertyErrorToString(vr::ETrackedPropertyError e);
+	const char *EVREventTypeToString(vr::EVREventType e);
+
 	const char *EVREyeToString(vr::EVREye e);
 	const char *EGraphicsAPIConventionToString(vr::EGraphicsAPIConvention e);
 	const char *EColorSpaceToString(vr::EColorSpace e);
+	const char *ETrackingResultToString(vr::ETrackingResult e);
 	const char *ETrackedControllerRoleToString(vr::ETrackedControllerRole e);
 	const char *ETrackingUniverseOriginToString(vr::ETrackingUniverseOrigin e);
-	const char *ETrackedPropertyErrorToString(vr::ETrackedPropertyError e);
 	const char *EVRSubmitFlagsToString(vr::EVRSubmitFlags e);
 	const char *EVRStateToString(vr::EVRState e);
 	const char *EDeviceActivityLevelToString(vr::EDeviceActivityLevel e);
 	const char *EVRMouseButtonToString(vr::EVRMouseButton e);
-	const char *EVRControllerAxisTypeToString(vr::EVRControllerAxisType e);
+	const char *EHiddenAreaMeshTypeToString(vr::EHiddenAreaMeshType e);
 	const char *EVRControllerEventOutputTypeToString(vr::EVRControllerEventOutputType e);
 	const char *ECollisionBoundsStyleToString(vr::ECollisionBoundsStyle e);
-	const char *EVROverlayErrorToString(vr::EVROverlayError e);
 	const char *EVRApplicationTypeToString(vr::EVRApplicationType e);
 	const char *EVRFirmwareErrorToString(vr::EVRFirmwareError e);
 	const char *EVRScreenshotTypeToString(vr::EVRScreenshotType e);
 	const char *EVRScreenshotPropertyFilenamesToString(vr::EVRScreenshotPropertyFilenames e);
 	const char *EVRTrackedCameraFrameTypeToString(vr::EVRTrackedCameraFrameType e);
+	const char *EVRApplicationPropertyToString(vr::EVRApplicationProperty e);
 	const char *EVRApplicationTransitionStateToString(vr::EVRApplicationTransitionState e);
 	const char *EChaperoneConfigFileToString(vr::EChaperoneConfigFile e);
+	const char *EChaperoneImportFlagsToString(vr::EChaperoneImportFlags e);
 	const char *VROverlayInputMethodToString(vr::VROverlayInputMethod e);
 	const char *VROverlayTransformTypeToString(vr::VROverlayTransformType e);
 	const char *VROverlayFlagsToString(vr::VROverlayFlags e);
 	const char *EGamepadTextInputModeToString(vr::EGamepadTextInputMode e);
 	const char *EGamepadTextInputLineModeToString(vr::EGamepadTextInputLineMode e);
 	const char *EOverlayDirectionToString(vr::EOverlayDirection e);
+	const char *EVROverlayIntersectionMaskPrimitiveTypeToString(vr::EVROverlayIntersectionMaskPrimitiveType e);
 	const char *EVRComponentPropertyToString(vr::EVRComponentProperty e);
 	const char *EVRNotificationTypeToString(vr::EVRNotificationType e);
-	const char *EVRSettingsErrorToString(vr::EVRSettingsError e);
+	const char* ETrackedDeviceClassToString(vr::ETrackedDeviceClass e);
 	const char* ETrackedDevicePropertyToString(vr::ETrackedDeviceProperty e);
-	const char* EVREventTypeToString(vr::EVREventType e);
-	const char* EVRButtonIdToString(vr::EVRButtonId e);
-	const char* EVRInitErrorToString(vr::EVRInitError e);
-	const char* EVRTrackedCameraErrorToString(vr::EVRTrackedCameraError e);
-	const char* EVRApplicationPropertyToString(vr::EVRApplicationProperty e);
+	const char* EVRNotificationErrorToString(vr::EVRNotificationError e);
+	const char* ChaperoneCalibrationStateToString(vr::ChaperoneCalibrationState e);
 	const char* EVRCompositorErrorToString(vr::EVRCompositorError e);
-	inline const char *GetAsString(vr::ETrackingResult e) { return ETrackingResultToString(e); }
-	inline const char *GetAsString(vr::ETrackedDeviceClass e) { return ETrackedDeviceClassToString(e); }
-	inline const char *GetAsString(vr::EVRNotificationError e) { return EVRNotificationErrorToString(e); }
-	inline const char *GetAsString(vr::EVRApplicationError e) { return EVRApplicationErrorToString(e); }
-	inline const char *GetAsString(vr::ChaperoneCalibrationState e) { return ChaperoneCalibrationStateToString(e); }
-	inline const char *GetAsString(vr::EChaperoneImportFlags e) { return EChaperoneImportFlagsToString(e); }
-	inline const char *GetAsString(vr::EVRRenderModelError e) { return EVRRenderModelErrorToString(e); }
-	inline const char *GetAsString(vr::EVRNotificationStyle e) { return EVRNotificationStyleToString(e); }
-	inline const char *GetAsString(vr::EVRScreenshotError e) { return EVRScreenshotErrorToString(e); }
-	inline const char *GetAsString(vr::ETrackedDeviceProperty e) { return ETrackedDevicePropertyToString(e); }
-	inline const char *GetAsString(vr::EVREventType e) { return EVREventTypeToString(e); }
-	inline const char *GetAsString(vr::EVRButtonId e) { return EVRButtonIdToString(e); }
+	const char* EVRNotificationStyleToString(vr::EVRNotificationStyle e);
+	const char* EVRScreenshotErrorToString(vr::EVRScreenshotError e);
+
+
 	inline const char *GetAsString(vr::EVRInitError e) { return EVRInitErrorToString(e); }
 	inline const char *GetAsString(vr::EVRTrackedCameraError e) { return EVRTrackedCameraErrorToString(e); }
-	inline const char *GetAsString(vr::EVRApplicationProperty e) { return EVRApplicationPropertyToString(e); }
+	inline const char *GetAsString(vr::EVRRenderModelError e) { return EVRRenderModelErrorToString(e); }
+	inline const char *GetAsString(vr::EVROverlayError e) { return EVROverlayErrorToString(e); }
+	inline const char *GetAsString(vr::EVRSettingsError e) { return EVRSettingsErrorToString(e); }
+	inline const char *GetAsString(vr::EVRApplicationError e) { return EVRApplicationErrorToString(e); }
+	inline const char *GetAsString(vr::EVRControllerAxisType e) { return EVRControllerAxisTypeToString(e); }
+	inline const char *GetAsString(vr::EVRButtonId e) { return EVRButtonIdToString(e); }
+	inline const char *GetAsString(vr::ETrackedPropertyError e) { return ETrackedPropertyErrorToString(e); }
+	inline const char *GetAsString(vr::EVREventType e) { return EVREventTypeToString(e); }
+
+	inline const char *GetAsString(vr::ETrackedDeviceClass e) { return ETrackedDeviceClassToString(e); }
+	inline const char *GetAsString(vr::ETrackedDeviceProperty e) { return ETrackedDevicePropertyToString(e); }
+	inline const char *GetAsString(vr::EVRNotificationError e) { return EVRNotificationErrorToString(e); }
+	inline const char *GetAsString(vr::ChaperoneCalibrationState e) { return ChaperoneCalibrationStateToString(e); }
 	inline const char *GetAsString(vr::EVRCompositorError e) { return EVRCompositorErrorToString(e); }
+	inline const char *GetAsString(vr::EVRNotificationStyle e) { return EVRNotificationStyleToString(e); }
+	inline const char *GetAsString(vr::EVRScreenshotError e) { return EVRScreenshotErrorToString(e); }
 	inline const char *GetAsString(vr::EVREye e) { return EVREyeToString(e); }
 	inline const char *GetAsString(vr::EGraphicsAPIConvention e) { return EGraphicsAPIConventionToString(e); }
 	inline const char *GetAsString(vr::EColorSpace e) { return EColorSpaceToString(e); }
+	inline const char *GetAsString(vr::ETrackingResult e) { return ETrackingResultToString(e); }
 	inline const char *GetAsString(vr::ETrackedControllerRole e) { return ETrackedControllerRoleToString(e); }
 	inline const char *GetAsString(vr::ETrackingUniverseOrigin e) { return ETrackingUniverseOriginToString(e); }
-	inline const char *GetAsString(vr::ETrackedPropertyError e) { return ETrackedPropertyErrorToString(e); }
 	inline const char *GetAsString(vr::EVRSubmitFlags e) { return EVRSubmitFlagsToString(e); }
 	inline const char *GetAsString(vr::EVRState e) { return EVRStateToString(e); }
 	inline const char *GetAsString(vr::EDeviceActivityLevel e) { return EDeviceActivityLevelToString(e); }
 	inline const char *GetAsString(vr::EVRMouseButton e) { return EVRMouseButtonToString(e); }
-	inline const char *GetAsString(vr::EVRControllerAxisType e) { return EVRControllerAxisTypeToString(e); }
+	inline const char *GetAsString(vr::EHiddenAreaMeshType e) { return EHiddenAreaMeshTypeToString(e); }
 	inline const char *GetAsString(vr::EVRControllerEventOutputType e) { return EVRControllerEventOutputTypeToString(e); }
 	inline const char *GetAsString(vr::ECollisionBoundsStyle e) { return ECollisionBoundsStyleToString(e); }
-	inline const char *GetAsString(vr::EVROverlayError e) { return EVROverlayErrorToString(e); }
 	inline const char *GetAsString(vr::EVRApplicationType e) { return EVRApplicationTypeToString(e); }
 	inline const char *GetAsString(vr::EVRFirmwareError e) { return EVRFirmwareErrorToString(e); }
 	inline const char *GetAsString(vr::EVRScreenshotType e) { return EVRScreenshotTypeToString(e); }
 	inline const char *GetAsString(vr::EVRScreenshotPropertyFilenames e) { return EVRScreenshotPropertyFilenamesToString(e); }
 	inline const char *GetAsString(vr::EVRTrackedCameraFrameType e) { return EVRTrackedCameraFrameTypeToString(e); }
+	inline const char *GetAsString(vr::EVRApplicationProperty e) { return EVRApplicationPropertyToString(e); }
 	inline const char *GetAsString(vr::EVRApplicationTransitionState e) { return EVRApplicationTransitionStateToString(e); }
 	inline const char *GetAsString(vr::EChaperoneConfigFile e) { return EChaperoneConfigFileToString(e); }
+	inline const char *GetAsString(vr::EChaperoneImportFlags e) { return EChaperoneImportFlagsToString(e); }
 	inline const char *GetAsString(vr::VROverlayInputMethod e) { return VROverlayInputMethodToString(e); }
 	inline const char *GetAsString(vr::VROverlayTransformType e) { return VROverlayTransformTypeToString(e); }
 	inline const char *GetAsString(vr::VROverlayFlags e) { return VROverlayFlagsToString(e); }
 	inline const char *GetAsString(vr::EGamepadTextInputMode e) { return EGamepadTextInputModeToString(e); }
 	inline const char *GetAsString(vr::EGamepadTextInputLineMode e) { return EGamepadTextInputLineModeToString(e); }
 	inline const char *GetAsString(vr::EOverlayDirection e) { return EOverlayDirectionToString(e); }
+	inline const char *GetAsString(vr::EVROverlayIntersectionMaskPrimitiveType e) { return EVROverlayIntersectionMaskPrimitiveTypeToString(e); }
 	inline const char *GetAsString(vr::EVRComponentProperty e) { return EVRComponentPropertyToString(e); }
 	inline const char *GetAsString(vr::EVRNotificationType e) { return EVRNotificationTypeToString(e); }
-	inline const char *GetAsString(vr::EVRSettingsError e) { return EVRSettingsErrorToString(e); }
-
-	// experimental
-	uint32_t GetAsCSVString(const RenderModel_t &e, VR_OUT_STRING() char *s, uint32_t n);
 };

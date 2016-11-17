@@ -744,6 +744,9 @@ public:
         return w;
     }
 
+	// print something like A|B|C (0x123) by 
+	// walks down num_values of values[] character array.
+	// (assumes caller has done all of the matching)
     static byte_counter_t encode_enum_mask_strings_and_u32hex(traversal_state ts, char *s, byte_counter_t n, const char *key, const char *values[], int num_values, uint32_t u32_value)
     {
         byte_counter_t w = 0;
@@ -753,12 +756,33 @@ public:
         return w;
     }
 
+	static byte_counter_t encode_reprojection_flags(traversal_state ts, char *s, byte_counter_t n, const char *key, const uint32_t v)
+	{
+		byte_counter_t w = 0;
+		int num_matches = 0;
+		const char *match_list[3];
+		if (v & VRCompositor_ReprojectionReason_Cpu)
+		{
+			match_list[num_matches++] = "Reason_Cpu";
+		}
+		if (v & VRCompositor_ReprojectionReason_Gpu)
+		{
+			match_list[num_matches++] = "Reason_Gpu";
+		}
+		if (v & VRCompositor_ReprojectionAsync)
+		{
+			match_list[num_matches++] = "Async";
+		}
+		w += encode_enum_mask_strings_and_u32hex(ts, s + w, n - w,key, match_list, num_matches, v);
+		return w;
+	}
+
     static byte_counter_t encode_button_mask(traversal_state ts, char *s, byte_counter_t n, const char *key, uint64_t button_state)
     {
         byte_counter_t w = 0;
         w += encode_key(ts, s+w, n - w, key, "mask");
 
-        // the following is most generic but up to O(64)
+        // the following is most generic but up to O(64) (not fast)
         //      
         int num_matches = 0;
         const char *match_list[64];
@@ -787,6 +811,7 @@ public:
         
         w += encode_enum_mask_strings(ts, s + w, n - w, match_list, num_matches);
 
+		// because button_state is 64 bit: just do it here
 #ifdef WIN32
         w += SNPRINTF(s + w, n - w, " (%" PRIx64 ")%c", button_state, field_sep);
 #else
@@ -794,6 +819,9 @@ public:
 #endif
         return w;
     }
+
+	
+
 
     static byte_counter_t encode_color(traversal_state ts, char *s, byte_counter_t n, const char *key, const HmdColor_t *v)
     {
@@ -896,6 +924,43 @@ struct struct_encoder
         return w;
     }
 
+
+	static byte_counter_t encode_intersection_mask_circle(traversal_state ts, char *s, byte_counter_t n, const char *key, const IntersectionMaskCircle_t*v)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flCenterX", v->m_flCenterX);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flCenterY", v->m_flCenterY);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flRadius", v->m_flRadius);
+		return w;
+	};
+
+	static byte_counter_t encode_intersection_mask_rectangle(traversal_state ts, char *s, byte_counter_t n, const char *key, const IntersectionMaskRectangle_t*v)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flTopLeftX", v->m_flTopLeftX);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flTopLeftY", v->m_flTopLeftY);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flWidth", v->m_flWidth);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flHeight", v->m_flHeight);
+		return w;
+	}
+
+	static byte_counter_t encode_overlay_intersection_mask_primitive(traversal_state ts, char *s, byte_counter_t n, const char *key, const VROverlayIntersectionMaskPrimitive_t *v)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "m_nPrimitiveType",
+			openvr_string::EVROverlayIntersectionMaskPrimitiveTypeToString(v->m_nPrimitiveType), v->m_nPrimitiveType);
+
+		if (v->m_nPrimitiveType == OverlayIntersectionPrimitiveType_Rectangle)
+		{
+			w += encode_intersection_mask_rectangle(ts, s + w, n - w, "m_Primitive", &v->m_Primitive.m_Rectangle);
+		}
+		else if (v->m_nPrimitiveType == OverlayIntersectionPrimitiveType_Circle)
+		{
+			w += encode_intersection_mask_circle(ts, s + w, n - w, "m_Primitive", &v->m_Primitive.m_Circle);
+		}
+		return w;
+	}
+
     static byte_counter_t encode_overlay_intersection_results(traversal_state ts, char *s, byte_counter_t n, const char *key, const VROverlayIntersectionResults_t*v)
     {
         byte_counter_t w = 0;
@@ -957,8 +1022,9 @@ struct struct_encoder
         w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nSize", v->m_nSize);
         w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nFrameIndex", v->m_nFrameIndex);
         w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumFramePresents", v->m_nNumFramePresents);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumMisPresented", v->m_nNumMisPresented);
         w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumDroppedFrames", v->m_nNumDroppedFrames);
-        w += field_encoder_type::encode_u32hex(ts, s + w, n - w, "m_nReprojectionFlags", v->m_nReprojectionFlags);
+		w += field_encoder_type::encode_reprojection_flags(ts, s + w, n - w, "m_nReprojectionFlags", v->m_nReprojectionFlags);
         w += field_encoder_type::encode_double(ts, s + w, n - w, "m_flSystemTimeInSeconds", v->m_flSystemTimeInSeconds);
 
         w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flPreSubmitGpuMs", v->m_flPreSubmitGpuMs);
@@ -1316,11 +1382,6 @@ uint32_t openvr_string::GetAsString(const VREvent_t &e, VR_OUT_STRING() char *s,
     return tagged_struct_encoder::encode_event(traversal_state(23,1), s, n, "event", &e) + 1;
 }
 
-uint32_t openvr_string::GetAsCSVString(const RenderModel_t &e, VR_OUT_STRING() char *s, uint32_t n)
-{
-    return csv_struct_encoder::encode_render_model(traversal_state(22, 1), s, n, "event", &e) + 1;
-}
-
 uint32_t openvr_string::GetAsString(const VREvent_Controller_t &e, VR_OUT_STRING() char *s, uint32_t n)
 {
     return tagged_struct_encoder::encode_controller(traversal_state(22, 1), s, n, nullptr, &e) + 1;
@@ -1520,6 +1581,21 @@ uint32_t openvr_string::GetAsString(const VROverlayIntersectionParams_t &v, VR_O
 uint32_t openvr_string::GetAsString(const VROverlayIntersectionResults_t &v, VR_OUT_STRING() char *s, uint32_t n)
 {
     return tagged_struct_encoder::encode_overlay_intersection_results(traversal_state(22,1), s, n, nullptr, &v) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const IntersectionMaskCircle_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_intersection_mask_circle(traversal_state(22, 1), s, n, nullptr, &v) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const IntersectionMaskRectangle_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_intersection_mask_rectangle(traversal_state(22, 1), s, n, nullptr, &v) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const VROverlayIntersectionMaskPrimitive_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_overlay_intersection_mask_primitive(traversal_state(22, 1), s, n, nullptr, &v) + 1;
 }
 
 uint32_t openvr_string::GetAsString(const RenderModel_ComponentState_t &v, VR_OUT_STRING() char *s, uint32_t n)
