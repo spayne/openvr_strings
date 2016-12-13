@@ -31,6 +31,7 @@ Polled Controller 3 State:
                  rAxis[3]: 0.000000 0.000000
                  rAxis[4]: 0.000000 0.000000
 ```
+In this case I pressed down on the touchpad close to the centre of X (0.065527) and near the bottom of Y (-0.724208).
 
 For a full example of this, build and enable the **g_print_polled_controller_state** of the following [hellovr_opengl](https://github.com/spayne/openvr_strings/tree/master/samples/hellovr_opengl) sample.
 

@@ -15,6 +15,7 @@
 #include <cctype>
 #include <cinttypes>
 #include <stdarg.h>
+#include <limits>
 
 using namespace vr;
 
@@ -52,7 +53,8 @@ enum EventDetailsType
     EDT_EventDetails_Screenshot,
     EDT_EventDetails_ScreenshotProgress,
     EDT_EventDetails_ApplicationLaunch,
-    EDT_EventDetails_EditingCameraSurface
+    EDT_EventDetails_EditingCameraSurface,
+	EDT_EventDetails_MessageOverlay
 };
 
 static const char *subtype_to_str(EventDetailsType edt)
@@ -501,7 +503,7 @@ public:
     {
         byte_counter_t w = 0;
         w += encode_key(ts, s+w, n - w, key, "double");
-        w += SNPRINTF(s + w, n - w, "%f%c", value, field_sep);
+        w += SNPRINTF(s + w, n - w, "% f%c", value, field_sep);
         return w;
     }
 
@@ -509,7 +511,7 @@ public:
     {
         byte_counter_t w = 0;
         w += encode_key(ts, s + w, n - w, key, "f");
-        w += SNPRINTF(s + w, n - w, "%f%c", value, field_sep);
+        w += SNPRINTF(s + w, n - w, "% f%c", value, field_sep);
         return w;
     }
 
@@ -534,11 +536,6 @@ public:
             w += 8;
         }
 
-        // snprintf semantics: null terminate
-        if (n > 0)
-        {
-            s[w] = '\0';
-        }
         return 64;
     }
 
@@ -556,6 +553,14 @@ public:
             w += encode32bytes(s + w, n - w, &value[i + 32]);
             i += 64;
         }
+
+		// ensure the null terminator
+		// snprintf semantics: null terminate
+		if (n-w <= 0 && n > 0)
+		{
+			s[n-1] = '\0';
+		}
+
 
         // one byte steps through input value
         while (i < vn)
@@ -578,10 +583,10 @@ public:
         for (byte_counter_t i = 0; i < num_triangles; i++)
         {
             w += encode_indexed_key(ts, s + w, n - w, key, "tri", i, encoded_value_width(num_triangles - 1));
-            w += SNPRINTF(s + w, n - w, "%d %d %d%c", 
-                                v_array[i * 3], 
-                                v_array[i * 3 + 1], 
-                                v_array[i * 3 + 2], field_sep);
+            w += SNPRINTF(s + w, n - w, "\nf %d %d %d%c", 
+                                v_array[i * 3] + 1, 
+                                v_array[i * 3 + 1] + 1, 
+                                v_array[i * 3 + 2] + 1, field_sep);
         }
         return w;
     }
@@ -614,7 +619,7 @@ public:
         for (unsigned int i = 0; i < k_unControllerStateAxisCount; i++)
         {
             w += encode_indexed_key(ts, s + w, n - w, key, "axis", i, 1);
-            w += SNPRINTF(s + w, n - w, "%f %f%c", v_array[i].x,v_array[i].y, field_sep);
+            w += SNPRINTF(s + w, n - w, "% f % f%c", v_array[i].x,v_array[i].y, field_sep);
         }
         return w;
     }
@@ -655,12 +660,24 @@ public:
     {
         byte_counter_t w = 0;
         int key_width = encoded_value_width(vn-1);
+		// do vertices
         for (byte_counter_t i = 0; i < vn; i++)
         {
-            w += encode_substructure_start(ts, s + w, n - w, key, "rmv", i, key_width);
-            w += encode_render_model_vertex(ts+1, s + w, n - w, nullptr, &v_array[i]);
-            w += encode_substructure_end(ts, s + w, n - w);
+			w += SNPRINTF(s + w, n - w, "v ", field_sep);
+			w += encode_f3(ts, s + w, n - w, nullptr, v_array[i].vPosition.v);
         }
+		// do normals
+		for (byte_counter_t i = 0; i < vn; i++)
+		{
+			w += SNPRINTF(s + w, n - w, "vn ", field_sep);
+			w += encode_f3(ts, s + w, n - w, nullptr, v_array[i].vNormal.v);
+		}
+		// do uvs
+		for (byte_counter_t i = 0; i < vn; i++)
+		{
+			w += SNPRINTF(s + w, n - w, "vt ", field_sep);
+			w += encode_f2(ts, s + w, n - w, nullptr, v_array[i].rfTextureCoord);
+		}
         return w;
     }
 
@@ -672,12 +689,16 @@ public:
         return w;
     }
 
+	static byte_counter_t encode_f3(traversal_state ts, char *s, byte_counter_t n, const char *key, const float a, const float b, const float c)
+	{
+		byte_counter_t w = 0;
+		w += encode_key(ts, s + w, n - w, key, "f3");
+		w += SNPRINTF(s + w, n - w, "% f % f % f%c", a,b,c, field_sep);
+		return w;
+	}
     static byte_counter_t encode_f3(traversal_state ts, char *s, byte_counter_t n, const char *key, const float f[3])
     {
-        byte_counter_t w = 0;
-        w += encode_key(ts, s + w, n - w, key, "f3");
-        w += SNPRINTF(s + w,n-w, "%f %f %f%c", f[0], f[1], f[2], field_sep);
-        return w;
+		return encode_f3(ts, s, n, key, f[0], f[1], f[2]);
     }
 
     static byte_counter_t encode_f4(traversal_state ts, char *s, byte_counter_t n, const char *key, const float f[4])
@@ -691,18 +712,34 @@ public:
 
     static byte_counter_t encode_f34(traversal_state ts, char *s, byte_counter_t n, const char *key, const float f[3][4])
     {
-        byte_counter_t w = 0;
-        w += encode_key(ts, s + w, n - w, key, "f34");
-        int indent = w;
-        int width = encoded_value_width(&f[0][0], 3 * 4) + 7; // 6 for default precision + 1 for the decimal point
-        assert(width > 0);
-        w += SNPRINTF(s + w, n - w, "%*.6f %*.6f %*.6f %*.6f\n%*s%*.6f %*.6f %*.6f %*.6f\n%*s%*.6f %*.6f %*.6f %*.6f%c",
-            width, f[0][0], width, f[0][1], width, f[0][2], width, f[0][3], indent, "",
-            width, f[1][0], width, f[1][1], width, f[1][2], width, f[1][3], indent, "",
-            width, f[2][0], width, f[2][1], width, f[2][2], width, f[2][3],
-            field_sep);
-        return w;
+		float t[4][4];
+		memcpy(t, f, 12*sizeof(float));
+		t[3][0] = 0;
+		t[3][1] = 0;
+		t[3][2] = 0;
+		t[3][3] = 1.0f;
+		return encode_f44(ts, s, n, key, t);
     }
+
+	// since it's a transform matrix, encode the roll pitch and yaw as well
+	static byte_counter_t encode_transform34(traversal_state ts, char *s, byte_counter_t n, const char *key, const float f[3][4])
+	{
+		byte_counter_t w = 0;
+		w += encode_f34(ts, s+w, n-w, key, f);
+		float a = atan2(f[1][0], f[0][0]);
+		float b = atan2(-f[2][0], sqrt(f[2][1]*f[2][1]+f[2][2]*f[2][2]));
+		float g = atan2(f[2][1], f[2][2]);
+		w += encode_f(ts, s + w, n - w, "roll a", a);
+		w += encode_f(ts, s + w, n - w, "yaw b", b);
+		w += encode_f(ts, s + w, n - w, "pitch g", g);
+
+		w += encode_f3(ts, s + w, n - w, "z_ref direction vector", -f[0][2], -f[1][2], -f[2][2]);
+		
+
+		return w;
+	}
+
+	
     
     static byte_counter_t encode_f44(traversal_state ts, char *s, byte_counter_t n, const char *key, const float f[4][4])
     {
@@ -711,7 +748,7 @@ public:
         int indent = w;
         int width = encoded_value_width(&f[0][0], 4 * 4) + 7; // 6 for default precision + 1 for the decimal point
         assert(width > 0);
-        w += SNPRINTF(s + w, n - w, "%*.6f %*.6f %*.6f %*.6f\n%*s%*.6f %*.6f %*.6f %*.6f\n%*s%*.6f %*.6f %*.6f %*.6f\n%*s%*.6f %*.6f %*.6f %*.6f%c",
+        w += SNPRINTF(s + w, n - w, "[%*.6f %*.6f %*.6f %*.6f\n %*s%*.6f %*.6f %*.6f %*.6f\n %*s%*.6f %*.6f %*.6f %*.6f\n %*s%*.6f %*.6f %*.6f %*.6f]%c",
             width, f[0][0], width, f[0][1], width, f[0][2], width, f[0][3], indent, "",
             width, f[1][0], width, f[1][1], width, f[1][2], width, f[1][3], indent, "",
             width, f[2][0], width, f[2][1], width, f[2][2], width, f[2][3], indent, "",
@@ -875,11 +912,11 @@ struct struct_encoder
     static byte_counter_t encode_render_model(traversal_state ts, char *s, byte_counter_t n, const char *key, const RenderModel_t*v)
     {
         byte_counter_t w = 0;
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "unVertexCount", v->unVertexCount);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "unTriangleCount", v->unTriangleCount);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "diffuseTextureId", v->diffuseTextureId);
-        w += field_encoder_type::encode_render_model_vertex_array(ts, s + w, n - w, "rVertexData", v->unVertexCount, v->rVertexData);
-        w += field_encoder_type::encode_u16_triangle_index_array(ts, s + w, n - w, "rIndexData", v->unTriangleCount, v->rIndexData);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "# unVertexCount", v->unVertexCount);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "# unTriangleCount", v->unTriangleCount);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "# diffuseTextureId", v->diffuseTextureId);
+		w += field_encoder_type::encode_render_model_vertex_array(ts, s + w, n - w, "# rVertexData", v->unVertexCount, v->rVertexData);
+		w += field_encoder_type::encode_u16_triangle_index_array(ts, s + w, n - w, "# rIndexData", v->unTriangleCount, v->rIndexData);
         return w;
     }
 
@@ -1136,7 +1173,7 @@ struct struct_encoder
     static byte_counter_t encode_pose(traversal_state ts, char *s, byte_counter_t n, const char *key, const TrackedDevicePose_t *v)
     {
         byte_counter_t w = 0;
-        w += field_encoder_type::encode_f34(ts, s + w, n - w, "mDeviceToAbsoluteTracking", v->mDeviceToAbsoluteTracking.m);
+        w += field_encoder_type::encode_transform34(ts, s + w, n - w, "mDeviceToAbsoluteTracking", v->mDeviceToAbsoluteTracking.m);
         w += field_encoder_type::encode_f3(ts, s + w, n - w, "vVelocity", v->vVelocity.v);
         w += field_encoder_type::encode_f3(ts, s + w, n - w, "vAngularVelocity", v->vAngularVelocity.v);
         w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "eTrackingResult", 
@@ -1151,7 +1188,7 @@ struct struct_encoder
         byte_counter_t w = 0;
         w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "handle", (uint64_t)v->handle);
         w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "eType", 
-            openvr_string::EGraphicsAPIConventionToString(v->eType), v->eType);
+            openvr_string::ETextureTypeToString(v->eType), v->eType);
         w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "eColorSpace", 
             openvr_string::EColorSpaceToString(v->eColorSpace), v->eColorSpace);
         return w;
@@ -1311,6 +1348,13 @@ struct struct_encoder
             openvr_string::EVRTrackedCameraFrameTypeToString((EVRTrackedCameraFrameType)d->nVisualMode), d->nVisualMode);	// todo: this is a guess
         return w;
     }
+	static byte_counter_t encode_message_overlay(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_MessageOverlay_t *d)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "unVRMessageOverlayResponse",
+			openvr_string::VRMessageOverlayResponseToString((VRMessageOverlayResponse)d->unVRMessageOverlayResponse), d->unVRMessageOverlayResponse);
+		return w;
+	}
 
     // size includes null byte
     static byte_counter_t encode_event(traversal_state ts, char *s, byte_counter_t n, const char *, const VREvent_t *e)
@@ -1347,6 +1391,7 @@ struct struct_encoder
         case EDT_EventDetails_ScreenshotProgress:	w += encode_screenshot_progress(ts, s + w, n - w, key, &e->data.screenshotProgress); break;
         case EDT_EventDetails_ApplicationLaunch:	w += encode_application_launch(ts, s + w, n - w, key, &e->data.applicationLaunch); break;
         case EDT_EventDetails_EditingCameraSurface:	w += encode_editing_camera_surface(ts, s + w, n - w, key, &e->data.cameraSurface); break;
+		case EDT_EventDetails_MessageOverlay:       w += encode_message_overlay(ts, s + w, n - w, key, &e->data.messageOverlay); break;
         }
         return w;
     }
@@ -1470,6 +1515,11 @@ uint32_t openvr_string::GetAsString(const VREvent_ApplicationLaunch_t &e, VR_OUT
 uint32_t openvr_string::GetAsString(const VREvent_EditingCameraSurface_t &e, VR_OUT_STRING() char *s, uint32_t n)
 {
     return tagged_struct_encoder::encode_editing_camera_surface(traversal_state(22,1), s, n, nullptr, &e) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const VREvent_MessageOverlay_t &e, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_message_overlay(traversal_state(22, 1), s, n, nullptr, &e) + 1;
 }
 
 // external interface - at least for now - these don't include themselves as having names

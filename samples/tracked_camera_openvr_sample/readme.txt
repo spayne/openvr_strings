@@ -23,5 +23,7 @@ To run it:
 
 So in my case I copied glew32, glut32 icudt52 icuin52, icuuc52.dll, openvr_api.dll and sdl2.dll to my samples/bin/win32 directory.
 
-2. Then, from qtcreator gui, you can click on the play or debug button and you should see video from your hmd streaming into the gui window.  Matrix and velocity vectors on the right hand side are formatted with openvr_strings functions.
+2. Enable the camera in SteamVR
+
+3. Then, from qtcreator gui, you can click on the play or debug button and you should see video from your hmd streaming into the gui window.  Matrix and velocity vectors on the right hand side are formatted with openvr_strings functions.
 

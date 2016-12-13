@@ -758,9 +758,9 @@ void CMainApplication::RenderFrame()
         RenderStereoTargets();
 		RenderCompanionWindow();
 
-        vr::Texture_t leftEyeTexture = {(void*)leftEyeDesc.m_nResolveTextureId, vr::API_OpenGL, vr::ColorSpace_Gamma };
+        vr::Texture_t leftEyeTexture = {(void*)leftEyeDesc.m_nResolveTextureId, vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
         vr::VRCompositor()->Submit(vr::Eye_Left, &leftEyeTexture );
-        vr::Texture_t rightEyeTexture = {(void*)rightEyeDesc.m_nResolveTextureId, vr::API_OpenGL, vr::ColorSpace_Gamma };
+        vr::Texture_t rightEyeTexture = {(void*)rightEyeDesc.m_nResolveTextureId, vr::TextureType_OpenGL, vr::ColorSpace_Gamma };
         vr::VRCompositor()->Submit(vr::Eye_Right, &rightEyeTexture );
     }
 
@@ -1564,7 +1564,7 @@ Matrix4 CMainApplication::GetHMDMatrixProjectionEye( vr::Hmd_Eye nEye )
     if ( !m_pHMD )
         return Matrix4();
 
-    vr::HmdMatrix44_t mat = m_pHMD->GetProjectionMatrix( nEye, m_fNearClip, m_fFarClip, vr::API_OpenGL);
+    vr::HmdMatrix44_t mat = m_pHMD->GetProjectionMatrix( nEye, m_fNearClip, m_fFarClip);
 
     if (g_print_render)
     {
@@ -1656,7 +1656,7 @@ void CMainApplication::UpdateHMDMatrixPose()
                 case vr::TrackedDeviceClass_Controller:        m_rDevClassChar[nDevice] = 'C'; break;
                 case vr::TrackedDeviceClass_HMD:               m_rDevClassChar[nDevice] = 'H'; break;
                 case vr::TrackedDeviceClass_Invalid:           m_rDevClassChar[nDevice] = 'I'; break;
-                case vr::TrackedDeviceClass_Other:             m_rDevClassChar[nDevice] = 'O'; break;
+                case vr::TrackedDeviceClass_GenericTracker:    m_rDevClassChar[nDevice] = 'G'; break;
                 case vr::TrackedDeviceClass_TrackingReference: m_rDevClassChar[nDevice] = 'T'; break;
                 default:                                       m_rDevClassChar[nDevice] = '?'; break;
                 }

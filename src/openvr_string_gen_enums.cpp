@@ -24,17 +24,17 @@ const char *EVREyeToString(vr::EVREye e)
   return EVREye_strings[offset];
 }
 
-const char *EGraphicsAPIConventionToString(vr::EGraphicsAPIConvention e)
+const char *ETextureTypeToString(vr::ETextureType e)
 {
-  static const char * const EGraphicsAPIConvention_strings[] =
+  static const char * const ETextureType_strings[] =
   {
-  "API_DirectX","API_OpenGL"
+  "TextureType_DirectX","TextureType_OpenGL","TextureType_Vulkan"
   };
 
   int offset = (int)e;
-  if (offset < 0 || offset >= sizeof(EGraphicsAPIConvention_strings)/sizeof(EGraphicsAPIConvention_strings[0]))
+  if (offset < 0 || offset >= sizeof(ETextureType_strings)/sizeof(ETextureType_strings[0]))
      return nullptr;
-  return EGraphicsAPIConvention_strings[offset];
+  return ETextureType_strings[offset];
 }
 
 const char *EColorSpaceToString(vr::EColorSpace e)
@@ -50,63 +50,63 @@ const char *EColorSpaceToString(vr::EColorSpace e)
   return EColorSpace_strings[offset];
 }
 
-const char *ETrackingResultToString(vr::ETrackingResult e)
-{
-  static const char * const ETrackingResult_strings[] =
-  {
-  "TrackingResult_Uninitialized",nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,"TrackingResult_Calibrating_InProgress","TrackingResult_Calibrating_OutOfRange",nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,"TrackingResult_Running_OK","TrackingResult_Running_OutOfRange"
-  };
+static const vr::ETrackingResult ETrackingResult_check_table[] =
+{TrackingResult_Running_OutOfRange,TrackingResult_Running_OK,TrackingResult_Calibrating_OutOfRange,TrackingResult_Calibrating_InProgress,TrackingResult_Uninitialized,};
 
-  int offset = (int)e - (1);
-  if (offset < 0 || offset >= sizeof(ETrackingResult_strings)/sizeof(ETrackingResult_strings[0]))
-     return nullptr;
-  return ETrackingResult_strings[offset];
-}
+static const char * const ETrackingResult_string_table[] =
+{"TrackingResult_Running_OutOfRange","TrackingResult_Running_OK","TrackingResult_Calibrating_OutOfRange","TrackingResult_Calibrating_InProgress","TrackingResult_Uninitialized",};
 
-static const vr::ETrackedDeviceClass ETrackedDeviceClass_check_table[] =
-{TrackedDeviceClass_Other,TrackedDeviceClass_Count,TrackedDeviceClass_TrackingReference,TrackedDeviceClass_Controller,TrackedDeviceClass_HMD,TrackedDeviceClass_Invalid,};
-
-static const char * const ETrackedDeviceClass_string_table[] =
-{"TrackedDeviceClass_Other","TrackedDeviceClass_Count","TrackedDeviceClass_TrackingReference","TrackedDeviceClass_Controller","TrackedDeviceClass_HMD","TrackedDeviceClass_Invalid",};
-
-const char* ETrackedDeviceClassToString(vr::ETrackedDeviceClass e)
+const char* ETrackingResultToString(vr::ETrackingResult e)
 {
   static const unsigned char LUT[] =
     {
-      5, 4, 3, 6, 2, 1, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 0, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6
+      5, 4, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      3, 2, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      1, 0, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
+      5, 5, 5, 5, 5, 5
     };
    int offset = LUT[(unsigned char)e];
-   if (offset < (sizeof(ETrackedDeviceClass_check_table) / sizeof(ETrackedDeviceClass_check_table[0])) &&
-      (e == ETrackedDeviceClass_check_table[offset]))
+   if (offset < (sizeof(ETrackingResult_check_table) / sizeof(ETrackingResult_check_table[0])) &&
+      (e == ETrackingResult_check_table[offset]))
    {
-      return ETrackedDeviceClass_string_table[offset];
+      return ETrackingResult_string_table[offset];
    }
    return nullptr;
+}
+
+const char *ETrackedDeviceClassToString(vr::ETrackedDeviceClass e)
+{
+  static const char * const ETrackedDeviceClass_strings[] =
+  {
+  "TrackedDeviceClass_Invalid","TrackedDeviceClass_HMD","TrackedDeviceClass_Controller","TrackedDeviceClass_GenericTracker","TrackedDeviceClass_TrackingReference"
+  };
+
+  int offset = (int)e;
+  if (offset < 0 || offset >= sizeof(ETrackedDeviceClass_strings)/sizeof(ETrackedDeviceClass_strings[0]))
+     return nullptr;
+  return ETrackedDeviceClass_strings[offset];
 }
 
 const char *ETrackedControllerRoleToString(vr::ETrackedControllerRole e)
@@ -136,41 +136,41 @@ const char *ETrackingUniverseOriginToString(vr::ETrackingUniverseOrigin e)
 }
 
 static const vr::ETrackedDeviceProperty ETrackedDeviceProperty_check_table[] =
-{Prop_DisplayAllowNightMode_Bool,Prop_StatusDisplayTransform_Matrix34,Prop_DriverVersion_String,Prop_DeviceCanPowerOff_Bool,Prop_Firmware_ProgrammingTarget_String,Prop_DisplaySuppressed_Bool,Prop_DeviceBatteryPercentage_Float,Prop_ScreenshotVerticalFieldOfViewDegrees_Float,Prop_DeviceIsCharging_Bool,Prop_ScreenshotHorizontalFieldOfViewDegrees_Float,Prop_DeviceIsWireless_Bool,Prop_CameraCompatibilityMode_Int32,Prop_ConnectedWirelessDongle_String,Prop_AudioFirmwareVersion_Uint64,Prop_AllWirelessDongleDescriptions_String,Prop_DisplayHardwareVersion_Uint64,Prop_HardwareRevision_String,Prop_DisplayBootloaderVersion_Uint64,Prop_TrackingFirmwareVersion_String,Prop_DisplayFPGAVersion_Uint64,Prop_ManufacturerName_String,Prop_CameraFirmwareDescription_String,Prop_WillDriftInYaw_Bool,Prop_CameraFirmwareVersion_Uint64,Prop_RenderModelName_String,Prop_UserHeadToEyeDepthMeters_Float,Prop_SerialNumber_String,Prop_LensCenterRightV_Float,Prop_ModelNumber_String,Prop_LensCenterRightU_Float,Prop_TrackingSystemName_String,Prop_BlockServerShutdown_Bool,Prop_DongleVersion_Uint64,Prop_RadioVersion_Uint64,Prop_VRCVersion_Uint64,Prop_FPGAVersion_Uint64,Prop_FirmwareVersion_Uint64,Prop_HardwareRevision_Uint64,Prop_Firmware_ManualUpdateURL_String,Prop_Firmware_ManualUpdate_Bool,Prop_Firmware_UpdateAvailable_Bool,Prop_LensCenterLeftV_Float,Prop_LensCenterLeftU_Float,Prop_DisplayGCImage_String,Prop_DisplayGCPrescale_Float,Prop_DisplayGCScale_Float,Prop_DisplayGCOffset_Float,Prop_DisplayGCType_Int32,Prop_CameraToHeadTransform_Matrix34,Prop_EdidProductID_Int32,Prop_DisplayGCBlackClamp_Float,Prop_DisplayMCImageRight_String,Prop_DisplayMCImageLeft_String,Prop_EdidVendorID_Int32,Prop_DisplayMCScale_Float,Prop_DisplayMCOffset_Float,Prop_DisplayMCType_Int32,Prop_IsOnDesktop_Bool,Prop_DisplayFirmwareVersion_Uint64,Prop_PreviousUniverseId_Uint64,Prop_CurrentUniverseId_Uint64,Prop_UserIpdMeters_Float,Prop_DisplayFrequency_Float,Prop_SecondsFromVsyncToPhotons_Float,Prop_ReportsTimeSinceVSync_Bool,Prop_ControllerRoleHint_Int32,Prop_Axis4Type_Int32,Prop_Axis3Type_Int32,Prop_Axis2Type_Int32,Prop_Axis1Type_Int32,Prop_Axis0Type_Int32,Prop_SupportedButtons_Uint64,Prop_AttachedDeviceId_String,Prop_ModeLabel_String,Prop_TrackingRangeMaximumMeters_Float,Prop_TrackingRangeMinimumMeters_Float,Prop_FieldOfViewBottomDegrees_Float,Prop_FieldOfViewTopDegrees_Float,Prop_FieldOfViewRightDegrees_Float,Prop_FieldOfViewLeftDegrees_Float,Prop_NamedIconPathDeviceAlertLow_String,Prop_NamedIconPathDeviceStandby_String,Prop_NamedIconPathDeviceNotReady_String,Prop_NamedIconPathDeviceReadyAlert_String,Prop_NamedIconPathDeviceReady_String,Prop_NamedIconPathDeviceSearchingAlert_String,Prop_NamedIconPathDeviceSearching_String,Prop_NamedIconPathDeviceOff_String,Prop_IconPathName_String,Prop_VendorSpecific_Reserved_End,Prop_VendorSpecific_Reserved_Start,Prop_ViveSystemButtonFixRequired_Bool,Prop_Firmware_ForceUpdateRequired_Bool,Prop_HasCamera_Bool,Prop_DeviceClass_Int32,Prop_DeviceProvidesBatteryStatus_Bool,Prop_ContainsProximitySensor_Bool,Prop_CanUnifyCoordinateSystemWithHmd_Bool,};
+{Prop_DisplayAllowNightMode_Bool,Prop_StatusDisplayTransform_Matrix34,Prop_DriverVersion_String,Prop_DeviceCanPowerOff_Bool,Prop_Firmware_ProgrammingTarget_String,Prop_CanUnifyCoordinateSystemWithHmd_Bool,Prop_Invalid,Prop_DisplaySuppressed_Bool,Prop_DeviceBatteryPercentage_Float,Prop_ScreenshotVerticalFieldOfViewDegrees_Float,Prop_DeviceIsCharging_Bool,Prop_ScreenshotHorizontalFieldOfViewDegrees_Float,Prop_DeviceIsWireless_Bool,Prop_CameraCompatibilityMode_Int32,Prop_ConnectedWirelessDongle_String,Prop_AudioFirmwareVersion_Uint64,Prop_AllWirelessDongleDescriptions_String,Prop_DisplayHardwareVersion_Uint64,Prop_HardwareRevision_String,Prop_DisplayBootloaderVersion_Uint64,Prop_TrackingFirmwareVersion_String,Prop_DisplayFPGAVersion_Uint64,Prop_ManufacturerName_String,Prop_CameraFirmwareDescription_String,Prop_WillDriftInYaw_Bool,Prop_CameraFirmwareVersion_Uint64,Prop_RenderModelName_String,Prop_UserHeadToEyeDepthMeters_Float,Prop_SerialNumber_String,Prop_LensCenterRightV_Float,Prop_ModelNumber_String,Prop_LensCenterRightU_Float,Prop_TrackingSystemName_String,Prop_BlockServerShutdown_Bool,Prop_DongleVersion_Uint64,Prop_RadioVersion_Uint64,Prop_VRCVersion_Uint64,Prop_FPGAVersion_Uint64,Prop_FirmwareVersion_Uint64,Prop_HardwareRevision_Uint64,Prop_Firmware_ManualUpdateURL_String,Prop_Firmware_ManualUpdate_Bool,Prop_Firmware_UpdateAvailable_Bool,Prop_LensCenterLeftV_Float,Prop_LensCenterLeftU_Float,Prop_DisplayGCImage_String,Prop_DisplayGCPrescale_Float,Prop_DisplayGCScale_Float,Prop_DisplayGCOffset_Float,Prop_DisplayGCType_Int32,Prop_CameraToHeadTransform_Matrix34,Prop_EdidProductID_Int32,Prop_DisplayGCBlackClamp_Float,Prop_DisplayMCImageRight_String,Prop_DisplayMCImageLeft_String,Prop_EdidVendorID_Int32,Prop_DisplayMCScale_Float,Prop_DisplayMCOffset_Float,Prop_DisplayMCType_Int32,Prop_IsOnDesktop_Bool,Prop_DisplayFirmwareVersion_Uint64,Prop_PreviousUniverseId_Uint64,Prop_CurrentUniverseId_Uint64,Prop_UserIpdMeters_Float,Prop_DisplayFrequency_Float,Prop_SecondsFromVsyncToPhotons_Float,Prop_ReportsTimeSinceVSync_Bool,Prop_ControllerRoleHint_Int32,Prop_Axis4Type_Int32,Prop_Axis3Type_Int32,Prop_Axis2Type_Int32,Prop_Axis1Type_Int32,Prop_Axis0Type_Int32,Prop_SupportedButtons_Uint64,Prop_AttachedDeviceId_String,Prop_ModeLabel_String,Prop_TrackingRangeMaximumMeters_Float,Prop_TrackingRangeMinimumMeters_Float,Prop_FieldOfViewBottomDegrees_Float,Prop_FieldOfViewTopDegrees_Float,Prop_FieldOfViewRightDegrees_Float,Prop_FieldOfViewLeftDegrees_Float,Prop_NamedIconPathDeviceAlertLow_String,Prop_NamedIconPathDeviceStandby_String,Prop_NamedIconPathDeviceNotReady_String,Prop_NamedIconPathDeviceReadyAlert_String,Prop_NamedIconPathDeviceReady_String,Prop_NamedIconPathDeviceSearchingAlert_String,Prop_NamedIconPathDeviceSearching_String,Prop_NamedIconPathDeviceOff_String,Prop_IconPathName_String,Prop_VendorSpecific_Reserved_End,Prop_VendorSpecific_Reserved_Start,Prop_ViveSystemButtonFixRequired_Bool,Prop_Firmware_ForceUpdateRequired_Bool,Prop_HasCamera_Bool,Prop_DeviceClass_Int32,Prop_DeviceProvidesBatteryStatus_Bool,Prop_ContainsProximitySensor_Bool,};
 
 static const char * const ETrackedDeviceProperty_string_table[] =
-{"Prop_DisplayAllowNightMode_Bool","Prop_StatusDisplayTransform_Matrix34","Prop_DriverVersion_String","Prop_DeviceCanPowerOff_Bool","Prop_Firmware_ProgrammingTarget_String","Prop_DisplaySuppressed_Bool","Prop_DeviceBatteryPercentage_Float","Prop_ScreenshotVerticalFieldOfViewDegrees_Float","Prop_DeviceIsCharging_Bool","Prop_ScreenshotHorizontalFieldOfViewDegrees_Float","Prop_DeviceIsWireless_Bool","Prop_CameraCompatibilityMode_Int32","Prop_ConnectedWirelessDongle_String","Prop_AudioFirmwareVersion_Uint64","Prop_AllWirelessDongleDescriptions_String","Prop_DisplayHardwareVersion_Uint64","Prop_HardwareRevision_String","Prop_DisplayBootloaderVersion_Uint64","Prop_TrackingFirmwareVersion_String","Prop_DisplayFPGAVersion_Uint64","Prop_ManufacturerName_String","Prop_CameraFirmwareDescription_String","Prop_WillDriftInYaw_Bool","Prop_CameraFirmwareVersion_Uint64","Prop_RenderModelName_String","Prop_UserHeadToEyeDepthMeters_Float","Prop_SerialNumber_String","Prop_LensCenterRightV_Float","Prop_ModelNumber_String","Prop_LensCenterRightU_Float","Prop_TrackingSystemName_String","Prop_BlockServerShutdown_Bool","Prop_DongleVersion_Uint64","Prop_RadioVersion_Uint64","Prop_VRCVersion_Uint64","Prop_FPGAVersion_Uint64","Prop_FirmwareVersion_Uint64","Prop_HardwareRevision_Uint64","Prop_Firmware_ManualUpdateURL_String","Prop_Firmware_ManualUpdate_Bool","Prop_Firmware_UpdateAvailable_Bool","Prop_LensCenterLeftV_Float","Prop_LensCenterLeftU_Float","Prop_DisplayGCImage_String","Prop_DisplayGCPrescale_Float","Prop_DisplayGCScale_Float","Prop_DisplayGCOffset_Float","Prop_DisplayGCType_Int32","Prop_CameraToHeadTransform_Matrix34","Prop_EdidProductID_Int32","Prop_DisplayGCBlackClamp_Float","Prop_DisplayMCImageRight_String","Prop_DisplayMCImageLeft_String","Prop_EdidVendorID_Int32","Prop_DisplayMCScale_Float","Prop_DisplayMCOffset_Float","Prop_DisplayMCType_Int32","Prop_IsOnDesktop_Bool","Prop_DisplayFirmwareVersion_Uint64","Prop_PreviousUniverseId_Uint64","Prop_CurrentUniverseId_Uint64","Prop_UserIpdMeters_Float","Prop_DisplayFrequency_Float","Prop_SecondsFromVsyncToPhotons_Float","Prop_ReportsTimeSinceVSync_Bool","Prop_ControllerRoleHint_Int32","Prop_Axis4Type_Int32","Prop_Axis3Type_Int32","Prop_Axis2Type_Int32","Prop_Axis1Type_Int32","Prop_Axis0Type_Int32","Prop_SupportedButtons_Uint64","Prop_AttachedDeviceId_String","Prop_ModeLabel_String","Prop_TrackingRangeMaximumMeters_Float","Prop_TrackingRangeMinimumMeters_Float","Prop_FieldOfViewBottomDegrees_Float","Prop_FieldOfViewTopDegrees_Float","Prop_FieldOfViewRightDegrees_Float","Prop_FieldOfViewLeftDegrees_Float","Prop_NamedIconPathDeviceAlertLow_String","Prop_NamedIconPathDeviceStandby_String","Prop_NamedIconPathDeviceNotReady_String","Prop_NamedIconPathDeviceReadyAlert_String","Prop_NamedIconPathDeviceReady_String","Prop_NamedIconPathDeviceSearchingAlert_String","Prop_NamedIconPathDeviceSearching_String","Prop_NamedIconPathDeviceOff_String","Prop_IconPathName_String","Prop_VendorSpecific_Reserved_End","Prop_VendorSpecific_Reserved_Start","Prop_ViveSystemButtonFixRequired_Bool","Prop_Firmware_ForceUpdateRequired_Bool","Prop_HasCamera_Bool","Prop_DeviceClass_Int32","Prop_DeviceProvidesBatteryStatus_Bool","Prop_ContainsProximitySensor_Bool","Prop_CanUnifyCoordinateSystemWithHmd_Bool",};
+{"Prop_DisplayAllowNightMode_Bool","Prop_StatusDisplayTransform_Matrix34","Prop_DriverVersion_String","Prop_DeviceCanPowerOff_Bool","Prop_Firmware_ProgrammingTarget_String","Prop_CanUnifyCoordinateSystemWithHmd_Bool","Prop_Invalid","Prop_DisplaySuppressed_Bool","Prop_DeviceBatteryPercentage_Float","Prop_ScreenshotVerticalFieldOfViewDegrees_Float","Prop_DeviceIsCharging_Bool","Prop_ScreenshotHorizontalFieldOfViewDegrees_Float","Prop_DeviceIsWireless_Bool","Prop_CameraCompatibilityMode_Int32","Prop_ConnectedWirelessDongle_String","Prop_AudioFirmwareVersion_Uint64","Prop_AllWirelessDongleDescriptions_String","Prop_DisplayHardwareVersion_Uint64","Prop_HardwareRevision_String","Prop_DisplayBootloaderVersion_Uint64","Prop_TrackingFirmwareVersion_String","Prop_DisplayFPGAVersion_Uint64","Prop_ManufacturerName_String","Prop_CameraFirmwareDescription_String","Prop_WillDriftInYaw_Bool","Prop_CameraFirmwareVersion_Uint64","Prop_RenderModelName_String","Prop_UserHeadToEyeDepthMeters_Float","Prop_SerialNumber_String","Prop_LensCenterRightV_Float","Prop_ModelNumber_String","Prop_LensCenterRightU_Float","Prop_TrackingSystemName_String","Prop_BlockServerShutdown_Bool","Prop_DongleVersion_Uint64","Prop_RadioVersion_Uint64","Prop_VRCVersion_Uint64","Prop_FPGAVersion_Uint64","Prop_FirmwareVersion_Uint64","Prop_HardwareRevision_Uint64","Prop_Firmware_ManualUpdateURL_String","Prop_Firmware_ManualUpdate_Bool","Prop_Firmware_UpdateAvailable_Bool","Prop_LensCenterLeftV_Float","Prop_LensCenterLeftU_Float","Prop_DisplayGCImage_String","Prop_DisplayGCPrescale_Float","Prop_DisplayGCScale_Float","Prop_DisplayGCOffset_Float","Prop_DisplayGCType_Int32","Prop_CameraToHeadTransform_Matrix34","Prop_EdidProductID_Int32","Prop_DisplayGCBlackClamp_Float","Prop_DisplayMCImageRight_String","Prop_DisplayMCImageLeft_String","Prop_EdidVendorID_Int32","Prop_DisplayMCScale_Float","Prop_DisplayMCOffset_Float","Prop_DisplayMCType_Int32","Prop_IsOnDesktop_Bool","Prop_DisplayFirmwareVersion_Uint64","Prop_PreviousUniverseId_Uint64","Prop_CurrentUniverseId_Uint64","Prop_UserIpdMeters_Float","Prop_DisplayFrequency_Float","Prop_SecondsFromVsyncToPhotons_Float","Prop_ReportsTimeSinceVSync_Bool","Prop_ControllerRoleHint_Int32","Prop_Axis4Type_Int32","Prop_Axis3Type_Int32","Prop_Axis2Type_Int32","Prop_Axis1Type_Int32","Prop_Axis0Type_Int32","Prop_SupportedButtons_Uint64","Prop_AttachedDeviceId_String","Prop_ModeLabel_String","Prop_TrackingRangeMaximumMeters_Float","Prop_TrackingRangeMinimumMeters_Float","Prop_FieldOfViewBottomDegrees_Float","Prop_FieldOfViewTopDegrees_Float","Prop_FieldOfViewRightDegrees_Float","Prop_FieldOfViewLeftDegrees_Float","Prop_NamedIconPathDeviceAlertLow_String","Prop_NamedIconPathDeviceStandby_String","Prop_NamedIconPathDeviceNotReady_String","Prop_NamedIconPathDeviceReadyAlert_String","Prop_NamedIconPathDeviceReady_String","Prop_NamedIconPathDeviceSearchingAlert_String","Prop_NamedIconPathDeviceSearching_String","Prop_NamedIconPathDeviceOff_String","Prop_IconPathName_String","Prop_VendorSpecific_Reserved_End","Prop_VendorSpecific_Reserved_Start","Prop_ViveSystemButtonFixRequired_Bool","Prop_Firmware_ForceUpdateRequired_Bool","Prop_HasCamera_Bool","Prop_DeviceClass_Int32","Prop_DeviceProvidesBatteryStatus_Bool","Prop_ContainsProximitySensor_Bool",};
 
 const char* ETrackedDevicePropertyToString(vr::ETrackedDeviceProperty e)
 {
   static const unsigned char LUT[] =
     {
-      95, 94, 93,  1,  2, 92, 91,  0, 90, 89,
-      98, 33, 98, 98, 98, 37, 45, 98, 98, 40,
-      98, 98, 98, 98, 98, 98, 98, 98, 98, 98,
-      98, 98, 98, 98, 98, 98, 98, 98, 98, 45,
-      98, 98, 51, 98, 98, 98, 98, 98, 98, 98,
-      98, 98, 98, 98, 98, 98, 98, 98, 98, 98,
-      98, 98, 98, 98, 98, 98, 98, 98, 98, 98,
-      98, 98, 98, 98, 98, 98, 98, 98, 98, 98,
-      98, 98, 98, 98, 98, 98, 98, 98, 98, 98,
-      98, 98, 98, 98, 98, 98, 98, 98, 98, 98,
-      98, 98, 98, 98, 98, 98, 98, 98, 98, 98,
-      98, 98, 98, 98, 98, 98, 98, 98, 98, 98,
-      98, 98, 98, 98, 98, 98, 98, 98, 98, 98,
-      98, 98, 98, 98, 98, 98, 48, 47, 46, 45,
-      44, 43, 42, 41, 40, 98, 98, 98, 98, 98,
-      98, 98, 98, 98, 98, 98, 98, 98, 98, 98,
-      42, 41, 40, 39, 38, 37, 36, 98, 98, 98,
-      98, 98, 98, 98, 98, 98, 98, 98, 98, 98,
-      98, 98, 98, 98, 39, 38, 37, 36, 35, 34,
-      33, 32, 98, 98, 98, 98, 98, 98, 98, 98,
-      98, 98, 98, 98, 98, 98, 98, 98, 64, 63,
-      62, 61, 60, 59, 58, 57, 56, 55, 54, 53,
-      52, 51, 50, 49, 48, 47, 46, 45, 44, 43,
-      42, 41, 29, 27, 25, 23, 21, 19, 17, 15,
-      13, 11,  9,  7,  5,  0, 39, 38, 37, 36,
-      35, 34, 33, 32, 31, 30
+       3, 96, 95,  1,  2, 94, 93,  0, 92, 91,
+      99, 34, 99, 99, 99, 38, 46, 99, 99, 41,
+      99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+      99, 99, 99, 99, 99, 99, 99, 99, 99, 46,
+      99, 99, 51, 99, 99, 99, 99, 99, 99, 99,
+      99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+      99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+      99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+      99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+      99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+      99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+      99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+      99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+      99, 99, 99, 99, 99, 99, 49, 48, 47, 46,
+      45, 44, 43, 42, 41, 99, 99, 99, 99, 99,
+      99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+      43, 42, 41, 40, 39, 38, 37, 99, 99, 99,
+      99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
+      99, 99, 99, 99, 40, 39, 38, 37, 36, 35,
+      34, 33, 99, 99, 99, 99, 99, 99, 99, 99,
+      99, 99, 99, 99, 99, 99, 99, 99, 66, 65,
+      64, 63, 62, 61, 60, 59, 58, 57, 56, 55,
+      54, 53, 52, 51, 50, 49, 48, 47, 46, 45,
+      44, 43, 31, 29, 27, 25, 23, 21, 19, 17,
+      15, 13, 11,  9,  7,  0, 41, 40, 39, 38,
+      37, 36, 35, 34, 33, 32
     };
    int offset = LUT[(unsigned char)(((unsigned int)e & 0xFF00) >> 8)] + LUT[(unsigned char)e];
    if (offset < (sizeof(ETrackedDeviceProperty_check_table) / sizeof(ETrackedDeviceProperty_check_table[0])) &&
@@ -185,7 +185,7 @@ const char *EVRSubmitFlagsToString(vr::EVRSubmitFlags e)
 {
   static const char * const EVRSubmitFlags_strings[] =
   {
-  "Submit_Default","Submit_LensDistortionAlreadyApplied","Submit_GlRenderBuffer",nullptr,"Submit_VulkanTexture"
+  "Submit_Default","Submit_LensDistortionAlreadyApplied","Submit_GlRenderBuffer",nullptr,"Submit_Reserved"
   };
 
   int offset = (int)e;
@@ -410,10 +410,10 @@ const char *EVRApplicationTransitionStateToString(vr::EVRApplicationTransitionSt
 }
 
 static const vr::ChaperoneCalibrationState ChaperoneCalibrationState_check_table[] =
-{ChaperoneCalibrationState_Error_CollisionBoundsInvalid,ChaperoneCalibrationState_Error_PlayAreaInvalid,ChaperoneCalibrationState_Error_BaseStationConflict,ChaperoneCalibrationState_Error_BaseStationUninitalized,ChaperoneCalibrationState_Error,ChaperoneCalibrationState_Warning_SeatedBoundsInvalid,ChaperoneCalibrationState_Warning_BaseStationRemoved,ChaperoneCalibrationState_Warning_BaseStationMayHaveMoved,ChaperoneCalibrationState_Warning,ChaperoneCalibrationState_OK,};
+{ChaperoneCalibrationState_Error_CollisionBoundsInvalid,ChaperoneCalibrationState_Error_PlayAreaInvalid,ChaperoneCalibrationState_Error_BaseStationConflict,ChaperoneCalibrationState_Error_BaseStationUninitialized,ChaperoneCalibrationState_Error,ChaperoneCalibrationState_Warning_SeatedBoundsInvalid,ChaperoneCalibrationState_Warning_BaseStationRemoved,ChaperoneCalibrationState_Warning_BaseStationMayHaveMoved,ChaperoneCalibrationState_Warning,ChaperoneCalibrationState_OK,};
 
 static const char * const ChaperoneCalibrationState_string_table[] =
-{"ChaperoneCalibrationState_Error_CollisionBoundsInvalid","ChaperoneCalibrationState_Error_PlayAreaInvalid","ChaperoneCalibrationState_Error_BaseStationConflict","ChaperoneCalibrationState_Error_BaseStationUninitalized","ChaperoneCalibrationState_Error","ChaperoneCalibrationState_Warning_SeatedBoundsInvalid","ChaperoneCalibrationState_Warning_BaseStationRemoved","ChaperoneCalibrationState_Warning_BaseStationMayHaveMoved","ChaperoneCalibrationState_Warning","ChaperoneCalibrationState_OK",};
+{"ChaperoneCalibrationState_Error_CollisionBoundsInvalid","ChaperoneCalibrationState_Error_PlayAreaInvalid","ChaperoneCalibrationState_Error_BaseStationConflict","ChaperoneCalibrationState_Error_BaseStationUninitialized","ChaperoneCalibrationState_Error","ChaperoneCalibrationState_Warning_SeatedBoundsInvalid","ChaperoneCalibrationState_Warning_BaseStationRemoved","ChaperoneCalibrationState_Warning_BaseStationMayHaveMoved","ChaperoneCalibrationState_Warning","ChaperoneCalibrationState_OK",};
 
 const char* ChaperoneCalibrationStateToString(vr::ChaperoneCalibrationState e)
 {
@@ -557,13 +557,26 @@ const char *VROverlayFlagsToString(vr::VROverlayFlags e)
 {
   static const char * const VROverlayFlags_strings[] =
   {
-  "VROverlayFlags_None","VROverlayFlags_Curved","VROverlayFlags_RGSS4X","VROverlayFlags_NoDashboardTab","VROverlayFlags_AcceptsGamepadEvents","VROverlayFlags_ShowGamepadFocus","VROverlayFlags_SendVRScrollEvents","VROverlayFlags_SendVRTouchpadEvents","VROverlayFlags_ShowTouchPadScrollWheel","VROverlayFlags_TransferOwnershipToInternalProcess","VROverlayFlags_SideBySide_Parallel","VROverlayFlags_SideBySide_Crossed","VROverlayFlags_Panorama","VROverlayFlags_StereoPanorama","VROverlayFlags_SortWithNonSceneOverlays"
+  "VROverlayFlags_None","VROverlayFlags_Curved","VROverlayFlags_RGSS4X","VROverlayFlags_NoDashboardTab","VROverlayFlags_AcceptsGamepadEvents","VROverlayFlags_ShowGamepadFocus","VROverlayFlags_SendVRScrollEvents","VROverlayFlags_SendVRTouchpadEvents","VROverlayFlags_ShowTouchPadScrollWheel","VROverlayFlags_TransferOwnershipToInternalProcess","VROverlayFlags_SideBySide_Parallel","VROverlayFlags_SideBySide_Crossed","VROverlayFlags_Panorama","VROverlayFlags_StereoPanorama","VROverlayFlags_SortWithNonSceneOverlays","VROverlayFlags_VisibleInDashboard"
   };
 
   int offset = (int)e;
   if (offset < 0 || offset >= sizeof(VROverlayFlags_strings)/sizeof(VROverlayFlags_strings[0]))
      return nullptr;
   return VROverlayFlags_strings[offset];
+}
+
+const char *VRMessageOverlayResponseToString(vr::VRMessageOverlayResponse e)
+{
+  static const char * const VRMessageOverlayResponse_strings[] =
+  {
+  "VRMessageOverlayResponse_ButtonPress_0","VRMessageOverlayResponse_ButtonPress_1","VRMessageOverlayResponse_ButtonPress_2","VRMessageOverlayResponse_ButtonPress_3","VRMessageOverlayResponse_CouldntFindSystemOverlay","VRMessageOverlayResponse_CouldntFindOrCreateClientOverlay","VRMessageOverlayResponse_ApplicationQuit"
+  };
+
+  int offset = (int)e;
+  if (offset < 0 || offset >= sizeof(VRMessageOverlayResponse_strings)/sizeof(VRMessageOverlayResponse_strings[0]))
+     return nullptr;
+  return VRMessageOverlayResponse_strings[offset];
 }
 
 const char *EGamepadTextInputModeToString(vr::EGamepadTextInputMode e)
@@ -736,3 +749,4 @@ const char* EVRScreenshotErrorToString(vr::EVRScreenshotError e)
    return nullptr;
 }
 }
+

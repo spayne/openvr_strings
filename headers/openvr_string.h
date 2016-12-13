@@ -31,7 +31,7 @@ namespace openvr_string
 	uint32_t GetAsString(const VREvent_ScreenshotProgress_t &e, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_ApplicationLaunch_t &e, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_EditingCameraSurface_t &e, VR_OUT_STRING() char *s, uint32_t n);
-
+	uint32_t GetAsString(const VREvent_MessageOverlay_t &e, VR_OUT_STRING() char *s, uint32_t n);
 
 	uint32_t GetAsString(const HmdMatrix34_t h, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const HmdMatrix44_t h, VR_OUT_STRING() char *s, uint32_t n);
@@ -76,7 +76,7 @@ namespace openvr_string
 	const char *EVREventTypeToString(vr::EVREventType e);
 
 	const char *EVREyeToString(vr::EVREye e);
-	const char *EGraphicsAPIConventionToString(vr::EGraphicsAPIConvention e);
+	const char *ETextureTypeToString(vr::ETextureType e);
 	const char *EColorSpaceToString(vr::EColorSpace e);
 	const char *ETrackingResultToString(vr::ETrackingResult e);
 	const char *ETrackedControllerRoleToString(vr::ETrackedControllerRole e);
@@ -100,6 +100,7 @@ namespace openvr_string
 	const char *VROverlayInputMethodToString(vr::VROverlayInputMethod e);
 	const char *VROverlayTransformTypeToString(vr::VROverlayTransformType e);
 	const char *VROverlayFlagsToString(vr::VROverlayFlags e);
+	const char *VRMessageOverlayResponseToString(vr::VRMessageOverlayResponse e);
 	const char *EGamepadTextInputModeToString(vr::EGamepadTextInputMode e);
 	const char *EGamepadTextInputLineModeToString(vr::EGamepadTextInputLineMode e);
 	const char *EOverlayDirectionToString(vr::EOverlayDirection e);
@@ -134,7 +135,7 @@ namespace openvr_string
 	inline const char *GetAsString(vr::EVRNotificationStyle e) { return EVRNotificationStyleToString(e); }
 	inline const char *GetAsString(vr::EVRScreenshotError e) { return EVRScreenshotErrorToString(e); }
 	inline const char *GetAsString(vr::EVREye e) { return EVREyeToString(e); }
-	inline const char *GetAsString(vr::EGraphicsAPIConvention e) { return EGraphicsAPIConventionToString(e); }
+	inline const char *GetAsString(vr::ETextureType e) { return ETextureTypeToString(e); }
 	inline const char *GetAsString(vr::EColorSpace e) { return EColorSpaceToString(e); }
 	inline const char *GetAsString(vr::ETrackingResult e) { return ETrackingResultToString(e); }
 	inline const char *GetAsString(vr::ETrackedControllerRole e) { return ETrackedControllerRoleToString(e); }
@@ -158,6 +159,7 @@ namespace openvr_string
 	inline const char *GetAsString(vr::VROverlayInputMethod e) { return VROverlayInputMethodToString(e); }
 	inline const char *GetAsString(vr::VROverlayTransformType e) { return VROverlayTransformTypeToString(e); }
 	inline const char *GetAsString(vr::VROverlayFlags e) { return VROverlayFlagsToString(e); }
+	inline const char *GetAsString(vr::VRMessageOverlayResponse e) { return VRMessageOverlayResponseToString(e); }
 	inline const char *GetAsString(vr::EGamepadTextInputMode e) { return EGamepadTextInputModeToString(e); }
 	inline const char *GetAsString(vr::EGamepadTextInputLineMode e) { return EGamepadTextInputLineModeToString(e); }
 	inline const char *GetAsString(vr::EOverlayDirection e) { return EOverlayDirectionToString(e); }
