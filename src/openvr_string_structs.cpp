@@ -14,7 +14,7 @@
 #include <cstdio>
 #include <cctype>
 #include <cinttypes>
-#include <stdarg.h>
+#include <stdarg.h> 
 #include <limits>
 
 using namespace vr;
@@ -54,7 +54,8 @@ enum EventDetailsType
     EDT_EventDetails_ScreenshotProgress,
     EDT_EventDetails_ApplicationLaunch,
     EDT_EventDetails_EditingCameraSurface,
-	EDT_EventDetails_MessageOverlay
+	EDT_EventDetails_MessageOverlay,
+	EDT_EventDetails_Property
 };
 
 static const char *subtype_to_str(EventDetailsType edt)
@@ -80,6 +81,8 @@ static const char *subtype_to_str(EventDetailsType edt)
     case EDT_EventDetails_ScreenshotProgress: return "ScreenshotProgress";
     case EDT_EventDetails_ApplicationLaunch: return "ApplicationLaunch";
     case EDT_EventDetails_EditingCameraSurface: return "EditingCameraSurface";
+	case EDT_EventDetails_MessageOverlay: return "MessageOverlay";
+	case EDT_EventDetails_Property: return "Property";
     }
     return nullptr;
 }
@@ -101,6 +104,7 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_TrackedDeviceRoleChanged:					return EDT_EventDetails_None;
     case VREvent_WatchdogWakeUpRequested:					return EDT_EventDetails_None;
     case VREvent_LensDistortionChanged:						return EDT_EventDetails_None;
+	case VREvent_PropertyChanged:                           return EDT_EventDetails_Property;
 
     case VREvent_ButtonPress:								return EDT_EventDetails_Controller;
     case VREvent_ButtonUnpress:								return EDT_EventDetails_Controller;
@@ -155,6 +159,8 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_SubmitScreenshotToDashboard:				return EDT_EventDetails_None;
     case VREvent_ScreenshotProgressToDashboard:				return EDT_EventDetails_ScreenshotProgress; // logical guess
 
+	case VREvent_PrimaryDashboardDeviceChanged:             return EDT_EventDetails_None;
+
     case VREvent_Notification_Shown:						return EDT_EventDetails_None;
     case VREvent_Notification_Hidden:						return EDT_EventDetails_None;
     case VREvent_Notification_BeginInteraction:				return EDT_EventDetails_None;
@@ -200,6 +206,7 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_ApplicationTransitionNewAppStarted:		return EDT_EventDetails_ApplicationLaunch; // logical guess
     case VREvent_ApplicationListUpdated:					return EDT_EventDetails_None;
     case VREvent_ApplicationMimeTypeLoad:					return EDT_EventDetails_None;
+	case VREvent_ApplicationTransitionNewAppLaunchComplete: return EDT_EventDetails_None;
 
     case VREvent_Compositor_MirrorWindowShown:				return EDT_EventDetails_None;
     case VREvent_Compositor_MirrorWindowHidden:             return EDT_EventDetails_None;
@@ -1355,6 +1362,15 @@ struct struct_encoder
 			openvr_string::VRMessageOverlayResponseToString((VRMessageOverlayResponse)d->unVRMessageOverlayResponse), d->unVRMessageOverlayResponse);
 		return w;
 	}
+	static byte_counter_t encode_property(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_Property_t *d)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "container", d->container);
+		w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "prop",
+			openvr_string::ETrackedDevicePropertyToString(d->prop), d->prop);
+		return w;
+	}
+	
 
     // size includes null byte
     static byte_counter_t encode_event(traversal_state ts, char *s, byte_counter_t n, const char *, const VREvent_t *e)
@@ -1370,29 +1386,104 @@ struct struct_encoder
         w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "dataType", subtype_to_str(sub_type), sub_type);
 
         const char *key = "eventDetails";
+
+
+		byte_counter_t detail_bytes_used = 0;
+
         switch (sub_type)
         {
-        case EDT_EventDetails_None: break;
-        case EDT_EventDetails_Reserved:				w += encode_reserved(ts, s + w, n - w, key, &e->data.reserved); break;
-        case EDT_EventDetails_Controller:			w += encode_controller(ts, s + w, n - w, key, &e->data.controller); break;
-        case EDT_EventDetails_Mouse:				w += encode_mouse(ts, s + w, n - w, key, &e->data.mouse); break;
-        case EDT_EventDetails_Scroll:				w += encode_scroll(ts, s + w, n - w, key, &e->data.scroll); break;
-        case EDT_EventDetails_Process:				w += encode_process(ts, s + w, n - w, key, &e->data.process); break;
-        case EDT_EventDetails_Notification: 		w += encode_notification(ts, s + w, n - w, key, &e->data.notification); break;
-        case EDT_EventDetails_Overlay:				w += encode_overlay(ts, s + w, n - w, key, &e->data.overlay); break;
-        case EDT_EventDetails_Status:				w += encode_status(ts, s + w, n - w, key, &e->data.status); break;
-        case EDT_EventDetails_Keyboard:				w += encode_keyboard(ts, s + w, n - w, key, &e->data.keyboard); break;
-        case EDT_EventDetails_Ipd:					w += encode_ipd(ts, s + w, n - w, key, &e->data.ipd); break;
-        case EDT_EventDetails_Chaperone:			w += encode_chaperone(ts, s + w, n - w, key, &e->data.chaperone); break;
-        case EDT_EventDetails_PerformanceTest:		w += encode_performance_test(ts, s + w, n - w, key, &e->data.performanceTest); break;
-        case EDT_EventDetails_TouchPadMove:			w += encode_touch_pad_move(ts, s + w, n - w, key, &e->data.touchPadMove); break;
-        case EDT_EventDetails_SeatedZeroPoseReset:	w += encode_seated_zero_pose_reset(ts, s + w, n - w, key, &e->data.seatedZeroPoseReset); break;
-        case EDT_EventDetails_Screenshot:			w += encode_screenshot(ts, s + w, n - w, key, &e->data.screenshot); break;
-        case EDT_EventDetails_ScreenshotProgress:	w += encode_screenshot_progress(ts, s + w, n - w, key, &e->data.screenshotProgress); break;
-        case EDT_EventDetails_ApplicationLaunch:	w += encode_application_launch(ts, s + w, n - w, key, &e->data.applicationLaunch); break;
-        case EDT_EventDetails_EditingCameraSurface:	w += encode_editing_camera_surface(ts, s + w, n - w, key, &e->data.cameraSurface); break;
-		case EDT_EventDetails_MessageOverlay:       w += encode_message_overlay(ts, s + w, n - w, key, &e->data.messageOverlay); break;
+		case EDT_EventDetails_None: 
+													detail_bytes_used = 0; 
+													break;
+
+        case EDT_EventDetails_Reserved:				w += encode_reserved(ts, s + w, n - w, key, &e->data.reserved); 
+													detail_bytes_used = sizeof(e->data.reserved);
+													break;
+
+        case EDT_EventDetails_Controller:			w += encode_controller(ts, s + w, n - w, key, &e->data.controller); 
+													detail_bytes_used = sizeof(e->data.controller);
+													break;
+
+        case EDT_EventDetails_Mouse:				w += encode_mouse(ts, s + w, n - w, key, &e->data.mouse); 
+													detail_bytes_used = sizeof(e->data.mouse);
+													break;
+
+        case EDT_EventDetails_Scroll:				w += encode_scroll(ts, s + w, n - w, key, &e->data.scroll); 
+													detail_bytes_used = sizeof(e->data.scroll);
+													break;
+
+        case EDT_EventDetails_Process:				w += encode_process(ts, s + w, n - w, key, &e->data.process); 
+													detail_bytes_used = sizeof(e->data.process);
+													break;
+
+        case EDT_EventDetails_Notification: 		w += encode_notification(ts, s + w, n - w, key, &e->data.notification); 
+													detail_bytes_used = sizeof(e->data.notification);
+													break;
+
+        case EDT_EventDetails_Overlay:				w += encode_overlay(ts, s + w, n - w, key, &e->data.overlay); 
+													detail_bytes_used = sizeof(e->data.overlay);
+													break;
+
+        case EDT_EventDetails_Status:				w += encode_status(ts, s + w, n - w, key, &e->data.status); 
+													detail_bytes_used = sizeof(e->data.status);
+													break;
+
+        case EDT_EventDetails_Keyboard:				w += encode_keyboard(ts, s + w, n - w, key, &e->data.keyboard); 
+													detail_bytes_used = sizeof(e->data.keyboard);
+													break;
+
+        case EDT_EventDetails_Ipd:					w += encode_ipd(ts, s + w, n - w, key, &e->data.ipd); 
+													detail_bytes_used = sizeof(e->data.ipd);
+													break;
+
+        case EDT_EventDetails_Chaperone:			w += encode_chaperone(ts, s + w, n - w, key, &e->data.chaperone); 
+													detail_bytes_used = sizeof(e->data.chaperone);
+													break;
+
+        case EDT_EventDetails_PerformanceTest:		w += encode_performance_test(ts, s + w, n - w, key, &e->data.performanceTest); 
+													detail_bytes_used = sizeof(e->data.performanceTest);
+													break;
+				
+        case EDT_EventDetails_TouchPadMove:			w += encode_touch_pad_move(ts, s + w, n - w, key, &e->data.touchPadMove); 
+													detail_bytes_used = sizeof(e->data.touchPadMove);
+													break;
+        case EDT_EventDetails_SeatedZeroPoseReset:	w += encode_seated_zero_pose_reset(ts, s + w, n - w, key, &e->data.seatedZeroPoseReset); 
+													detail_bytes_used = sizeof(e->data.seatedZeroPoseReset);
+													break;
+        case EDT_EventDetails_Screenshot:			w += encode_screenshot(ts, s + w, n - w, key, &e->data.screenshot); 
+													detail_bytes_used = sizeof(e->data.screenshot);
+													break;
+        case EDT_EventDetails_ScreenshotProgress:	w += encode_screenshot_progress(ts, s + w, n - w, key, &e->data.screenshotProgress); 
+													detail_bytes_used = sizeof(e->data.screenshotProgress);
+													break;
+        case EDT_EventDetails_ApplicationLaunch:	w += encode_application_launch(ts, s + w, n - w, key, &e->data.applicationLaunch); 
+													detail_bytes_used = sizeof(e->data.applicationLaunch);
+													break;
+        case EDT_EventDetails_EditingCameraSurface:	w += encode_editing_camera_surface(ts, s + w, n - w, key, &e->data.cameraSurface); 
+													detail_bytes_used = sizeof(e->data.cameraSurface);
+													break;
+		case EDT_EventDetails_MessageOverlay:       w += encode_message_overlay(ts, s + w, n - w, key, &e->data.messageOverlay); 
+													detail_bytes_used = sizeof(e->data.messageOverlay);
+													break;
+		case EDT_EventDetails_Property:	            w += encode_property(ts, s + w, n - w, key, &e->data.property); 
+													detail_bytes_used = sizeof(e->data.property);
+													break;
         }
+
+
+		static VREvent_Data_t zero_data;
+		byte_counter_t unused_byte_count = sizeof(VREvent_Data_t) - detail_bytes_used;
+		if (unused_byte_count > 0)
+		{
+			uint8_t *unused_bytes = ((uint8_t *)&e->data) + detail_bytes_used;
+			if (memcmp(unused_bytes, &zero_data, unused_byte_count) != 0)
+			{
+				// found dirty bytes at the end of the event
+				w += field_encoder_type::encode_u8_hex_array(ts, s + w, n - w, "dirty_bytes", unused_byte_count, unused_bytes);
+			}
+		}
+		
+
         return w;
     }
 };

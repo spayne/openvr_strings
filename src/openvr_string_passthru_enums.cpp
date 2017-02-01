@@ -8,8 +8,9 @@
 //    below to match the declaration structure of the ones that are generated
 //    in openvr_string_gen_enums.cpp.  
 //
-#include <openvr.h>
 
+#include <openvr.h>
+#ifndef OPENVR_STRINGS_DISABLE_PASSTHRU
 using namespace vr;
 namespace openvr_string
 {
@@ -54,3 +55,4 @@ namespace openvr_string
         return VRSystem()->GetEventTypeNameFromEnum(e);
     }
 }
+#endif
