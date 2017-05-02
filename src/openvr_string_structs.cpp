@@ -666,7 +666,6 @@ public:
     static byte_counter_t encode_render_model_vertex_array(traversal_state ts, char *s, byte_counter_t n, const char *key, byte_counter_t vn, const RenderModel_Vertex_t *v_array)
     {
         byte_counter_t w = 0;
-        int key_width = encoded_value_width(vn-1);
 		// do vertices
         for (byte_counter_t i = 0; i < vn; i++)
         {
