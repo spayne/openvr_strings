@@ -45,6 +45,7 @@ namespace openvr_string
 	uint32_t GetAsString(const Texture_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const TrackedDevicePose_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VRTextureBounds_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const VRTextureWithPose_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const HiddenAreaMesh_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VRControllerAxis_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VRControllerState_t &v, VR_OUT_STRING() char *s, uint32_t n);

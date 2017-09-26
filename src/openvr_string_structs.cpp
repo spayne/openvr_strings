@@ -105,6 +105,8 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_WatchdogWakeUpRequested:					return EDT_EventDetails_None;
     case VREvent_LensDistortionChanged:						return EDT_EventDetails_None;
 	case VREvent_PropertyChanged:                           return EDT_EventDetails_Property;
+	case VREvent_WirelessDisconnect:						return EDT_EventDetails_None;
+	case VREvent_WirelessReconnect:							return EDT_EventDetails_None;
 
     case VREvent_ButtonPress:								return EDT_EventDetails_Controller;
     case VREvent_ButtonUnpress:								return EDT_EventDetails_Controller;
@@ -222,6 +224,9 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_PerformanceTest_EnableCapture:				return EDT_EventDetails_None;
     case VREvent_PerformanceTest_DisableCapture:            return EDT_EventDetails_None;
     case VREvent_PerformanceTest_FidelityLevel:				return EDT_EventDetails_PerformanceTest; // logical guess
+
+	case VREvent_MessageOverlay_Closed:						return EDT_EventDetails_Overlay;
+	case VREvent_MessageOverlayCloseRequested:				return EDT_EventDetails_Overlay;
     }
     return EDT_EventDetails_None;
 };
@@ -1200,6 +1205,14 @@ struct struct_encoder
         return w;
     }
 
+	static byte_counter_t encode_texture_with_pose(traversal_state ts, char *s, byte_counter_t n, const char *key, const VRTextureWithPose_t *v)
+	{
+		byte_counter_t w = 0;
+		w += encode_texture(ts, s + w, n - w, "texture", v);
+		w += field_encoder_type::encode_transform34(ts, s + w, n - w, "mDeviceToAbsoluteTracking", v->mDeviceToAbsoluteTracking.m);
+		return w;
+	}
+
     static byte_counter_t encode_distortion(traversal_state ts, char *s, byte_counter_t n, const char *key, const DistortionCoordinates_t *v)
     {
         byte_counter_t w = 0;
@@ -1672,6 +1685,12 @@ uint32_t openvr_string::GetAsString(const VRTextureBounds_t &v, VR_OUT_STRING() 
 {
     return tagged_struct_encoder::encode_texture_bounds(traversal_state(22,1), s, n, nullptr, &v) + 1;
 }
+
+uint32_t openvr_string::GetAsString(const VRTextureWithPose_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_texture_with_pose(traversal_state(22, 1), s, n, nullptr, &v) + 1;
+}
+
 
 uint32_t openvr_string::GetAsString(const HiddenAreaMesh_t &v, VR_OUT_STRING() char *s, uint32_t n)
 {
