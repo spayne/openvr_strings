@@ -32,6 +32,9 @@ namespace openvr_string
 	uint32_t GetAsString(const VREvent_ApplicationLaunch_t &e, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_EditingCameraSurface_t &e, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_MessageOverlay_t &e, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const VREvent_Property_t &e, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const VREvent_DualAnalog_t &e, VR_OUT_STRING() char *s, uint32_t n);
+	
 
 	uint32_t GetAsString(const HmdMatrix34_t h, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const HmdMatrix44_t h, VR_OUT_STRING() char *s, uint32_t n);
@@ -52,6 +55,7 @@ namespace openvr_string
 	uint32_t GetAsString(const Compositor_OverlaySettings &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const CameraVideoStreamFrameHeader_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const Compositor_FrameTiming &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const DriverDirectMode_FrameTiming &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const Compositor_CumulativeStats &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const NotificationBitmap_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VROverlayIntersectionParams_t &v, VR_OUT_STRING() char *s, uint32_t n);
@@ -86,6 +90,7 @@ namespace openvr_string
 	const char *EVRStateToString(vr::EVRState e);
 	const char *EDeviceActivityLevelToString(vr::EDeviceActivityLevel e);
 	const char *EVRMouseButtonToString(vr::EVRMouseButton e);
+	const char *EDualAnalogWhichToString(vr::EDualAnalogWhich e);
 	const char *EHiddenAreaMeshTypeToString(vr::EHiddenAreaMeshType e);
 	const char *EVRControllerEventOutputTypeToString(vr::EVRControllerEventOutputType e);
 	const char *ECollisionBoundsStyleToString(vr::ECollisionBoundsStyle e);
@@ -113,6 +118,7 @@ namespace openvr_string
 	const char* EVRNotificationErrorToString(vr::EVRNotificationError e);
 	const char* ChaperoneCalibrationStateToString(vr::ChaperoneCalibrationState e);
 	const char* EVRCompositorErrorToString(vr::EVRCompositorError e);
+	const char* EVRCompositorTimingModeToString(vr::EVRCompositorTimingMode e);
 	const char* EVRNotificationStyleToString(vr::EVRNotificationStyle e);
 	const char* EVRScreenshotErrorToString(vr::EVRScreenshotError e);
 
@@ -133,6 +139,7 @@ namespace openvr_string
 	inline const char *GetAsString(vr::EVRNotificationError e) { return EVRNotificationErrorToString(e); }
 	inline const char *GetAsString(vr::ChaperoneCalibrationState e) { return ChaperoneCalibrationStateToString(e); }
 	inline const char *GetAsString(vr::EVRCompositorError e) { return EVRCompositorErrorToString(e); }
+	inline const char *GetAsString(vr::EVRCompositorTimingMode e) { return EVRCompositorTimingModeToString(e); }
 	inline const char *GetAsString(vr::EVRNotificationStyle e) { return EVRNotificationStyleToString(e); }
 	inline const char *GetAsString(vr::EVRScreenshotError e) { return EVRScreenshotErrorToString(e); }
 	inline const char *GetAsString(vr::EVREye e) { return EVREyeToString(e); }
@@ -145,6 +152,7 @@ namespace openvr_string
 	inline const char *GetAsString(vr::EVRState e) { return EVRStateToString(e); }
 	inline const char *GetAsString(vr::EDeviceActivityLevel e) { return EDeviceActivityLevelToString(e); }
 	inline const char *GetAsString(vr::EVRMouseButton e) { return EVRMouseButtonToString(e); }
+	inline const char *GetAsString(vr::EDualAnalogWhich e) { return EDualAnalogWhichToString(e); }
 	inline const char *GetAsString(vr::EHiddenAreaMeshType e) { return EHiddenAreaMeshTypeToString(e); }
 	inline const char *GetAsString(vr::EVRControllerEventOutputType e) { return EVRControllerEventOutputTypeToString(e); }
 	inline const char *GetAsString(vr::ECollisionBoundsStyle e) { return ECollisionBoundsStyleToString(e); }

@@ -1099,6 +1099,17 @@ struct struct_encoder
         return w;
     }
 
+	static byte_counter_t encode_driverdirectmode_frame_timing(traversal_state ts, char *s, byte_counter_t n, const char *key, const DriverDirectMode_FrameTiming *v)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nSize", v->m_nSize);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumFramePresents", v->m_nNumFramePresents);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumMisPresented", v->m_nNumMisPresented);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumDroppedFrames", v->m_nNumDroppedFrames);
+		w += field_encoder_type::encode_reprojection_flags(ts, s + w, n - w, "m_nReprojectionFlags", v->m_nReprojectionFlags);
+		return w;
+	}
+
     static byte_counter_t encode_camera_video_stream_frame_header(traversal_state ts, char *s, byte_counter_t n, const char *key, const CameraVideoStreamFrameHeader_t *v)
     {
         byte_counter_t w = 0;
@@ -1382,7 +1393,18 @@ struct struct_encoder
 			openvr_string::ETrackedDevicePropertyToString(d->prop), d->prop);
 		return w;
 	}
-	
+
+	static byte_counter_t encode_dualanalog_event(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_DualAnalog_t *d)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "x", d->x);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "y", d->y);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "transformedX", d->transformedX);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "transformedY", d->transformedY);
+		w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "prop",
+			openvr_string::EDualAnalogWhichToString(d->which), d->which);
+		return w;
+	}
 
     // size includes null byte
     static byte_counter_t encode_event(traversal_state ts, char *s, byte_counter_t n, const char *, const VREvent_t *e)
@@ -1625,6 +1647,17 @@ uint32_t openvr_string::GetAsString(const VREvent_MessageOverlay_t &e, VR_OUT_ST
 	return tagged_struct_encoder::encode_message_overlay(traversal_state(22, 1), s, n, nullptr, &e) + 1;
 }
 
+uint32_t openvr_string::GetAsString(const VREvent_Property_t &e, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_property(traversal_state(22, 1), s, n, nullptr, &e) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const VREvent_DualAnalog_t &e, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_dualanalog_event(traversal_state(22, 1), s, n, nullptr, &e) + 1;
+}
+
+
 // external interface - at least for now - these don't include themselves as having names
 uint32_t openvr_string::GetAsString(const HmdMatrix34_t h, VR_OUT_STRING() char *s, uint32_t n)
 {
@@ -1721,6 +1754,13 @@ uint32_t openvr_string::GetAsString(const Compositor_FrameTiming &v, VR_OUT_STRI
 {
     return tagged_struct_encoder::encode_compositor_frame_timing(traversal_state(31,1), s, n, nullptr, &v) + 1;
 }
+
+uint32_t openvr_string::GetAsString(const DriverDirectMode_FrameTiming &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_driverdirectmode_frame_timing(traversal_state(31, 1), s, n, nullptr, &v) + 1;
+}
+
+
 
 uint32_t openvr_string::GetAsString(const Compositor_CumulativeStats &v, VR_OUT_STRING() char *s, uint32_t n)
 {
