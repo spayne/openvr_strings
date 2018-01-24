@@ -55,7 +55,8 @@ enum EventDetailsType
     EDT_EventDetails_ApplicationLaunch,
     EDT_EventDetails_EditingCameraSurface,
 	EDT_EventDetails_MessageOverlay,
-	EDT_EventDetails_Property
+	EDT_EventDetails_Property,
+	EDT_EventDetails_Haptic
 };
 
 static const char *subtype_to_str(EventDetailsType edt)
@@ -83,6 +84,7 @@ static const char *subtype_to_str(EventDetailsType edt)
     case EDT_EventDetails_EditingCameraSurface: return "EditingCameraSurface";
 	case EDT_EventDetails_MessageOverlay: return "MessageOverlay";
 	case EDT_EventDetails_Property: return "Property";
+	case EDT_EventDetails_Haptic: return "Haptic";
     }
     return nullptr;
 }
@@ -227,6 +229,8 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
 
 	case VREvent_MessageOverlay_Closed:						return EDT_EventDetails_Overlay;
 	case VREvent_MessageOverlayCloseRequested:				return EDT_EventDetails_Overlay;
+
+	case VREvent_Input_HapticVibration:						return EDT_EventDetails_Haptic;
     }
     return EDT_EventDetails_None;
 };
@@ -920,6 +924,15 @@ struct struct_encoder
         return w;
     };
 
+	static byte_counter_t encode_texture_depth_mode(traversal_state ts, char *s, byte_counter_t n, const char *key, const VRTextureDepthInfo_t *v)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "handle", (uint64_t)v->handle);
+		w += field_encoder_type::encode_f44(ts, s + w, n - w, "mProjection", v->mProjection.m);
+		w += field_encoder_type::encode_f2(ts, s + w, n - w, "vRange", v->vRange.v);
+		return w;
+	}
+
     static byte_counter_t encode_render_model(traversal_state ts, char *s, byte_counter_t n, const char *key, const RenderModel_t*v)
     {
         byte_counter_t w = 0;
@@ -1406,6 +1419,17 @@ struct struct_encoder
 		return w;
 	}
 
+	static byte_counter_t encode_hapticvibration_event(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_HapticVibration_t*d)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "containerHandle", d->containerHandle);
+		w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "componentHandle", d->componentHandle);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "fDurationSeconds", d->fDurationSeconds);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "fFrequency", d->fFrequency);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "fAmplitude", d->fAmplitude);
+		return w;
+	}
+
     // size includes null byte
     static byte_counter_t encode_event(traversal_state ts, char *s, byte_counter_t n, const char *, const VREvent_t *e)
     {
@@ -1501,6 +1525,9 @@ struct struct_encoder
 													break;
 		case EDT_EventDetails_Property:	            w += encode_property(ts, s + w, n - w, key, &e->data.property); 
 													detail_bytes_used = sizeof(e->data.property);
+													break;
+		case EDT_EventDetails_Haptic:	            w += encode_hapticvibration_event(ts, s + w, n - w, key, &e->data.hapticVibration);
+													detail_bytes_used = sizeof(e->data.hapticVibration);
 													break;
         }
 
@@ -1657,6 +1684,11 @@ uint32_t openvr_string::GetAsString(const VREvent_DualAnalog_t &e, VR_OUT_STRING
 	return tagged_struct_encoder::encode_dualanalog_event(traversal_state(22, 1), s, n, nullptr, &e) + 1;
 }
 
+uint32_t openvr_string::GetAsString(const VREvent_HapticVibration_t &e, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_hapticvibration_event(traversal_state(22, 1), s, n, nullptr, &e) + 1;
+}
+
 
 // external interface - at least for now - these don't include themselves as having names
 uint32_t openvr_string::GetAsString(const HmdMatrix34_t h, VR_OUT_STRING() char *s, uint32_t n)
@@ -1761,7 +1793,6 @@ uint32_t openvr_string::GetAsString(const DriverDirectMode_FrameTiming &v, VR_OU
 }
 
 
-
 uint32_t openvr_string::GetAsString(const Compositor_CumulativeStats &v, VR_OUT_STRING() char *s, uint32_t n)
 {
     return tagged_struct_encoder::encode_compositor_cumulative_stats(traversal_state(34,1), s, n, nullptr, &v) + 1;
@@ -1821,3 +1852,9 @@ uint32_t openvr_string::GetAsString(const RenderModel_ControllerMode_State_t &v,
 {
     return tagged_struct_encoder::encode_render_controller_mode_state(traversal_state(22,1), s, n, nullptr, &v) + 1;
 }
+
+uint32_t openvr_string::GetAsString(const VRTextureDepthInfo_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_texture_depth_mode(traversal_state(22, 1), s, n, nullptr, &v) + 1;
+}
+

@@ -34,7 +34,7 @@ namespace openvr_string
 	uint32_t GetAsString(const VREvent_MessageOverlay_t &e, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_Property_t &e, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_DualAnalog_t &e, VR_OUT_STRING() char *s, uint32_t n);
-	
+	uint32_t GetAsString(const VREvent_HapticVibration_t &e, VR_OUT_STRING() char *s, uint32_t n);
 
 	uint32_t GetAsString(const HmdMatrix34_t h, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const HmdMatrix44_t h, VR_OUT_STRING() char *s, uint32_t n);
@@ -49,6 +49,7 @@ namespace openvr_string
 	uint32_t GetAsString(const TrackedDevicePose_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VRTextureBounds_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VRTextureWithPose_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const VRTextureDepthInfo_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const HiddenAreaMesh_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VRControllerAxis_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VRControllerState_t &v, VR_OUT_STRING() char *s, uint32_t n);
@@ -91,6 +92,7 @@ namespace openvr_string
 	const char *EDeviceActivityLevelToString(vr::EDeviceActivityLevel e);
 	const char *EVRMouseButtonToString(vr::EVRMouseButton e);
 	const char *EDualAnalogWhichToString(vr::EDualAnalogWhich e);
+	const char *EVRInputErrorToString(vr::EVRInputError e);
 	const char *EHiddenAreaMeshTypeToString(vr::EHiddenAreaMeshType e);
 	const char *EVRControllerEventOutputTypeToString(vr::EVRControllerEventOutputType e);
 	const char *ECollisionBoundsStyleToString(vr::ECollisionBoundsStyle e);
@@ -122,7 +124,8 @@ namespace openvr_string
 	const char* EVRNotificationStyleToString(vr::EVRNotificationStyle e);
 	const char* EVRScreenshotErrorToString(vr::EVRScreenshotError e);
 
-
+	// give enum values converters using the "GetAsString" signature so they can be used by 
+	// openvr_string::to_string template converter
 	inline const char *GetAsString(vr::EVRInitError e) { return EVRInitErrorToString(e); }
 	inline const char *GetAsString(vr::EVRTrackedCameraError e) { return EVRTrackedCameraErrorToString(e); }
 	inline const char *GetAsString(vr::EVRRenderModelError e) { return EVRRenderModelErrorToString(e); }
@@ -153,6 +156,7 @@ namespace openvr_string
 	inline const char *GetAsString(vr::EDeviceActivityLevel e) { return EDeviceActivityLevelToString(e); }
 	inline const char *GetAsString(vr::EVRMouseButton e) { return EVRMouseButtonToString(e); }
 	inline const char *GetAsString(vr::EDualAnalogWhich e) { return EDualAnalogWhichToString(e); }
+	inline const char *GetAsString(vr::EVRInputError e) { return EVRInputErrorToString(e); }
 	inline const char *GetAsString(vr::EHiddenAreaMeshType e) { return EHiddenAreaMeshTypeToString(e); }
 	inline const char *GetAsString(vr::EVRControllerEventOutputType e) { return EVRControllerEventOutputTypeToString(e); }
 	inline const char *GetAsString(vr::ECollisionBoundsStyle e) { return ECollisionBoundsStyleToString(e); }
