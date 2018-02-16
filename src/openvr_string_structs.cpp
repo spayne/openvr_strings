@@ -132,6 +132,7 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_SceneFocusChanged:							return EDT_EventDetails_Process;
     case VREvent_InputFocusChanged:							return EDT_EventDetails_Process;
     case VREvent_SceneApplicationSecondaryRenderingStarted:	return EDT_EventDetails_Process;
+	case VREvent_SceneApplicationUsingWrongGraphicsAdapter:	return EDT_EventDetails_Process;
 
     case VREvent_HideRenderModels:							return EDT_EventDetails_None;
     case VREvent_ShowRenderModels:							return EDT_EventDetails_None;
@@ -150,11 +151,10 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_OverlayGamepadFocusGained:					return EDT_EventDetails_None;
     case VREvent_OverlayGamepadFocusLost:					return EDT_EventDetails_None;
     case VREvent_OverlaySharedTextureChanged:				return EDT_EventDetails_None;
-    case VREvent_DashboardGuideButtonDown:					return EDT_EventDetails_None;
-    case VREvent_DashboardGuideButtonUp:					return EDT_EventDetails_None;
     case VREvent_ScreenshotTriggered:						return EDT_EventDetails_None;
     case VREvent_ImageFailed:								return EDT_EventDetails_None;
     case VREvent_DashboardOverlayCreated:					return EDT_EventDetails_None;
+	case VREvent_SwitchGamepadFocus:						return EDT_EventDetails_None;
 
 
     case VREvent_RequestScreenshot:							return EDT_EventDetails_None;
@@ -164,6 +164,8 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_ScreenshotProgressToDashboard:				return EDT_EventDetails_ScreenshotProgress; // logical guess
 
 	case VREvent_PrimaryDashboardDeviceChanged:             return EDT_EventDetails_None;
+	case VREvent_RoomViewShown:								return EDT_EventDetails_None;
+	case VREvent_RoomViewHidden:							return EDT_EventDetails_None;
 
     case VREvent_Notification_Shown:						return EDT_EventDetails_None;
     case VREvent_Notification_Hidden:						return EDT_EventDetails_None;
