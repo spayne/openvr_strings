@@ -69,6 +69,8 @@ namespace openvr_string
 	uint32_t GetAsString(const RenderModel_TextureMap_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const RenderModel_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const RenderModel_ControllerMode_State_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const VREvent_WebConsole_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	
 
 	const char *EVRInitErrorToString(vr::EVRInitError e);
 	const char *EVRTrackedCameraErrorToString(vr::EVRTrackedCameraError e);
@@ -123,6 +125,8 @@ namespace openvr_string
 	const char* EVRCompositorTimingModeToString(vr::EVRCompositorTimingMode e);
 	const char* EVRNotificationStyleToString(vr::EVRNotificationStyle e);
 	const char* EVRScreenshotErrorToString(vr::EVRScreenshotError e);
+	const char *EVRTrackedCameraFrameLayoutToString(vr::EVRTrackedCameraFrameLayout e);
+	const char *EVSyncToString(vr::EVSync e);
 
 	// give enum values converters using the "GetAsString" signature so they can be used by 
 	// openvr_string::to_string template converter
@@ -179,4 +183,6 @@ namespace openvr_string
 	inline const char *GetAsString(vr::EVROverlayIntersectionMaskPrimitiveType e) { return EVROverlayIntersectionMaskPrimitiveTypeToString(e); }
 	inline const char *GetAsString(vr::EVRComponentProperty e) { return EVRComponentPropertyToString(e); }
 	inline const char *GetAsString(vr::EVRNotificationType e) { return EVRNotificationTypeToString(e); }
+	inline const char *GetAsString(vr::EVRTrackedCameraFrameLayout e) { return EVRTrackedCameraFrameLayoutToString(e); }
+	inline const char *GetAsString(vr::EVSync e) { return EVSyncToString(e); }
 };
