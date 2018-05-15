@@ -56,7 +56,8 @@ enum EventDetailsType
     EDT_EventDetails_EditingCameraSurface,
 	EDT_EventDetails_MessageOverlay,
 	EDT_EventDetails_Property,
-	EDT_EventDetails_Haptic
+	EDT_EventDetails_Haptic,
+	EDT_EventDetails_InputBindingLoad,
 };
 
 static const char *subtype_to_str(EventDetailsType edt)
@@ -85,6 +86,7 @@ static const char *subtype_to_str(EventDetailsType edt)
 	case EDT_EventDetails_MessageOverlay: return "MessageOverlay";
 	case EDT_EventDetails_Property: return "Property";
 	case EDT_EventDetails_Haptic: return "Haptic";
+	case EDT_EventDetails_InputBindingLoad: return "InputBindingLoad";
     }
     return nullptr;
 }
@@ -234,6 +236,9 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
 	case VREvent_MessageOverlayCloseRequested:				return EDT_EventDetails_Overlay;
 
 	case VREvent_Input_HapticVibration:						return EDT_EventDetails_Haptic;
+
+	case VREvent_Input_BindingLoadFailed:					return EDT_EventDetails_Process; // that's what the comment in openvr.h says
+	case VREvent_Input_BindingLoadSuccessful:				return EDT_EventDetails_InputBindingLoad; // logical guess
     }
     return EDT_EventDetails_None;
 };
@@ -610,6 +615,7 @@ public:
         return w;
     }
 
+	// write vn bytes as printable characters or as escape sequences
     static byte_counter_t encode_char_mixed_array(traversal_state ts, char *s, byte_counter_t n, const char *key, byte_counter_t vn, const char *value)
     {
         byte_counter_t w = 0;
@@ -631,6 +637,16 @@ public:
         w += SNPRINTF(s + w, n - w, "%c", field_sep);
         return w;
     }
+
+	// write vn bytes as printable characters or as escape sequences
+	static byte_counter_t encode_null_terminated_string(traversal_state ts, char *s, byte_counter_t n, const char *key,
+		const char *value)
+	{
+		byte_counter_t w = 0;
+		w += encode_key(ts, s + w, n - w, key, "char[]");
+		w += SNPRINTF(s + w, n - w, "%s", value);
+		return w;
+	}
 
     static byte_counter_t encode_axis_array(traversal_state ts, char *s, byte_counter_t n, const char *key, const VRControllerAxis_t *v_array)
     {
@@ -727,6 +743,25 @@ public:
             f[0], f[1], f[2], f[3], field_sep);
         return w;
     }
+
+	static byte_counter_t encode_double3(traversal_state ts, char *s, byte_counter_t n, const char *key, const double d[3])
+	{
+		byte_counter_t w = 0;
+		w += encode_key(ts, s + w, n - w, key, "double3");
+		w += SNPRINTF(s + w, n - w, "% f % f % f%c",
+			d[0], d[1], d[2], field_sep);
+		return w;
+	}
+
+
+	static byte_counter_t encode_quatf(traversal_state ts, char *s, byte_counter_t n, const char *key, const HmdQuaternionf_t &q)
+	{
+		byte_counter_t w = 0;
+		w += encode_key(ts, s + w, n - w, key, "q4");
+		w += SNPRINTF(s + w, n - w, "%f %f %f %f%c",
+			q.w, q.x, q.y, q.z, field_sep);
+		return w;
+	}
 
     static byte_counter_t encode_f34(traversal_state ts, char *s, byte_counter_t n, const char *key, const float f[3][4])
     {
@@ -829,6 +864,40 @@ public:
 			match_list[num_matches++] = "Async";
 		}
 		w += encode_enum_mask_strings_and_u32hex(ts, s + w, n - w,key, match_list, num_matches, v);
+		return w;
+	}
+
+	static byte_counter_t encode_offscale_flags(traversal_state ts, char *s, byte_counter_t n, const char *key, const uint32_t v)
+	{
+		byte_counter_t w = 0;
+		// to reuse the encode_enum_mask_strings_and_u32hex, construct an array of matches found in v
+		int num_matches = 0;
+		const char *match_list[6];
+		if (v & OffScale_AccelX)
+		{
+			match_list[num_matches++] = "OffScale_AccelX";
+		}
+		if (v & OffScale_AccelY)
+		{
+			match_list[num_matches++] = "OffScale_AccelY";
+		}
+		if (v & OffScale_AccelZ)
+		{
+			match_list[num_matches++] = "OffScale_AccelZ";
+		}
+		if (v & OffScale_GyroX)
+		{
+			match_list[num_matches++] = "OffScale_GyroX";
+		}
+		if (v & OffScale_GyroY)
+		{
+			match_list[num_matches++] = "OffScale_GyroY";
+		}
+		if (v & OffScale_GyroZ)
+		{
+			match_list[num_matches++] = "OffScale_GyroZ";
+		}
+		w += encode_enum_mask_strings_and_u32hex(ts, s + w, n - w, key, match_list, num_matches, v);
 		return w;
 	}
 
@@ -1027,93 +1096,93 @@ struct struct_encoder
 
     static byte_counter_t encode_overlay_intersection_results(traversal_state ts, char *s, byte_counter_t n, const char *key, const VROverlayIntersectionResults_t*v)
     {
-        byte_counter_t w = 0;
-        w += field_encoder_type::encode_f3(ts, s + w, n - w, "vPoint", v->vPoint.v);
-        w += field_encoder_type::encode_f3(ts, s + w, n - w, "vNormal", v->vNormal.v);
-        w += field_encoder_type::encode_f2(ts, s + w, n - w, "vUVs", v->vUVs.v);
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "fDistance", v->fDistance);
-        return w;
-    }
+byte_counter_t w = 0;
+w += field_encoder_type::encode_f3(ts, s + w, n - w, "vPoint", v->vPoint.v);
+w += field_encoder_type::encode_f3(ts, s + w, n - w, "vNormal", v->vNormal.v);
+w += field_encoder_type::encode_f2(ts, s + w, n - w, "vUVs", v->vUVs.v);
+w += field_encoder_type::encode_f(ts, s + w, n - w, "fDistance", v->fDistance);
+return w;
+	}
 
-    static byte_counter_t encode_overlay_intersection_params(traversal_state ts, char *s, byte_counter_t n, const char *key, const VROverlayIntersectionParams_t*v)
-    {
-        byte_counter_t w = 0;
-        w += field_encoder_type::encode_f3(ts, s + w, n - w, "vSource", v->vSource.v);
-        w += field_encoder_type::encode_f3(ts, s + w, n - w, "vDirection", v->vDirection.v);
-        w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "eOrigin", 
-                                    openvr_string::ETrackingUniverseOriginToString(v->eOrigin), v->eOrigin);
-        return w;
-    }
+	static byte_counter_t encode_overlay_intersection_params(traversal_state ts, char *s, byte_counter_t n, const char *key, const VROverlayIntersectionParams_t*v)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_f3(ts, s + w, n - w, "vSource", v->vSource.v);
+		w += field_encoder_type::encode_f3(ts, s + w, n - w, "vDirection", v->vDirection.v);
+		w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "eOrigin",
+			openvr_string::ETrackingUniverseOriginToString(v->eOrigin), v->eOrigin);
+		return w;
+	}
 
-    static byte_counter_t encode_notification_bitmap(traversal_state ts, char *s, byte_counter_t n, const char *key, const NotificationBitmap_t*v)
-    {
-        byte_counter_t w = 0;
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nWidth", v->m_nWidth);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nHeight", v->m_nHeight);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nBytesPerPixel", v->m_nBytesPerPixel);
-        w += field_encoder_type::encode_u8_hex_array(ts, s + w, n - w, "m_pImageData", v->m_nHeight * v->m_nWidth * v->m_nBytesPerPixel,
-            (const uint8_t *)v->m_pImageData);
-        return w;
-    }
+	static byte_counter_t encode_notification_bitmap(traversal_state ts, char *s, byte_counter_t n, const char *key, const NotificationBitmap_t*v)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nWidth", v->m_nWidth);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nHeight", v->m_nHeight);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nBytesPerPixel", v->m_nBytesPerPixel);
+		w += field_encoder_type::encode_u8_hex_array(ts, s + w, n - w, "m_pImageData", v->m_nHeight * v->m_nWidth * v->m_nBytesPerPixel,
+			(const uint8_t *)v->m_pImageData);
+		return w;
+	}
 
-    static byte_counter_t encode_compositor_cumulative_stats(traversal_state ts, char *s, byte_counter_t n, const char *key, const Compositor_CumulativeStats*v)
-    {
-        byte_counter_t w = 0;
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nPid", v->m_nPid);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumFramePresents", v->m_nNumFramePresents);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumDroppedFrames", v->m_nNumDroppedFrames);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumReprojectedFrames", v->m_nNumReprojectedFrames);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumFramePresentsOnStartup", v->m_nNumFramePresentsOnStartup);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumDroppedFramesOnStartup", v->m_nNumDroppedFramesOnStartup);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumReprojectedFramesOnStartup", v->m_nNumReprojectedFramesOnStartup);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumLoading", v->m_nNumLoading);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumFramePresentsLoading", v->m_nNumFramePresentsLoading);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumDroppedFramesLoading", v->m_nNumDroppedFramesLoading);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumReprojectedFramesLoading", v->m_nNumReprojectedFramesLoading);
+	static byte_counter_t encode_compositor_cumulative_stats(traversal_state ts, char *s, byte_counter_t n, const char *key, const Compositor_CumulativeStats*v)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nPid", v->m_nPid);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumFramePresents", v->m_nNumFramePresents);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumDroppedFrames", v->m_nNumDroppedFrames);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumReprojectedFrames", v->m_nNumReprojectedFrames);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumFramePresentsOnStartup", v->m_nNumFramePresentsOnStartup);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumDroppedFramesOnStartup", v->m_nNumDroppedFramesOnStartup);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumReprojectedFramesOnStartup", v->m_nNumReprojectedFramesOnStartup);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumLoading", v->m_nNumLoading);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumFramePresentsLoading", v->m_nNumFramePresentsLoading);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumDroppedFramesLoading", v->m_nNumDroppedFramesLoading);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumReprojectedFramesLoading", v->m_nNumReprojectedFramesLoading);
 
 
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumTimedOut", v->m_nNumTimedOut);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumFramePresentsTimedOut", v->m_nNumFramePresentsTimedOut);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumDroppedFramesTimedOut", v->m_nNumDroppedFramesTimedOut);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumReprojectedFramesTimedOut", v->m_nNumReprojectedFramesTimedOut);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumTimedOut", v->m_nNumTimedOut);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumFramePresentsTimedOut", v->m_nNumFramePresentsTimedOut);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumDroppedFramesTimedOut", v->m_nNumDroppedFramesTimedOut);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumReprojectedFramesTimedOut", v->m_nNumReprojectedFramesTimedOut);
 
-        return w;
-    }
+		return w;
+	}
 
-    static byte_counter_t encode_compositor_frame_timing(traversal_state ts, char *s, byte_counter_t n, const char *key, const Compositor_FrameTiming*v)
-    {
-        byte_counter_t w = 0;
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nSize", v->m_nSize);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nFrameIndex", v->m_nFrameIndex);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumFramePresents", v->m_nNumFramePresents);
+	static byte_counter_t encode_compositor_frame_timing(traversal_state ts, char *s, byte_counter_t n, const char *key, const Compositor_FrameTiming*v)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nSize", v->m_nSize);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nFrameIndex", v->m_nFrameIndex);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumFramePresents", v->m_nNumFramePresents);
 		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumMisPresented", v->m_nNumMisPresented);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumDroppedFrames", v->m_nNumDroppedFrames);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "m_nNumDroppedFrames", v->m_nNumDroppedFrames);
 		w += field_encoder_type::encode_reprojection_flags(ts, s + w, n - w, "m_nReprojectionFlags", v->m_nReprojectionFlags);
-        w += field_encoder_type::encode_double(ts, s + w, n - w, "m_flSystemTimeInSeconds", v->m_flSystemTimeInSeconds);
+		w += field_encoder_type::encode_double(ts, s + w, n - w, "m_flSystemTimeInSeconds", v->m_flSystemTimeInSeconds);
 
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flPreSubmitGpuMs", v->m_flPreSubmitGpuMs);
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flPostSubmitGpuMs", v->m_flPostSubmitGpuMs);
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flTotalRenderGpuMs", v->m_flTotalRenderGpuMs);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flPreSubmitGpuMs", v->m_flPreSubmitGpuMs);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flPostSubmitGpuMs", v->m_flPostSubmitGpuMs);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flTotalRenderGpuMs", v->m_flTotalRenderGpuMs);
 
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flCompositorRenderGpuMs", v->m_flCompositorRenderGpuMs);
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flCompositorRenderCpuMs", v->m_flCompositorRenderCpuMs);
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flCompositorRenderIdleCpuMs", v->m_flCompositorIdleCpuMs);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flCompositorRenderGpuMs", v->m_flCompositorRenderGpuMs);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flCompositorRenderCpuMs", v->m_flCompositorRenderCpuMs);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flCompositorRenderIdleCpuMs", v->m_flCompositorIdleCpuMs);
 
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flClientFrameIntervalMs", v->m_flClientFrameIntervalMs);
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flPresentCallCpuMs", v->m_flPresentCallCpuMs);
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flWaitForPresentCpuMs", v->m_flWaitForPresentCpuMs);
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flSubmitFrameMs", v->m_flSubmitFrameMs);
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flWaitGetPosesCalledMs", v->m_flWaitGetPosesCalledMs);
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flNewPosesReadyMs", v->m_flNewPosesReadyMs);
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flNewFrameReadyMs", v->m_flNewFrameReadyMs);
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flCompositorUpdateStartMs", v->m_flCompositorUpdateStartMs);
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flCompositorUpdateEndMs", v->m_flCompositorUpdateEndMs);
-        w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flCompositorRenderStartMs", v->m_flCompositorRenderStartMs);
-        w += field_encoder_type::encode_substructure_start(ts, s + w, n - w, "m_HmdPose", "DevicePose");
-        w += encode_pose(ts + 1, s + w, n - w, nullptr, &v->m_HmdPose);
-        w += field_encoder_type::encode_substructure_end(ts, s + w, n - w);
-        return w;
-    }
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flClientFrameIntervalMs", v->m_flClientFrameIntervalMs);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flPresentCallCpuMs", v->m_flPresentCallCpuMs);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flWaitForPresentCpuMs", v->m_flWaitForPresentCpuMs);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flSubmitFrameMs", v->m_flSubmitFrameMs);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flWaitGetPosesCalledMs", v->m_flWaitGetPosesCalledMs);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flNewPosesReadyMs", v->m_flNewPosesReadyMs);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flNewFrameReadyMs", v->m_flNewFrameReadyMs);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flCompositorUpdateStartMs", v->m_flCompositorUpdateStartMs);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flCompositorUpdateEndMs", v->m_flCompositorUpdateEndMs);
+		w += field_encoder_type::encode_f(ts, s + w, n - w, "m_flCompositorRenderStartMs", v->m_flCompositorRenderStartMs);
+		w += field_encoder_type::encode_substructure_start(ts, s + w, n - w, "m_HmdPose", "DevicePose");
+		w += encode_pose(ts + 1, s + w, n - w, nullptr, &v->m_HmdPose);
+		w += field_encoder_type::encode_substructure_end(ts, s + w, n - w);
+		return w;
+	}
 
 	static byte_counter_t encode_driverdirectmode_frame_timing(traversal_state ts, char *s, byte_counter_t n, const char *key, const DriverDirectMode_FrameTiming *v)
 	{
@@ -1125,6 +1194,19 @@ struct struct_encoder
 		w += field_encoder_type::encode_reprojection_flags(ts, s + w, n - w, "m_nReprojectionFlags", v->m_nReprojectionFlags);
 		return w;
 	}
+
+	
+
+	static byte_counter_t  encode_imu_sample(traversal_state ts, char *s, byte_counter_t n, const char *key, const ImuSample_t *v)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_double(ts, s + w, n - w, "fSampleTime", v->fSampleTime);
+		w += field_encoder_type::encode_double3(ts, s + w, n - w, "vAccel", v->vAccel.v);
+		w += field_encoder_type::encode_double3(ts, s + w, n - w, "vGyro", v->vGyro.v);
+		w += field_encoder_type::encode_offscale_flags(ts, s + w, n - w, "unOffScaleFlags", v->unOffScaleFlags);
+		return w;
+	}
+	
 
     static byte_counter_t encode_camera_video_stream_frame_header(traversal_state ts, char *s, byte_counter_t n, const char *key, const CameraVideoStreamFrameHeader_t *v)
     {
@@ -1160,6 +1242,15 @@ struct struct_encoder
         w += field_encoder_type::encode_f44(ts, s + w, n - w, "transform", v->transform.m);
         return w;
     }
+
+	static byte_counter_t encode_bone_transform(traversal_state ts, char *s, byte_counter_t n, const char *key, const VRBoneTransform_t *v)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_f4(ts, s + w, n - w, "position", v->position.v);
+		w += field_encoder_type::encode_quatf(ts, s + w, n - w, "orientation", v->orientation);
+		return w;
+	}
+	
 
     static byte_counter_t encode_reserved(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_Reserved_t *v)
     {
@@ -1387,59 +1478,133 @@ struct struct_encoder
         w += field_encoder_type::encode_u32hex(ts, s + w, n - w, "unArgsHandle", d->unArgsHandle);
         return w;
     }
-    static byte_counter_t encode_editing_camera_surface(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_EditingCameraSurface_t *d)
-    {
-        byte_counter_t w = 0;
-        w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "overlayHandle", d->overlayHandle);
-        w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "nVisualMode", 
-            openvr_string::EVRTrackedCameraFrameTypeToString((EVRTrackedCameraFrameType)d->nVisualMode), d->nVisualMode);	// todo: this is a guess
-        return w;
-    }
-	static byte_counter_t encode_message_overlay(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_MessageOverlay_t *d)
-	{
-		byte_counter_t w = 0;
-		w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "unVRMessageOverlayResponse",
-			openvr_string::VRMessageOverlayResponseToString((VRMessageOverlayResponse)d->unVRMessageOverlayResponse), d->unVRMessageOverlayResponse);
-		return w;
-	}
-	static byte_counter_t encode_property(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_Property_t *d)
-	{
-		byte_counter_t w = 0;
-		w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "container", d->container);
-		w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "prop",
-			openvr_string::ETrackedDevicePropertyToString(d->prop), d->prop);
-		return w;
-	}
+static byte_counter_t encode_editing_camera_surface(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_EditingCameraSurface_t *d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "overlayHandle", d->overlayHandle);
+	w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "nVisualMode",
+		openvr_string::EVRTrackedCameraFrameTypeToString((EVRTrackedCameraFrameType)d->nVisualMode), d->nVisualMode);	// todo: this is a guess
+	return w;
+}
+static byte_counter_t encode_message_overlay(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_MessageOverlay_t *d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "unVRMessageOverlayResponse",
+		openvr_string::VRMessageOverlayResponseToString((VRMessageOverlayResponse)d->unVRMessageOverlayResponse), d->unVRMessageOverlayResponse);
+	return w;
+}
+static byte_counter_t encode_property(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_Property_t *d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "container", d->container);
+	w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "prop",
+		openvr_string::ETrackedDevicePropertyToString(d->prop), d->prop);
+	return w;
+}
 
-	static byte_counter_t encode_dualanalog_event(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_DualAnalog_t *d)
-	{
-		byte_counter_t w = 0;
-		w += field_encoder_type::encode_f(ts, s + w, n - w, "x", d->x);
-		w += field_encoder_type::encode_f(ts, s + w, n - w, "y", d->y);
-		w += field_encoder_type::encode_f(ts, s + w, n - w, "transformedX", d->transformedX);
-		w += field_encoder_type::encode_f(ts, s + w, n - w, "transformedY", d->transformedY);
-		w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "prop",
-			openvr_string::EDualAnalogWhichToString(d->which), d->which);
-		return w;
-	}
+static byte_counter_t encode_dualanalog_event(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_DualAnalog_t *d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_f(ts, s + w, n - w, "x", d->x);
+	w += field_encoder_type::encode_f(ts, s + w, n - w, "y", d->y);
+	w += field_encoder_type::encode_f(ts, s + w, n - w, "transformedX", d->transformedX);
+	w += field_encoder_type::encode_f(ts, s + w, n - w, "transformedY", d->transformedY);
+	w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "prop",
+		openvr_string::EDualAnalogWhichToString(d->which), d->which);
+	return w;
+}
 
-	static byte_counter_t encode_hapticvibration_event(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_HapticVibration_t*d)
-	{
-		byte_counter_t w = 0;
-		w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "containerHandle", d->containerHandle);
-		w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "componentHandle", d->componentHandle);
-		w += field_encoder_type::encode_f(ts, s + w, n - w, "fDurationSeconds", d->fDurationSeconds);
-		w += field_encoder_type::encode_f(ts, s + w, n - w, "fFrequency", d->fFrequency);
-		w += field_encoder_type::encode_f(ts, s + w, n - w, "fAmplitude", d->fAmplitude);
-		return w;
-	}
+static byte_counter_t encode_hapticvibration_event(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_HapticVibration_t*d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "containerHandle", d->containerHandle);
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "componentHandle", d->componentHandle);
+	w += field_encoder_type::encode_f(ts, s + w, n - w, "fDurationSeconds", d->fDurationSeconds);
+	w += field_encoder_type::encode_f(ts, s + w, n - w, "fFrequency", d->fFrequency);
+	w += field_encoder_type::encode_f(ts, s + w, n - w, "fAmplitude", d->fAmplitude);
+	return w;
+}
 
-	static byte_counter_t encode_webconsole_event(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_WebConsole_t*d)
-	{
-		byte_counter_t w = 0;
-		w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "webConsoleHandle", d->webConsoleHandle);
-		return w;
-	}
+
+
+static byte_counter_t encode_webconsole_event(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_WebConsole_t*d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "webConsoleHandle", d->webConsoleHandle);
+	return w;
+}
+
+static byte_counter_t encode_inputbinding_event(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_InputBindingLoad_t*d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "ulAppContainer", d->ulAppContainer);
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "pathMessage", d->pathMessage);
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "pathUrl", d->pathUrl);
+	return w;
+}
+
+static byte_counter_t encode_input_analog_action_data(traversal_state ts, char *s, byte_counter_t n, const char *key, const InputAnalogActionData_t*d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_b(ts, s + w, n - w, "bActive", d->bActive);
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "activeOrigin", d->activeOrigin);
+	w += field_encoder_type::encode_f(ts, s + w, n - w, "x", d->x);
+	w += field_encoder_type::encode_f(ts, s + w, n - w, "y", d->y);
+	w += field_encoder_type::encode_f(ts, s + w, n - w, "z", d->z);
+	w += field_encoder_type::encode_f(ts, s + w, n - w, "deltaX", d->deltaX);
+	w += field_encoder_type::encode_f(ts, s + w, n - w, "deltaY", d->deltaY);
+	w += field_encoder_type::encode_f(ts, s + w, n - w, "deltaZ", d->deltaZ);
+	w += field_encoder_type::encode_f(ts, s + w, n - w, "fUpdateTime", d->fUpdateTime);
+	return w;
+}
+
+static byte_counter_t encode_input_digital_action_data(traversal_state ts, char *s, byte_counter_t n, const char *key, const InputDigitalActionData_t*d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_b(ts, s + w, n - w, "bActive", d->bActive);
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "activeOrigin", d->activeOrigin);
+	w += field_encoder_type::encode_b(ts, s + w, n - w, "bState", d->bState);
+	w += field_encoder_type::encode_b(ts, s + w, n - w, "bChanged", d->bChanged);
+	w += field_encoder_type::encode_f(ts, s + w, n - w, "fUpdateTime", d->fUpdateTime);
+	return w;
+}
+
+static byte_counter_t encode_input_pose_action_data(traversal_state ts, char *s, byte_counter_t n, const char *key, const InputPoseActionData_t*d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_b(ts, s + w, n - w, "bActive", d->bActive);
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "activeOrigin", d->activeOrigin);
+	w += encode_pose(ts, s + w, n - w, "pose", &d->pose);
+	return w;
+}
+
+static byte_counter_t encode_input_skeleton_action_data(traversal_state ts, char *s, byte_counter_t n, const char *key, const InputSkeletonActionData_t*d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_b(ts, s + w, n - w, "bActive", d->bActive);
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "activeOrigin", d->activeOrigin);
+	return w;
+}
+
+static byte_counter_t encode_input_origin_info(traversal_state ts, char *s, byte_counter_t n, const char *key, const InputOriginInfo_t*d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "devicePath", d->devicePath);
+	w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "trackedDeviceIndex", d->trackedDeviceIndex);
+	w += field_encoder_type::encode_null_terminated_string(ts, s + w, n - w, "rchRenderModelComponentName", d->rchRenderModelComponentName);
+	return w;
+}
+
+static byte_counter_t encode_active_action_set(traversal_state ts, char *s, byte_counter_t n, const char *key, const VRActiveActionSet_t*d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "ulActionSet", d->ulActionSet);
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "ulRestrictedToDevice", d->ulRestrictedToDevice);
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "ulSecondaryActionSet", d->ulSecondaryActionSet);
+	return w;
+}
+
+uint32_t GetAsString(const VRActiveActionSet_t &v, VR_OUT_STRING() char *s, uint32_t n);
 
     // size includes null byte
     static byte_counter_t encode_event(traversal_state ts, char *s, byte_counter_t n, const char *, const VREvent_t *e)
@@ -1539,6 +1704,9 @@ struct struct_encoder
 													break;
 		case EDT_EventDetails_Haptic:	            w += encode_hapticvibration_event(ts, s + w, n - w, key, &e->data.hapticVibration);
 													detail_bytes_used = sizeof(e->data.hapticVibration);
+													break;
+		case EDT_EventDetails_InputBindingLoad:	    w += encode_inputbinding_event(ts, s + w, n - w, key, &e->data.inputBinding);
+													detail_bytes_used = sizeof(e->data.inputBinding);
 													break;
         }
 
@@ -1705,7 +1873,40 @@ uint32_t openvr_string::GetAsString(const VREvent_WebConsole_t &e, VR_OUT_STRING
 	return tagged_struct_encoder::encode_webconsole_event(traversal_state(22, 1), s, n, nullptr, &e) + 1;
 }
 
+uint32_t openvr_string::GetAsString(const VREvent_InputBindingLoad_t &e, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_inputbinding_event(traversal_state(22, 1), s, n, nullptr, &e) + 1;
+}
 
+uint32_t openvr_string::GetAsString(const InputAnalogActionData_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_input_analog_action_data(traversal_state(22, 1), s, n, nullptr, &v) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const InputDigitalActionData_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_input_digital_action_data(traversal_state(22, 1), s, n, nullptr, &v) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const InputPoseActionData_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_input_pose_action_data(traversal_state(22, 1), s, n, nullptr, &v) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const InputSkeletonActionData_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_input_skeleton_action_data(traversal_state(22, 1), s, n, nullptr, &v) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const InputOriginInfo_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_input_origin_info(traversal_state(22, 1), s, n, nullptr, &v) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const VRActiveActionSet_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_active_action_set(traversal_state(22, 1), s, n, nullptr, &v) + 1;
+}
 
 // external interface - at least for now - these don't include themselves as having names
 uint32_t openvr_string::GetAsString(const HmdMatrix34_t h, VR_OUT_STRING() char *s, uint32_t n)
@@ -1731,6 +1932,11 @@ uint32_t openvr_string::GetAsString(const HmdVector3_t v, VR_OUT_STRING() char *
 uint32_t openvr_string::GetAsString(const HmdVector4_t v, VR_OUT_STRING() char *s, uint32_t n)
 {
     return tagged_struct_encoder::field_encoder_type::encode_f4(traversal_state(22,1), s, n, nullptr, v.v) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const HmdQuaternionf_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::field_encoder_type::encode_quatf(traversal_state(22, 1), s, n, nullptr, v) + 1;
 }
 
 uint32_t openvr_string::GetAsString(const HmdColor_t &v, VR_OUT_STRING() char *s, uint32_t n)
@@ -1794,6 +2000,11 @@ uint32_t openvr_string::GetAsString(const Compositor_OverlaySettings &v, VR_OUT_
     return tagged_struct_encoder::encode_compositor_overlay_settings(traversal_state(22,1), s, n, nullptr, &v) + 1;
 }
 
+uint32_t openvr_string::GetAsString(const VRBoneTransform_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_bone_transform(traversal_state(22, 1), s, n, nullptr, &v) + 1;
+}
+
 uint32_t openvr_string::GetAsString(const CameraVideoStreamFrameHeader_t &v, VR_OUT_STRING() char *s, uint32_t n)
 {
     return tagged_struct_encoder::encode_camera_video_stream_frame_header(traversal_state(22,1), s, n, nullptr, &v) + 1;
@@ -1807,6 +2018,11 @@ uint32_t openvr_string::GetAsString(const Compositor_FrameTiming &v, VR_OUT_STRI
 uint32_t openvr_string::GetAsString(const DriverDirectMode_FrameTiming &v, VR_OUT_STRING() char *s, uint32_t n)
 {
 	return tagged_struct_encoder::encode_driverdirectmode_frame_timing(traversal_state(31, 1), s, n, nullptr, &v) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const ImuSample_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_imu_sample(traversal_state(31, 1), s, n, nullptr, &v) + 1;
 }
 
 

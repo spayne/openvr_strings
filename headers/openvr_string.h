@@ -41,6 +41,7 @@ namespace openvr_string
 	uint32_t GetAsString(const HmdVector2_t v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const HmdVector3_t v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const HmdVector4_t v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const HmdQuaternionf_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const HmdColor_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const HmdQuad_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const HmdRect2_t &v, VR_OUT_STRING() char *s, uint32_t n);
@@ -54,9 +55,11 @@ namespace openvr_string
 	uint32_t GetAsString(const VRControllerAxis_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VRControllerState_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const Compositor_OverlaySettings &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const VRBoneTransform_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const CameraVideoStreamFrameHeader_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const Compositor_FrameTiming &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const DriverDirectMode_FrameTiming &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const ImuSample_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const Compositor_CumulativeStats &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const NotificationBitmap_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VROverlayIntersectionParams_t &v, VR_OUT_STRING() char *s, uint32_t n);
@@ -70,7 +73,13 @@ namespace openvr_string
 	uint32_t GetAsString(const RenderModel_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const RenderModel_ControllerMode_State_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_WebConsole_t &v, VR_OUT_STRING() char *s, uint32_t n);
-	
+	uint32_t GetAsString(const VREvent_InputBindingLoad_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const InputAnalogActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const InputDigitalActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const InputPoseActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const InputSkeletonActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const InputOriginInfo_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const VRActiveActionSet_t &v, VR_OUT_STRING() char *s, uint32_t n);
 
 	const char *EVRInitErrorToString(vr::EVRInitError e);
 	const char *EVRTrackedCameraErrorToString(vr::EVRTrackedCameraError e);
@@ -127,6 +136,11 @@ namespace openvr_string
 	const char* EVRScreenshotErrorToString(vr::EVRScreenshotError e);
 	const char *EVRTrackedCameraFrameLayoutToString(vr::EVRTrackedCameraFrameLayout e);
 	const char *EVSyncToString(vr::EVSync e);
+	const char *Imu_OffScaleFlagsToString(vr::Imu_OffScaleFlags e);
+	const char *EVRSkeletalTransformSpaceToString(vr::EVRSkeletalTransformSpace e);
+	const char *EVRInputFilterCancelTypeToString(vr::EVRInputFilterCancelType);
+	const char *EIOBufferErrorToString(vr::EIOBufferError);
+	const char *EIOBufferModeToString(vr::EIOBufferMode);
 
 	// give enum values converters using the "GetAsString" signature so they can be used by 
 	// openvr_string::to_string template converter
@@ -185,4 +199,9 @@ namespace openvr_string
 	inline const char *GetAsString(vr::EVRNotificationType e) { return EVRNotificationTypeToString(e); }
 	inline const char *GetAsString(vr::EVRTrackedCameraFrameLayout e) { return EVRTrackedCameraFrameLayoutToString(e); }
 	inline const char *GetAsString(vr::EVSync e) { return EVSyncToString(e); }
+	inline const char *GetAsString(vr::Imu_OffScaleFlags e) { return Imu_OffScaleFlagsToString(e); }
+	inline const char *GetAsString(vr::EVRSkeletalTransformSpace e) { return EVRSkeletalTransformSpaceToString(e); }
+	inline const char *GetAsString(vr::EVRInputFilterCancelType e) { return EVRInputFilterCancelTypeToString(e); }
+	inline const char *GetAsString(vr::EIOBufferError e) { return EIOBufferErrorToString(e); }
+	inline const char *GetAsString(vr::EIOBufferMode e) { return EIOBufferModeToString(e); }
 };
