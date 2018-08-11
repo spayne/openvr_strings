@@ -58,6 +58,7 @@ enum EventDetailsType
 	EDT_EventDetails_Property,
 	EDT_EventDetails_Haptic,
 	EDT_EventDetails_InputBindingLoad,
+	EDT_EventDetails_SpatialAnchor,
 };
 
 static const char *subtype_to_str(EventDetailsType edt)
@@ -87,6 +88,7 @@ static const char *subtype_to_str(EventDetailsType edt)
 	case EDT_EventDetails_Property: return "Property";
 	case EDT_EventDetails_Haptic: return "Haptic";
 	case EDT_EventDetails_InputBindingLoad: return "InputBindingLoad";
+	case EDT_EventDetails_SpatialAnchor: return "SpatialAnchor";
     }
     return nullptr;
 }
@@ -195,6 +197,7 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_ModelSkinSettingsHaveChanged:				return EDT_EventDetails_None;
     case VREvent_EnvironmentSettingsHaveChanged:			return EDT_EventDetails_None;
     case VREvent_PowerSettingsHaveChanged:					return EDT_EventDetails_None;
+	case VREvent_TrackersSectionSettingChanged:  			return EDT_EventDetails_None;
 
         // StatusUpdate was added at the same time as the status struct, 
         // ref: https://cm-gitlab.stanford.edu/ethan/OpenVRAudio/commit/088a60b823f89670f811391136c1a70c9de64d97
@@ -239,6 +242,12 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
 
 	case VREvent_Input_BindingLoadFailed:					return EDT_EventDetails_Process; // that's what the comment in openvr.h says
 	case VREvent_Input_BindingLoadSuccessful:				return EDT_EventDetails_InputBindingLoad; // logical guess
+
+	case VREvent_SpatialAnchors_PoseUpdated:				return EDT_EventDetails_SpatialAnchor;
+	case VREvent_SpatialAnchors_DescriptorUpdated :			return EDT_EventDetails_SpatialAnchor;
+	case VREvent_SpatialAnchors_RequestPoseUpdate :			return EDT_EventDetails_SpatialAnchor;
+	case VREvent_SpatialAnchors_RequestDescriptorUpdate :   return EDT_EventDetails_SpatialAnchor;
+
     }
     return EDT_EventDetails_None;
 };
@@ -763,6 +772,24 @@ public:
 		return w;
 	}
 
+	static byte_counter_t encode_f33(traversal_state ts, char *s, byte_counter_t n, const char *key, const float f[3][3])
+	{
+		byte_counter_t w = 0;
+		w += encode_key(ts, s + w, n - w, key, "f33");
+		int indent = w;
+		int width = encoded_value_width(&f[0][0], 4 * 4) + 7; // 6 for default precision + 1 for the decimal point
+		assert(width > 0);
+		w += SNPRINTF(s + w, n - w,   "[%*.6f %*.6f %*.6f\n"
+			                        " %*s%*.6f %*.6f %*.6f\n"
+			                        " %*s%*.6f %*.6f %*.6f]%c",
+			width, f[0][0], width, f[0][1], width, f[0][2], indent, "",
+			width, f[1][0], width, f[1][1], width, f[1][2], indent, "",
+			width, f[2][0], width, f[2][1], width, f[2][2], 
+			field_sep);
+		return w;
+	}
+
+	// treat a 34 as a 44
     static byte_counter_t encode_f34(traversal_state ts, char *s, byte_counter_t n, const char *key, const float f[3][4])
     {
 		float t[4][4];
@@ -1540,6 +1567,25 @@ static byte_counter_t encode_inputbinding_event(traversal_state ts, char *s, byt
 	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "ulAppContainer", d->ulAppContainer);
 	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "pathMessage", d->pathMessage);
 	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "pathUrl", d->pathUrl);
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "pathControllerType", d->pathControllerType);
+	return w;
+}
+
+static byte_counter_t encode_inputactionmanifestload_event(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_InputActionManifestLoad_t *d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "pathAppKey", d->pathAppKey);
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "pathMessage", d->pathMessage);
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "pathMessageParam", d->pathMessageParam);
+	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "pathManifestPath", d->pathManifestPath);
+	return w; 
+}
+
+
+static byte_counter_t encode_spatialanchor_event(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_SpatialAnchor_t *d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_u32hex(ts, s + w, n - w, "unHandle", d->unHandle);
 	return w;
 }
 
@@ -1578,11 +1624,12 @@ static byte_counter_t encode_input_pose_action_data(traversal_state ts, char *s,
 	return w;
 }
 
-static byte_counter_t encode_input_skeleton_action_data(traversal_state ts, char *s, byte_counter_t n, const char *key, const InputSkeletonActionData_t*d)
+static byte_counter_t encode_input_skeletal_action_data(traversal_state ts, char *s, byte_counter_t n, const char *key, const InputSkeletalActionData_t*d)
 {
 	byte_counter_t w = 0;
 	w += field_encoder_type::encode_b(ts, s + w, n - w, "bActive", d->bActive);
 	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "activeOrigin", d->activeOrigin);
+	w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "boneCount", d->boneCount);
 	return w;
 }
 
@@ -1601,6 +1648,13 @@ static byte_counter_t encode_active_action_set(traversal_state ts, char *s, byte
 	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "ulActionSet", d->ulActionSet);
 	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "ulRestrictedToDevice", d->ulRestrictedToDevice);
 	w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "ulSecondaryActionSet", d->ulSecondaryActionSet);
+	return w;
+}
+
+static byte_counter_t encode_spatial_anchor_pose(traversal_state ts, char *s, byte_counter_t n, const char *key, const SpatialAnchorPose_t *d)
+{
+	byte_counter_t w = 0;
+	w += field_encoder_type::encode_f34(ts, s + w, n - w, "mAnchorToAbsoluteTracking", d->mAnchorToAbsoluteTracking.m);
 	return w;
 }
 
@@ -1707,6 +1761,9 @@ uint32_t GetAsString(const VRActiveActionSet_t &v, VR_OUT_STRING() char *s, uint
 													break;
 		case EDT_EventDetails_InputBindingLoad:	    w += encode_inputbinding_event(ts, s + w, n - w, key, &e->data.inputBinding);
 													detail_bytes_used = sizeof(e->data.inputBinding);
+													break;
+		case EDT_EventDetails_SpatialAnchor:	    w += encode_spatialanchor_event(ts, s + w, n - w, key, &e->data.spatialAnchor);
+													detail_bytes_used = sizeof(e->data.spatialAnchor);
 													break;
         }
 
@@ -1878,6 +1935,17 @@ uint32_t openvr_string::GetAsString(const VREvent_InputBindingLoad_t &e, VR_OUT_
 	return tagged_struct_encoder::encode_inputbinding_event(traversal_state(22, 1), s, n, nullptr, &e) + 1;
 }
 
+uint32_t openvr_string::GetAsString(const VREvent_InputActionManifestLoad_t &e, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_inputactionmanifestload_event(traversal_state(22, 1), s, n, nullptr, &e) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const VREvent_SpatialAnchor_t &e, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_spatialanchor_event(traversal_state(22, 1), s, n, nullptr, &e) + 1;
+}
+
+
 uint32_t openvr_string::GetAsString(const InputAnalogActionData_t &v, VR_OUT_STRING() char *s, uint32_t n)
 {
 	return tagged_struct_encoder::encode_input_analog_action_data(traversal_state(22, 1), s, n, nullptr, &v) + 1;
@@ -1893,9 +1961,9 @@ uint32_t openvr_string::GetAsString(const InputPoseActionData_t &v, VR_OUT_STRIN
 	return tagged_struct_encoder::encode_input_pose_action_data(traversal_state(22, 1), s, n, nullptr, &v) + 1;
 }
 
-uint32_t openvr_string::GetAsString(const InputSkeletonActionData_t &v, VR_OUT_STRING() char *s, uint32_t n)
+uint32_t openvr_string::GetAsString(const InputSkeletalActionData_t &v, VR_OUT_STRING() char *s, uint32_t n)
 {
-	return tagged_struct_encoder::encode_input_skeleton_action_data(traversal_state(22, 1), s, n, nullptr, &v) + 1;
+	return tagged_struct_encoder::encode_input_skeletal_action_data(traversal_state(22, 1), s, n, nullptr, &v) + 1;
 }
 
 uint32_t openvr_string::GetAsString(const InputOriginInfo_t &v, VR_OUT_STRING() char *s, uint32_t n)
@@ -1906,6 +1974,16 @@ uint32_t openvr_string::GetAsString(const InputOriginInfo_t &v, VR_OUT_STRING() 
 uint32_t openvr_string::GetAsString(const VRActiveActionSet_t &v, VR_OUT_STRING() char *s, uint32_t n)
 {
 	return tagged_struct_encoder::encode_active_action_set(traversal_state(22, 1), s, n, nullptr, &v) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const SpatialAnchorPose_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_spatial_anchor_pose(traversal_state(22, 1), s, n, nullptr, &v) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const HmdMatrix33_t h, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::field_encoder_type::encode_f33(traversal_state(22, 1), s, n, nullptr, h.m) + 1;
 }
 
 // external interface - at least for now - these don't include themselves as having names

@@ -36,6 +36,7 @@ namespace openvr_string
 	uint32_t GetAsString(const VREvent_DualAnalog_t &e, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_HapticVibration_t &e, VR_OUT_STRING() char *s, uint32_t n);
 
+	uint32_t GetAsString(const HmdMatrix33_t h, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const HmdMatrix34_t h, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const HmdMatrix44_t h, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const HmdVector2_t v, VR_OUT_STRING() char *s, uint32_t n);
@@ -74,12 +75,15 @@ namespace openvr_string
 	uint32_t GetAsString(const RenderModel_ControllerMode_State_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_WebConsole_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_InputBindingLoad_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const VREvent_InputActionManifestLoad_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const VREvent_SpatialAnchor_t &e, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const InputAnalogActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const InputDigitalActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const InputPoseActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
-	uint32_t GetAsString(const InputSkeletonActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const InputSkeletalActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const InputOriginInfo_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VRActiveActionSet_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const SpatialAnchorPose_t &v, VR_OUT_STRING() char *s, uint32_t n);
 
 	const char *EVRInitErrorToString(vr::EVRInitError e);
 	const char *EVRTrackedCameraErrorToString(vr::EVRTrackedCameraError e);
@@ -104,6 +108,7 @@ namespace openvr_string
 	const char *EVRMouseButtonToString(vr::EVRMouseButton e);
 	const char *EDualAnalogWhichToString(vr::EDualAnalogWhich e);
 	const char *EVRInputErrorToString(vr::EVRInputError e);
+	const char *EVRSpatialAnchorErrorToString(vr::EVRSpatialAnchorError e);
 	const char *EHiddenAreaMeshTypeToString(vr::EHiddenAreaMeshType e);
 	const char *EVRControllerEventOutputTypeToString(vr::EVRControllerEventOutputType e);
 	const char *ECollisionBoundsStyleToString(vr::ECollisionBoundsStyle e);
@@ -129,15 +134,17 @@ namespace openvr_string
 	const char* ETrackedDeviceClassToString(vr::ETrackedDeviceClass e);
 	const char* ETrackedDevicePropertyToString(vr::ETrackedDeviceProperty e);
 	const char* EVRNotificationErrorToString(vr::EVRNotificationError e);
+	const char* EVRSkeletalMotionRangeToString(vr::EVRSkeletalMotionRange e);
 	const char* ChaperoneCalibrationStateToString(vr::ChaperoneCalibrationState e);
 	const char* EVRCompositorErrorToString(vr::EVRCompositorError e);
 	const char* EVRCompositorTimingModeToString(vr::EVRCompositorTimingMode e);
 	const char* EVRNotificationStyleToString(vr::EVRNotificationStyle e);
 	const char* EVRScreenshotErrorToString(vr::EVRScreenshotError e);
+	const char* EVRSkeletalTransformSpaceToString(vr::EVRSkeletalTransformSpace e);
 	const char *EVRTrackedCameraFrameLayoutToString(vr::EVRTrackedCameraFrameLayout e);
 	const char *EVSyncToString(vr::EVSync e);
+	const char *EVRMuraCorrectionModeToString(vr::EVRMuraCorrectionMode e);
 	const char *Imu_OffScaleFlagsToString(vr::Imu_OffScaleFlags e);
-	const char *EVRSkeletalTransformSpaceToString(vr::EVRSkeletalTransformSpace e);
 	const char *EVRInputFilterCancelTypeToString(vr::EVRInputFilterCancelType);
 	const char *EIOBufferErrorToString(vr::EIOBufferError);
 	const char *EIOBufferModeToString(vr::EIOBufferMode);
@@ -158,6 +165,7 @@ namespace openvr_string
 	inline const char *GetAsString(vr::ETrackedDeviceClass e) { return ETrackedDeviceClassToString(e); }
 	inline const char *GetAsString(vr::ETrackedDeviceProperty e) { return ETrackedDevicePropertyToString(e); }
 	inline const char *GetAsString(vr::EVRNotificationError e) { return EVRNotificationErrorToString(e); }
+	inline const char *GetAsString(vr::EVRSkeletalMotionRange e) { return EVRSkeletalMotionRangeToString(e); }
 	inline const char *GetAsString(vr::ChaperoneCalibrationState e) { return ChaperoneCalibrationStateToString(e); }
 	inline const char *GetAsString(vr::EVRCompositorError e) { return EVRCompositorErrorToString(e); }
 	inline const char *GetAsString(vr::EVRCompositorTimingMode e) { return EVRCompositorTimingModeToString(e); }
@@ -175,6 +183,7 @@ namespace openvr_string
 	inline const char *GetAsString(vr::EVRMouseButton e) { return EVRMouseButtonToString(e); }
 	inline const char *GetAsString(vr::EDualAnalogWhich e) { return EDualAnalogWhichToString(e); }
 	inline const char *GetAsString(vr::EVRInputError e) { return EVRInputErrorToString(e); }
+	inline const char *GetAsString(vr::EVRSpatialAnchorError e) { return EVRSpatialAnchorErrorToString(e); }
 	inline const char *GetAsString(vr::EHiddenAreaMeshType e) { return EHiddenAreaMeshTypeToString(e); }
 	inline const char *GetAsString(vr::EVRControllerEventOutputType e) { return EVRControllerEventOutputTypeToString(e); }
 	inline const char *GetAsString(vr::ECollisionBoundsStyle e) { return ECollisionBoundsStyleToString(e); }
@@ -199,6 +208,8 @@ namespace openvr_string
 	inline const char *GetAsString(vr::EVRNotificationType e) { return EVRNotificationTypeToString(e); }
 	inline const char *GetAsString(vr::EVRTrackedCameraFrameLayout e) { return EVRTrackedCameraFrameLayoutToString(e); }
 	inline const char *GetAsString(vr::EVSync e) { return EVSyncToString(e); }
+	inline const char *GetAsString(vr::EVRMuraCorrectionMode e) { return EVRMuraCorrectionModeToString(e); }
+	
 	inline const char *GetAsString(vr::Imu_OffScaleFlags e) { return Imu_OffScaleFlagsToString(e); }
 	inline const char *GetAsString(vr::EVRSkeletalTransformSpace e) { return EVRSkeletalTransformSpaceToString(e); }
 	inline const char *GetAsString(vr::EVRInputFilterCancelType e) { return EVRInputFilterCancelTypeToString(e); }
