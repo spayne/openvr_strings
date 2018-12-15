@@ -77,6 +77,8 @@ namespace openvr_string
 	uint32_t GetAsString(const VREvent_InputBindingLoad_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_InputActionManifestLoad_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_SpatialAnchor_t &e, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const VREvent_ProgressUpdate_t &e, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const VREvent_ShowUI_t &e, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const InputAnalogActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const InputDigitalActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const InputPoseActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
@@ -107,6 +109,7 @@ namespace openvr_string
 	const char *EDeviceActivityLevelToString(vr::EDeviceActivityLevel e);
 	const char *EVRMouseButtonToString(vr::EVRMouseButton e);
 	const char *EDualAnalogWhichToString(vr::EDualAnalogWhich e);
+	const char *EShowUITypeToString(vr::EShowUIType e);
 	const char *EVRInputErrorToString(vr::EVRInputError e);
 	const char *EVRSpatialAnchorErrorToString(vr::EVRSpatialAnchorError e);
 	const char *EHiddenAreaMeshTypeToString(vr::EHiddenAreaMeshType e);
@@ -117,6 +120,7 @@ namespace openvr_string
 	const char *EVRScreenshotTypeToString(vr::EVRScreenshotType e);
 	const char *EVRScreenshotPropertyFilenamesToString(vr::EVRScreenshotPropertyFilenames e);
 	const char *EVRTrackedCameraFrameTypeToString(vr::EVRTrackedCameraFrameType e);
+	const char *EVRDistortionFunctionTypeToString(vr::EVRDistortionFunctionType e);
 	const char *EVRApplicationPropertyToString(vr::EVRApplicationProperty e);
 	const char *EVRApplicationTransitionStateToString(vr::EVRApplicationTransitionState e);
 	const char *EChaperoneConfigFileToString(vr::EChaperoneConfigFile e);
@@ -135,6 +139,7 @@ namespace openvr_string
 	const char* ETrackedDevicePropertyToString(vr::ETrackedDeviceProperty e);
 	const char* EVRNotificationErrorToString(vr::EVRNotificationError e);
 	const char* EVRSkeletalMotionRangeToString(vr::EVRSkeletalMotionRange e);
+	const char* EVRSkeletalTrackingLevelToString(vr::EVRSkeletalTrackingLevel e);
 	const char* ChaperoneCalibrationStateToString(vr::ChaperoneCalibrationState e);
 	const char* EVRCompositorErrorToString(vr::EVRCompositorError e);
 	const char* EVRCompositorTimingModeToString(vr::EVRCompositorTimingMode e);
@@ -166,6 +171,7 @@ namespace openvr_string
 	inline const char *GetAsString(vr::ETrackedDeviceProperty e) { return ETrackedDevicePropertyToString(e); }
 	inline const char *GetAsString(vr::EVRNotificationError e) { return EVRNotificationErrorToString(e); }
 	inline const char *GetAsString(vr::EVRSkeletalMotionRange e) { return EVRSkeletalMotionRangeToString(e); }
+	inline const char *GetAsString(vr::EVRSkeletalTrackingLevel e) { return EVRSkeletalTrackingLevelToString(e); }
 	inline const char *GetAsString(vr::ChaperoneCalibrationState e) { return ChaperoneCalibrationStateToString(e); }
 	inline const char *GetAsString(vr::EVRCompositorError e) { return EVRCompositorErrorToString(e); }
 	inline const char *GetAsString(vr::EVRCompositorTimingMode e) { return EVRCompositorTimingModeToString(e); }
@@ -182,6 +188,7 @@ namespace openvr_string
 	inline const char *GetAsString(vr::EDeviceActivityLevel e) { return EDeviceActivityLevelToString(e); }
 	inline const char *GetAsString(vr::EVRMouseButton e) { return EVRMouseButtonToString(e); }
 	inline const char *GetAsString(vr::EDualAnalogWhich e) { return EDualAnalogWhichToString(e); }
+	inline const char *GetAsString(vr::EShowUIType e) { return EShowUITypeToString(e); }
 	inline const char *GetAsString(vr::EVRInputError e) { return EVRInputErrorToString(e); }
 	inline const char *GetAsString(vr::EVRSpatialAnchorError e) { return EVRSpatialAnchorErrorToString(e); }
 	inline const char *GetAsString(vr::EHiddenAreaMeshType e) { return EHiddenAreaMeshTypeToString(e); }
@@ -192,6 +199,7 @@ namespace openvr_string
 	inline const char *GetAsString(vr::EVRScreenshotType e) { return EVRScreenshotTypeToString(e); }
 	inline const char *GetAsString(vr::EVRScreenshotPropertyFilenames e) { return EVRScreenshotPropertyFilenamesToString(e); }
 	inline const char *GetAsString(vr::EVRTrackedCameraFrameType e) { return EVRTrackedCameraFrameTypeToString(e); }
+	inline const char *GetAsString(vr::EVRDistortionFunctionType e) { return EVRDistortionFunctionTypeToString(e); }
 	inline const char *GetAsString(vr::EVRApplicationProperty e) { return EVRApplicationPropertyToString(e); }
 	inline const char *GetAsString(vr::EVRApplicationTransitionState e) { return EVRApplicationTransitionStateToString(e); }
 	inline const char *GetAsString(vr::EChaperoneConfigFile e) { return EChaperoneConfigFileToString(e); }

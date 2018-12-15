@@ -50,7 +50,7 @@ using namespace openvr_string;
 //
 
 static bool g_slow_motion = false;				// delay in render loop.   this way it's possible to read the console as it flys by
-static bool g_print_all_events = false;			// print all events processed in ProcessVREvent
+static bool g_print_all_events = true;			// print all events processed in ProcessVREvent
 static bool g_print_property_lookup = false;
 
 static bool g_print_polled_controller_state = false; // print controller state in the HandleInput phase
