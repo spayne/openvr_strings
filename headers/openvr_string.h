@@ -79,6 +79,8 @@ namespace openvr_string
 	uint32_t GetAsString(const VREvent_SpatialAnchor_t &e, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_ProgressUpdate_t &e, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VREvent_ShowUI_t &e, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const VREvent_ShowDevTools_t &e, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const VREvent_HDCPError_t &e, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const InputAnalogActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const InputDigitalActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const InputPoseActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
@@ -110,6 +112,7 @@ namespace openvr_string
 	const char *EVRMouseButtonToString(vr::EVRMouseButton e);
 	const char *EDualAnalogWhichToString(vr::EDualAnalogWhich e);
 	const char *EShowUITypeToString(vr::EShowUIType e);
+	const char *EHDCPErrorToString(vr::EHDCPError e);
 	const char *EVRInputErrorToString(vr::EVRInputError e);
 	const char *EVRSpatialAnchorErrorToString(vr::EVRSpatialAnchorError e);
 	const char *EHiddenAreaMeshTypeToString(vr::EHiddenAreaMeshType e);
@@ -189,6 +192,7 @@ namespace openvr_string
 	inline const char *GetAsString(vr::EVRMouseButton e) { return EVRMouseButtonToString(e); }
 	inline const char *GetAsString(vr::EDualAnalogWhich e) { return EDualAnalogWhichToString(e); }
 	inline const char *GetAsString(vr::EShowUIType e) { return EShowUITypeToString(e); }
+	inline const char *GetAsString(vr::EHDCPError e) { return EHDCPErrorToString(e); }
 	inline const char *GetAsString(vr::EVRInputError e) { return EVRInputErrorToString(e); }
 	inline const char *GetAsString(vr::EVRSpatialAnchorError e) { return EVRSpatialAnchorErrorToString(e); }
 	inline const char *GetAsString(vr::EHiddenAreaMeshType e) { return EHiddenAreaMeshTypeToString(e); }

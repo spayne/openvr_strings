@@ -63,6 +63,9 @@ enum EventDetailsType
     EDT_EventDetails_SpatialAnchor,
     EDT_EventDetails_ProgressUpdate,
     EDT_EventDetails_ShowUI,
+	EDT_EventDetails_ShowDevTools,
+	EDT_EventDetails_HDCPError,
+
 };
 
 static const char *subtype_to_str(EventDetailsType edt)
@@ -97,6 +100,8 @@ static const char *subtype_to_str(EventDetailsType edt)
     case EDT_EventDetails_SpatialAnchor: return "SpatialAnchor";
     case EDT_EventDetails_ProgressUpdate: return "ProgressUpdate";
     case EDT_EventDetails_ShowUI: return "ShowUI";
+	case EDT_EventDetails_ShowDevTools: return "ShowDevTools";
+	case EDT_EventDetails_HDCPError: return "HDCPError";
     }
     return nullptr;
 }
@@ -141,10 +146,11 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_MouseButtonUp:                             return EDT_EventDetails_Mouse;
     case VREvent_FocusEnter:                                return EDT_EventDetails_Overlay;
     case VREvent_FocusLeave:                                return EDT_EventDetails_Overlay;
-    case VREvent_Scroll:                                    return EDT_EventDetails_Scroll;   // can be either scroll or mouse bleh
+    case VREvent_ScrollDiscrete:                            return EDT_EventDetails_Scroll;   // can be either scroll or mouse bleh
     case VREvent_TouchPadMove:                              return EDT_EventDetails_TouchPadMove; // logical guess - though it *contradicts* the comment in openvr.h which says that this is a mouse event
     case VREvent_OverlayFocusChanged:                       return EDT_EventDetails_Overlay;
     case VREvent_ReloadOverlays:                            return EDT_EventDetails_None; // guess
+	case VREvent_ScrollSmooth:                              return EDT_EventDetails_Scroll;
 
     case VREvent_InputFocusCaptured:                        return EDT_EventDetails_Process;
     case VREvent_InputFocusReleased:                        return EDT_EventDetails_Process;
@@ -167,7 +173,7 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_OverlayHidden:                             return EDT_EventDetails_None;
     case VREvent_DashboardActivated:                        return EDT_EventDetails_None;
     case VREvent_DashboardDeactivated:                      return EDT_EventDetails_None;
-    case VREvent_DashboardThumbSelected:                    return EDT_EventDetails_Overlay;
+    //case VREvent_DashboardThumbSelected:                    return EDT_EventDetails_Overlay;
     case VREvent_DashboardRequested:                        return EDT_EventDetails_Overlay;
     case VREvent_ResetDashboard:                            return EDT_EventDetails_None;
     case VREvent_RenderToast:                               return EDT_EventDetails_Notification;
@@ -193,6 +199,7 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_RoomViewShown:                             return EDT_EventDetails_None;
     case VREvent_RoomViewHidden:                            return EDT_EventDetails_None;
     case VREvent_ShowUI:                                    return EDT_EventDetails_ShowUI;
+	case VREvent_ShowDevTools:                              return EDT_EventDetails_ShowDevTools;
 
     case VREvent_Notification_Shown:                        return EDT_EventDetails_None;
     case VREvent_Notification_Hidden:                       return EDT_EventDetails_None;
@@ -204,6 +211,7 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_QuitAborted_UserPrompt:                    return EDT_EventDetails_Process;
     case VREvent_QuitAcknowledged:                          return EDT_EventDetails_Process;
     case VREvent_DriverRequestedQuit:                       return EDT_EventDetails_Process;
+	case VREvent_RestartRequested:                          return EDT_EventDetails_Process;
 
     case VREvent_ChaperoneDataHasChanged:                   return EDT_EventDetails_None;
     case VREvent_ChaperoneUniverseHasChanged:               return EDT_EventDetails_Chaperone; // logical guess
@@ -246,6 +254,11 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_Compositor_MirrorWindowHidden:             return EDT_EventDetails_None;
     case VREvent_Compositor_ChaperoneBoundsShown:           return EDT_EventDetails_None;
     case VREvent_Compositor_ChaperoneBoundsHidden:          return EDT_EventDetails_None;
+	case VREvent_Compositor_DisplayDisconnected:            return EDT_EventDetails_None;
+	case VREvent_Compositor_DisplayReconnected:             return EDT_EventDetails_None;
+	case VREvent_Compositor_HDCPError:                      return EDT_EventDetails_HDCPError;
+	case VREvent_Compositor_ApplicationNotResponding:       return EDT_EventDetails_None;
+	case VREvent_Compositor_ApplicationResumed:             return EDT_EventDetails_None;
 
     case VREvent_TrackedCamera_StartVideoStream:            return EDT_EventDetails_None;
     case VREvent_TrackedCamera_StopVideoStream:             return EDT_EventDetails_None;
@@ -271,7 +284,9 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_SpatialAnchors_PoseUpdated:                return EDT_EventDetails_SpatialAnchor;
     case VREvent_SpatialAnchors_DescriptorUpdated:          return EDT_EventDetails_SpatialAnchor;
     case VREvent_SpatialAnchors_RequestPoseUpdate:          return EDT_EventDetails_SpatialAnchor;
-    case VREvent_SpatialAnchors_RequestDescriptorUpdate:   return EDT_EventDetails_SpatialAnchor;
+    case VREvent_SpatialAnchors_RequestDescriptorUpdate:    return EDT_EventDetails_SpatialAnchor;
+
+	case VREvent_SystemReport_Started:                      return EDT_EventDetails_None;
 
     }
     return EDT_EventDetails_None;
@@ -1454,7 +1469,7 @@ struct struct_encoder
         byte_counter_t w = 0;
         w += field_encoder_type::encode_f(ts, s + w, n - w, "xdelta", d->xdelta);
         w += field_encoder_type::encode_f(ts, s + w, n - w, "ydelta", d->ydelta);
-        w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "repeatCount", d->repeatCount);
+        w += field_encoder_type::encode_f(ts, s + w, n - w, "viewportScale", d->viewportscale);
         return w;
     }
     static byte_counter_t encode_process(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_Process_t *d)
@@ -1654,6 +1669,21 @@ struct struct_encoder
         return w;
     }
 
+	static byte_counter_t encode_showdevtools_event(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_ShowDevTools_t *d)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "nBrowserIdentifier", d->nBrowserIdentifier);
+		return w;
+	}
+
+	static byte_counter_t encode_hdcperror_event(traversal_state ts, char *s, byte_counter_t n, const char *key, const VREvent_HDCPError_t *d)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_enum_s_and_u32dec(ts, s + w, n - w, "eCode",
+			openvr_string::EHDCPErrorToString(d->eCode), d->eCode);
+		return w;
+	}
+
     static byte_counter_t encode_input_analog_action_data(traversal_state ts, char *s, byte_counter_t n, const char *key, const InputAnalogActionData_t*d)
     {
         byte_counter_t w = 0;
@@ -1839,6 +1869,12 @@ struct struct_encoder
         case EDT_EventDetails_ShowUI:               w += encode_showui_event(ts, s + w, n - w, key, &e->data.showUi);
             detail_bytes_used = sizeof(e->data.showUi);
             break;
+		case EDT_EventDetails_ShowDevTools:         w += encode_showdevtools_event(ts, s + w, n - w, key, &e->data.showDevTools);
+			detail_bytes_used = sizeof(e->data.showDevTools);
+			break;
+		case EDT_EventDetails_HDCPError:         w += encode_hdcperror_event(ts, s + w, n - w, key, &e->data.hdcpError);
+			detail_bytes_used = sizeof(e->data.hdcpError);
+			break;
         }
 
 #if 0
@@ -2032,6 +2068,16 @@ uint32_t openvr_string::GetAsString(const VREvent_ProgressUpdate_t &e, VR_OUT_ST
 uint32_t openvr_string::GetAsString(const VREvent_ShowUI_t &e, VR_OUT_STRING() char *s, uint32_t n)
 {
     return tagged_struct_encoder::encode_showui_event(traversal_state(22, 1), s, n, nullptr, &e) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const VREvent_ShowDevTools_t &e, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_showdevtools_event(traversal_state(22, 1), s, n, nullptr, &e) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const VREvent_HDCPError_t &e, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_hdcperror_event(traversal_state(22, 1), s, n, nullptr, &e) + 1;
 }
 
 uint32_t openvr_string::GetAsString(const InputAnalogActionData_t &v, VR_OUT_STRING() char *s, uint32_t n)
