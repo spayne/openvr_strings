@@ -218,6 +218,9 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_ChaperoneTempDataHasChanged:               return EDT_EventDetails_None;
     case VREvent_ChaperoneSettingsHaveChanged:              return EDT_EventDetails_None;
     case VREvent_SeatedZeroPoseReset:                       return EDT_EventDetails_SeatedZeroPoseReset; //logical guess
+	case VREvent_ChaperoneFlushCache:						return EDT_EventDetails_None;
+	case VREvent_ChaperoneRoomSetupStarting:				return EDT_EventDetails_None;
+	case VREvent_ChaperoneRoomSetupFinished:				return EDT_EventDetails_None;
 
     case VREvent_AudioSettingsHaveChanged:                  return EDT_EventDetails_None;
 
@@ -227,7 +230,19 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_ModelSkinSettingsHaveChanged:              return EDT_EventDetails_None;
     case VREvent_EnvironmentSettingsHaveChanged:            return EDT_EventDetails_None;
     case VREvent_PowerSettingsHaveChanged:                  return EDT_EventDetails_None;
-    case VREvent_TrackersSectionSettingChanged:             return EDT_EventDetails_None;
+	case VREvent_EnableHomeAppSettingsHaveChanged:          return EDT_EventDetails_None;
+	case VREvent_SteamVRSectionSettingChanged:              return EDT_EventDetails_None;
+	case VREvent_LighthouseSectionSettingChanged:           return EDT_EventDetails_None;
+	case VREvent_NullSectionSettingChanged:                 return EDT_EventDetails_None;
+	case VREvent_UserInterfaceSectionSettingChanged:        return EDT_EventDetails_None;
+	case VREvent_NotificationsSectionSettingChanged:        return EDT_EventDetails_None;
+	case VREvent_KeyboardSectionSettingChanged:             return EDT_EventDetails_None;
+	case VREvent_PerfSectionSettingChanged:                 return EDT_EventDetails_None;
+	case VREvent_DashboardSectionSettingChanged:            return EDT_EventDetails_None;
+	case VREvent_WebInterfaceSectionSettingChanged:         return EDT_EventDetails_None;
+	case VREvent_TrackersSectionSettingChanged:             return EDT_EventDetails_None;
+	case VREvent_LastKnownSectionSettingChanged:            return EDT_EventDetails_None;
+	case VREvent_DismissedWarningsSectionSettingChanged:    return EDT_EventDetails_None;
 
         // StatusUpdate was added at the same time as the status struct, 
         // ref: https://cm-gitlab.stanford.edu/ethan/OpenVRAudio/commit/088a60b823f89670f811391136c1a70c9de64d97
@@ -249,9 +264,11 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_ApplicationListUpdated:                    return EDT_EventDetails_None;
     case VREvent_ApplicationMimeTypeLoad:                   return EDT_EventDetails_None;
     case VREvent_ApplicationTransitionNewAppLaunchComplete: return EDT_EventDetails_None;
+	case VREvent_ProcessConnected:                          return EDT_EventDetails_None;
+	case VREvent_ProcessDisconnected:                       return EDT_EventDetails_None;
 
-    case VREvent_Compositor_MirrorWindowShown:              return EDT_EventDetails_None;
-    case VREvent_Compositor_MirrorWindowHidden:             return EDT_EventDetails_None;
+    //case VREvent_Compositor_MirrorWindowShown:              return EDT_EventDetails_None;
+    //case VREvent_Compositor_MirrorWindowHidden:             return EDT_EventDetails_None;
     case VREvent_Compositor_ChaperoneBoundsShown:           return EDT_EventDetails_None;
     case VREvent_Compositor_ChaperoneBoundsHidden:          return EDT_EventDetails_None;
 	case VREvent_Compositor_DisplayDisconnected:            return EDT_EventDetails_None;
@@ -259,6 +276,7 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
 	case VREvent_Compositor_HDCPError:                      return EDT_EventDetails_HDCPError;
 	case VREvent_Compositor_ApplicationNotResponding:       return EDT_EventDetails_None;
 	case VREvent_Compositor_ApplicationResumed:             return EDT_EventDetails_None;
+	case VREvent_Compositor_OutOfVideoMemory:               return EDT_EventDetails_None;
 
     case VREvent_TrackedCamera_StartVideoStream:            return EDT_EventDetails_None;
     case VREvent_TrackedCamera_StopVideoStream:             return EDT_EventDetails_None;
@@ -280,6 +298,7 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_Input_ActionManifestLoadFailed:            return EDT_EventDetails_InputActionManifestLoad;
     case VREvent_Input_ProgressUpdate:                      return EDT_EventDetails_ProgressUpdate;
     case VREvent_Input_TrackerActivated:                    return EDT_EventDetails_None;
+	case VREvent_Input_BindingsUpdated:                     return EDT_EventDetails_None;
 
     case VREvent_SpatialAnchors_PoseUpdated:                return EDT_EventDetails_SpatialAnchor;
     case VREvent_SpatialAnchors_DescriptorUpdated:          return EDT_EventDetails_SpatialAnchor;
@@ -288,6 +307,8 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
 
 	case VREvent_SystemReport_Started:                      return EDT_EventDetails_None;
 
+	case VREvent_Monitor_ShowHeadsetView:                   return EDT_EventDetails_Process;
+	case VREvent_Monitor_HideHeadsetView:                   return EDT_EventDetails_Process;
     }
     return EDT_EventDetails_None;
 };
@@ -706,7 +727,7 @@ public:
     {
         byte_counter_t w = 0;
         w += encode_key(ts, s + w, n - w, key, "char[]");
-        w += SNPRINTF(s + w, n - w, "%s", value);
+        w += SNPRINTF(s + w, n - w, "%s%c", value, field_sep);
         return w;
     }
 
@@ -1299,8 +1320,8 @@ struct struct_encoder
         w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "nHeight", v->nHeight);
         w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "nBytesPerPixel", v->nBytesPerPixel);
         w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "nFrameSequence", v->nFrameSequence);
-        w += field_encoder_type::encode_substructure_start(ts, s + w, n - w, "standingTrackedDevicePose", "device pose");
-        w += encode_pose(ts + 1, s + w, n - w, nullptr, &v->standingTrackedDevicePose);
+        w += field_encoder_type::encode_substructure_start(ts, s + w, n - w, "trackedDevicePose", "device pose");
+        w += encode_pose(ts + 1, s + w, n - w, nullptr, &v->trackedDevicePose);
         w += field_encoder_type::encode_substructure_end(ts, s + w, n - w);
         w += field_encoder_type::encode_u64dec(ts, s + w, n - w, "ulFrameExposureTime", v->ulFrameExposureTime);
         return w;
@@ -1736,12 +1757,23 @@ struct struct_encoder
         return w;
     }
 
+	static byte_counter_t encode_input_binding_info(traversal_state ts, char *s, byte_counter_t n, const char *key, const InputBindingInfo_t*d)
+	{
+		byte_counter_t w = 0;
+		w += field_encoder_type::encode_null_terminated_string(ts, s + w, n - w, "rchDevicePathName", d->rchDevicePathName);
+		w += field_encoder_type::encode_null_terminated_string(ts, s + w, n - w, "rchInputPathName", d->rchInputPathName);
+		w += field_encoder_type::encode_null_terminated_string(ts, s + w, n - w, "rchModeName", d->rchModeName);
+		w += field_encoder_type::encode_null_terminated_string(ts, s + w, n - w, "rchSlotName", d->rchSlotName);
+		return w;
+	}
+
     static byte_counter_t encode_active_action_set(traversal_state ts, char *s, byte_counter_t n, const char *key, const VRActiveActionSet_t*d)
     {
         byte_counter_t w = 0;
         w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "ulActionSet", d->ulActionSet);
         w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "ulRestrictedToDevice", d->ulRestrictedToDevice);
         w += field_encoder_type::encode_u64hex(ts, s + w, n - w, "ulSecondaryActionSet", d->ulSecondaryActionSet);
+		w += field_encoder_type::encode_u32dec(ts, s + w, n - w, "nPriority", d->nPriority);
         return w;
     }
 
@@ -2103,6 +2135,11 @@ uint32_t openvr_string::GetAsString(const InputSkeletalActionData_t &v, VR_OUT_S
 uint32_t openvr_string::GetAsString(const InputOriginInfo_t &v, VR_OUT_STRING() char *s, uint32_t n)
 {
     return tagged_struct_encoder::encode_input_origin_info(traversal_state(22, 1), s, n, nullptr, &v) + 1;
+}
+
+uint32_t openvr_string::GetAsString(const InputBindingInfo_t &v, VR_OUT_STRING() char *s, uint32_t n)
+{
+	return tagged_struct_encoder::encode_input_binding_info(traversal_state(22, 1), s, n, nullptr, &v) + 1;
 }
 
 uint32_t openvr_string::GetAsString(const VRActiveActionSet_t &v, VR_OUT_STRING() char *s, uint32_t n)

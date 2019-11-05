@@ -86,6 +86,7 @@ namespace openvr_string
 	uint32_t GetAsString(const InputPoseActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const InputSkeletalActionData_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const InputOriginInfo_t &v, VR_OUT_STRING() char *s, uint32_t n);
+	uint32_t GetAsString(const InputBindingInfo_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const VRActiveActionSet_t &v, VR_OUT_STRING() char *s, uint32_t n);
 	uint32_t GetAsString(const SpatialAnchorPose_t &v, VR_OUT_STRING() char *s, uint32_t n);
 
@@ -98,6 +99,7 @@ namespace openvr_string
 	const char *EVRControllerAxisTypeToString(vr::EVRControllerAxisType e);
 	const char *EVRButtonIdToString(vr::EVRButtonId e);
 	const char *ETrackedPropertyErrorToString(vr::ETrackedPropertyError e);
+	const char *EHmdTrackingStyleToString(vr::EHmdTrackingStyle e);
 	const char *EVREventTypeToString(vr::EVREventType e);
 
 	const char *EVREyeToString(vr::EVREye e);
@@ -149,13 +151,19 @@ namespace openvr_string
 	const char* EVRNotificationStyleToString(vr::EVRNotificationStyle e);
 	const char* EVRScreenshotErrorToString(vr::EVRScreenshotError e);
 	const char* EVRSkeletalTransformSpaceToString(vr::EVRSkeletalTransformSpace e);
+	const char* EVRSkeletalReferencePoseToString(vr::EVRSkeletalReferencePose e);
+	const char* EVRFingerToString(vr::EVRFinger e);
+	const char* EVRFingerSplayToString(vr::EVRFingerSplay e);
+	const char* EVRSummaryTypeToString(vr::EVRSummaryType e);
 	const char *EVRTrackedCameraFrameLayoutToString(vr::EVRTrackedCameraFrameLayout e);
 	const char *EVSyncToString(vr::EVSync e);
 	const char *EVRMuraCorrectionModeToString(vr::EVRMuraCorrectionMode e);
 	const char *Imu_OffScaleFlagsToString(vr::Imu_OffScaleFlags e);
 	const char *EVRInputFilterCancelTypeToString(vr::EVRInputFilterCancelType);
+	const char *EVRInputStringBitsToString(vr::EVRInputStringBits);
 	const char *EIOBufferErrorToString(vr::EIOBufferError);
 	const char *EIOBufferModeToString(vr::EIOBufferMode);
+	const char *EVRDebugErrorToString(vr::EVRDebugError);
 
 	// give enum values converters using the "GetAsString" signature so they can be used by 
 	// openvr_string::to_string template converter
@@ -168,6 +176,7 @@ namespace openvr_string
 	inline const char *GetAsString(vr::EVRControllerAxisType e) { return EVRControllerAxisTypeToString(e); }
 	inline const char *GetAsString(vr::EVRButtonId e) { return EVRButtonIdToString(e); }
 	inline const char *GetAsString(vr::ETrackedPropertyError e) { return ETrackedPropertyErrorToString(e); }
+	inline const char *GetAsString(vr::EHmdTrackingStyle e) { return EHmdTrackingStyleToString(e); }
 	inline const char *GetAsString(vr::EVREventType e) { return EVREventTypeToString(e); }
 
 	inline const char *GetAsString(vr::ETrackedDeviceClass e) { return ETrackedDeviceClassToString(e); }
@@ -224,7 +233,13 @@ namespace openvr_string
 	
 	inline const char *GetAsString(vr::Imu_OffScaleFlags e) { return Imu_OffScaleFlagsToString(e); }
 	inline const char *GetAsString(vr::EVRSkeletalTransformSpace e) { return EVRSkeletalTransformSpaceToString(e); }
+	inline const char * GetAsString(vr::EVRSkeletalReferencePose e) { return EVRSkeletalReferencePoseToString(e); }
+	inline const char * GetAsString(vr::EVRFinger e) { return EVRFingerToString(e); }
+	inline const char * GetAsString(vr::EVRFingerSplay e) { return EVRFingerSplayToString(e); }
+	inline const char * GetAsString(vr::EVRSummaryType e) { return EVRSummaryTypeToString(e); }
 	inline const char *GetAsString(vr::EVRInputFilterCancelType e) { return EVRInputFilterCancelTypeToString(e); }
+	inline const char *GetAsString(vr::EVRInputStringBits e) { return EVRInputStringBitsToString(e); }
 	inline const char *GetAsString(vr::EIOBufferError e) { return EIOBufferErrorToString(e); }
 	inline const char *GetAsString(vr::EIOBufferMode e) { return EIOBufferModeToString(e); }
+	inline const char *GetAsString(vr::EVRDebugError e) { return EVRDebugErrorToString(e); }
 };

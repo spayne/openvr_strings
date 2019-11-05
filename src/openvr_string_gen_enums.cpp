@@ -8,9 +8,9 @@
 //
 #include <openvr.h>
 using namespace vr;
-
 namespace openvr_string
 {
+
 const char *EVREyeToString(vr::EVREye e)
 {
  switch(e)
@@ -36,61 +36,27 @@ const char *ETextureTypeToString(vr::ETextureType e)
 
 const char *EColorSpaceToString(vr::EColorSpace e)
 {
-  static const char * const EColorSpace_strings[] =
-  {
-  "ColorSpace_Auto","ColorSpace_Gamma","ColorSpace_Linear"
-  };
-
-  int offset = (int)e;
-  if (offset < 0 || offset >= sizeof(EColorSpace_strings)/sizeof(EColorSpace_strings[0]))
-     return nullptr;
-  return EColorSpace_strings[offset];
+ switch(e)
+ {
+   case (ColorSpace_Auto) : return "ColorSpace_Auto";
+   case (ColorSpace_Gamma) : return "ColorSpace_Gamma";
+   case (ColorSpace_Linear) : return "ColorSpace_Linear";
+   default: return nullptr;
+ }
 }
 
-static const vr::ETrackingResult ETrackingResult_check_table[] =
-{TrackingResult_Running_OutOfRange,TrackingResult_Running_OK,TrackingResult_Calibrating_OutOfRange,TrackingResult_Calibrating_InProgress,TrackingResult_Fallback_RotationOnly,TrackingResult_Uninitialized,};
-
-static const char * const ETrackingResult_string_table[] =
-{"TrackingResult_Running_OutOfRange","TrackingResult_Running_OK","TrackingResult_Calibrating_OutOfRange","TrackingResult_Calibrating_InProgress","TrackingResult_Fallback_RotationOnly","TrackingResult_Uninitialized",};
-
-const char* ETrackingResultToString(vr::ETrackingResult e)
+const char *ETrackingResultToString(vr::ETrackingResult e)
 {
-  static const unsigned char LUT[] =
-    {
-      6, 5, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 4, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      3, 2, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      1, 0, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6, 6, 6, 6, 6,
-      6, 6, 6, 6, 6, 6
-    };
-   int offset = LUT[(unsigned char)e];
-   if (offset < (sizeof(ETrackingResult_check_table) / sizeof(ETrackingResult_check_table[0])) &&
-      (e == ETrackingResult_check_table[offset]))
-   {
-      return ETrackingResult_string_table[offset];
-   }
-   return nullptr;
+ switch(e)
+ {
+   case (TrackingResult_Uninitialized) : return "TrackingResult_Uninitialized";
+   case (TrackingResult_Calibrating_InProgress) : return "TrackingResult_Calibrating_InProgress";
+   case (TrackingResult_Calibrating_OutOfRange) : return "TrackingResult_Calibrating_OutOfRange";
+   case (TrackingResult_Running_OK) : return "TrackingResult_Running_OK";
+   case (TrackingResult_Running_OutOfRange) : return "TrackingResult_Running_OutOfRange";
+   case (TrackingResult_Fallback_RotationOnly) : return "TrackingResult_Fallback_RotationOnly";
+   default: return nullptr;
+ }
 }
 
 const char *ETrackedDeviceClassToString(vr::ETrackedDeviceClass e)
@@ -110,7 +76,7 @@ const char *ETrackedControllerRoleToString(vr::ETrackedControllerRole e)
 {
   static const char * const ETrackedControllerRole_strings[] =
   {
-  "TrackedControllerRole_Invalid","TrackedControllerRole_LeftHand","TrackedControllerRole_RightHand","TrackedControllerRole_OptOut","TrackedControllerRole_Treadmill"
+  "TrackedControllerRole_Invalid","TrackedControllerRole_LeftHand","TrackedControllerRole_RightHand","TrackedControllerRole_OptOut","TrackedControllerRole_Treadmill","TrackedControllerRole_Max"
   };
 
   int offset = (int)e;
@@ -121,15 +87,13 @@ const char *ETrackedControllerRoleToString(vr::ETrackedControllerRole e)
 
 const char *ETrackingUniverseOriginToString(vr::ETrackingUniverseOrigin e)
 {
-  static const char * const ETrackingUniverseOrigin_strings[] =
-  {
-  "TrackingUniverseSeated","TrackingUniverseStanding","TrackingUniverseRawAndUncalibrated"
-  };
-
-  int offset = (int)e;
-  if (offset < 0 || offset >= sizeof(ETrackingUniverseOrigin_strings)/sizeof(ETrackingUniverseOrigin_strings[0]))
-     return nullptr;
-  return ETrackingUniverseOrigin_strings[offset];
+ switch(e)
+ {
+   case (TrackingUniverseSeated) : return "TrackingUniverseSeated";
+   case (TrackingUniverseStanding) : return "TrackingUniverseStanding";
+   case (TrackingUniverseRawAndUncalibrated) : return "TrackingUniverseRawAndUncalibrated";
+   default: return nullptr;
+ }
 }
 
 const char *EAdditionalRadioFeaturesToString(vr::EAdditionalRadioFeatures e)
@@ -146,41 +110,41 @@ const char *EAdditionalRadioFeaturesToString(vr::EAdditionalRadioFeatures e)
 }
 
 static const vr::ETrackedDeviceProperty ETrackedDeviceProperty_check_table[] =
-{Prop_NamedIconPathControllerLeftDeviceOff_String,Prop_DeviceCanPowerOff_Bool,Prop_ExpectedControllerCount_Int32,Prop_DeviceProvidesBatteryStatus_Bool,Prop_WillDriftInYaw_Bool,Prop_BlockServerShutdown_Bool,Prop_CameraFirmwareDescription_String,Prop_ImageBridgeFirmwareVersion_Uint64,Prop_NeverTracked_Bool,Prop_DriverRequestsApplicationPause_Bool,Prop_ParentDriver_Uint64,Prop_DisplayHiddenArea_Binary_Start,Prop_RadioVersion_Uint64,Prop_VRCVersion_Uint64,Prop_GraphicsAdapterLuid_Uint64,Prop_DisplayDebugMode_Bool,Prop_FPGAVersion_Uint64,Prop_FirmwareVersion_Uint64,Prop_DriverDirectModeSendsVsyncEvents_Bool,Prop_SecondsFromPhotonsToVblank_Float,Prop_HardwareRevision_Uint64,Prop_Firmware_ManualUpdateURL_String,Prop_DisplayMCImageData_Binary,Prop_DisplayMCImageNumChannels_Int32,Prop_Firmware_ManualUpdate_Bool,Prop_Firmware_UpdateAvailable_Bool,Prop_DisplayMCImageHeight_Int32,Prop_DisplayMCImageWidth_Int32,Prop_StatusDisplayTransform_Matrix34,Prop_DeviceBatteryPercentage_Float,Prop_DisplayAllowNightMode_Bool,Prop_DisplaySuppressed_Bool,Prop_DeviceIsCharging_Bool,Prop_DeviceIsWireless_Bool,Prop_ScreenshotVerticalFieldOfViewDegrees_Float,Prop_ScreenshotHorizontalFieldOfViewDegrees_Float,Prop_ConnectedWirelessDongle_String,Prop_AllWirelessDongleDescriptions_String,Prop_CameraCompatibilityMode_Int32,Prop_AudioFirmwareVersion_Uint64,Prop_HardwareRevision_String,Prop_TrackingFirmwareVersion_String,Prop_DisplayHardwareVersion_Uint64,Prop_DisplayBootloaderVersion_Uint64,Prop_ManufacturerName_String,Prop_RenderModelName_String,Prop_DisplayFPGAVersion_Uint64,Prop_CameraFirmwareVersion_Uint64,Prop_SerialNumber_String,Prop_ModelNumber_String,Prop_UserHeadToEyeDepthMeters_Float,Prop_LensCenterRightV_Float,Prop_TrackingSystemName_String,Prop_DriverRequestedMuraFeather_OuterBottom_Int32,Prop_LensCenterRightU_Float,Prop_AdditionalRadioFeatures_Uint64,Prop_CompositeFirmwareVersion_String,Prop_ConfigurationIncludesLighthouse20Features_Bool,Prop_AdditionalSystemReportData_String,Prop_ImuFactoryAccelerometerScale_Vector3,Prop_Identifiable_Bool,Prop_DongleVersion_Uint64,Prop_FieldOfViewLeftDegrees_Float,Prop_ImuFactoryAccelerometerBias_Vector3,Prop_AdditionalDeviceSettingsPath_String,Prop_ImuFactoryGyroScale_Vector3,Prop_CameraStreamFormat_Int32,Prop_ImuFactoryGyroBias_Vector3,Prop_CameraFrameLayout_Int32,Prop_ImuToHeadTransform_Matrix34,Prop_NumCameras_Int32,Prop_AudioBridgeFirmwareVersion_Uint64,Prop_InputProfilePath_String,Prop_MinimumIpdStepMeters_Float,Prop_RegisteredDeviceType_String,Prop_DriverRequestsReducedRendering_Bool,Prop_ResourceRoot_String,Prop_DriverIsDrawingControllers_Bool,Prop_ViveSystemButtonFixRequired_Bool,Prop_DistortionMeshResolution_Int32,Prop_Firmware_ForceUpdateRequired_Bool,Prop_CameraToHeadTransforms_Matrix34_Array,Prop_DriverVersion_String,Prop_DoNotApplyPrediction_Bool,Prop_HasCamera_Bool,Prop_NamedIconPathTrackingReferenceDeviceOff_String,Prop_DeviceClass_Int32,Prop_NamedIconPathControllerRightDeviceOff_String,Prop_Firmware_ProgrammingTarget_String,Prop_ExpectedTrackingReferenceCount_Int32,Prop_ContainsProximitySensor_Bool,Prop_DriverProvidedChaperonePath_String,Prop_CanUnifyCoordinateSystemWithHmd_Bool,Prop_LensCenterLeftV_Float,Prop_LensCenterLeftU_Float,Prop_DisplayGCImage_String,Prop_DisplayGCPrescale_Float,Prop_DisplayGCScale_Float,Prop_DisplayGCOffset_Float,Prop_DisplayGCType_Int32,Prop_CameraToHeadTransform_Matrix34,Prop_EdidProductID_Int32,Prop_DisplayGCBlackClamp_Float,Prop_DisplayMCImageRight_String,Prop_DisplayMCImageLeft_String,Prop_EdidVendorID_Int32,Prop_DisplayMCScale_Float,Prop_DisplayMCOffset_Float,Prop_DisplayMCType_Int32,Prop_IsOnDesktop_Bool,Prop_DisplayFirmwareVersion_Uint64,Prop_PreviousUniverseId_Uint64,Prop_CurrentUniverseId_Uint64,Prop_UserIpdMeters_Float,Prop_DisplayFrequency_Float,Prop_SecondsFromVsyncToPhotons_Float,Prop_ReportsTimeSinceVSync_Bool,Prop_ControllerRoleHint_Int32,Prop_Axis4Type_Int32,Prop_Axis3Type_Int32,Prop_Axis2Type_Int32,Prop_Axis1Type_Int32,Prop_Axis0Type_Int32,Prop_SupportedButtons_Uint64,Prop_AttachedDeviceId_String,Prop_Nonce_Int32,Prop_CanWirelessIdentify_Bool,Prop_ModeLabel_String,Prop_TrackingRangeMaximumMeters_Float,Prop_TrackingRangeMinimumMeters_Float,Prop_FieldOfViewBottomDegrees_Float,Prop_FieldOfViewTopDegrees_Float,Prop_FieldOfViewRightDegrees_Float,Prop_DriverRequestedMuraFeather_OuterTop_Int32,Prop_DriverRequestedMuraFeather_OuterRight_Int32,Prop_DriverRequestedMuraFeather_OuterLeft_Int32,Prop_DriverRequestedMuraFeather_InnerBottom_Int32,Prop_DriverRequestedMuraFeather_InnerTop_Int32,Prop_DriverRequestedMuraFeather_InnerRight_Int32,Prop_DriverRequestedMuraFeather_InnerLeft_Int32,Prop_DriverRequestedMuraCorrectionMode_Int32,Prop_NamedIconPathDeviceAlertLow_String,Prop_NamedIconPathDeviceStandby_String,Prop_NamedIconPathDeviceNotReady_String,Prop_NamedIconPathDeviceReadyAlert_String,Prop_NamedIconPathDeviceReady_String,Prop_NamedIconPathDeviceSearchingAlert_String,Prop_NamedIconPathDeviceSearching_String,Prop_NamedIconPathDeviceOff_String,Prop_IconPathName_String,Prop_HasSpatialAnchorsSupport_Bool,Prop_HasVirtualDisplayComponent_Bool,Prop_HasDriverDirectModeComponent_Bool,Prop_HasCameraComponent_Bool,Prop_HasControllerComponent_Bool,Prop_HasDisplayComponent_Bool,Prop_InstallPath_String,Prop_UserConfigPath_String,Prop_ControllerHandSelectionPriority_Int32,Prop_LegacyInputProfile_String,Prop_ControllerType_String,Prop_TrackedDeviceProperty_Max,Prop_VendorSpecific_Reserved_End,Prop_VendorSpecific_Reserved_Start,Prop_ParentContainer,Prop_DisplayHiddenArea_Binary_End,Prop_ExpectedControllerType_String,Prop_CameraDistortionCoefficients_Float_Array,Prop_CameraDistortionFunction_Int32_Array,Prop_CameraWhiteBalance_Vector4_Array,Prop_BootloaderVersion_Uint64,Prop_Invalid,};
+{Prop_NamedIconPathControllerLeftDeviceOff_String,Prop_DeviceCanPowerOff_Bool,Prop_ExpectedControllerCount_Int32,Prop_DeviceProvidesBatteryStatus_Bool,Prop_WillDriftInYaw_Bool,Prop_BlockServerShutdown_Bool,Prop_CameraFirmwareDescription_String,Prop_ImageBridgeFirmwareVersion_Uint64,Prop_NeverTracked_Bool,Prop_ImuFactoryGyroBias_Vector3,Prop_CameraFrameLayout_Int32,Prop_DisplayHiddenArea_Binary_Start,Prop_ImuToHeadTransform_Matrix34,Prop_NumCameras_Int32,Prop_DriverRequestsApplicationPause_Bool,Prop_ParentDriver_Uint64,Prop_RadioVersion_Uint64,Prop_VRCVersion_Uint64,Prop_GraphicsAdapterLuid_Uint64,Prop_DisplayDebugMode_Bool,Prop_FPGAVersion_Uint64,Prop_FirmwareVersion_Uint64,Prop_DriverDirectModeSendsVsyncEvents_Bool,Prop_SecondsFromPhotonsToVblank_Float,Prop_HardwareRevision_Uint64,Prop_Firmware_ManualUpdateURL_String,Prop_DisplayMCImageData_Binary,Prop_DisplayMCImageNumChannels_Int32,Prop_Firmware_ManualUpdate_Bool,Prop_Firmware_UpdateAvailable_Bool,Prop_DisplayMCImageHeight_Int32,Prop_DisplayMCImageWidth_Int32,Prop_StatusDisplayTransform_Matrix34,Prop_DeviceBatteryPercentage_Float,Prop_DisplayAllowNightMode_Bool,Prop_DisplaySuppressed_Bool,Prop_DeviceIsCharging_Bool,Prop_DeviceIsWireless_Bool,Prop_ScreenshotVerticalFieldOfViewDegrees_Float,Prop_ScreenshotHorizontalFieldOfViewDegrees_Float,Prop_ConnectedWirelessDongle_String,Prop_AllWirelessDongleDescriptions_String,Prop_CameraCompatibilityMode_Int32,Prop_AudioFirmwareVersion_Uint64,Prop_HardwareRevision_String,Prop_TrackingFirmwareVersion_String,Prop_DisplayHardwareVersion_Uint64,Prop_DisplayBootloaderVersion_Uint64,Prop_ManufacturerName_String,Prop_RenderModelName_String,Prop_DisplayFPGAVersion_Uint64,Prop_CameraFirmwareVersion_Uint64,Prop_SerialNumber_String,Prop_ModelNumber_String,Prop_UserHeadToEyeDepthMeters_Float,Prop_LensCenterRightV_Float,Prop_TrackingSystemName_String,Prop_DriverRequestedMuraFeather_OuterBottom_Int32,Prop_LensCenterRightU_Float,Prop_DisplayColorMultLeft_Vector3,Prop_DisplayAvailableFrameRates_Float_Array,Prop_CameraWhiteBalance_Vector4_Array,Prop_Firmware_RemindUpdate_Bool,Prop_AdditionalRadioFeatures_Uint64,Prop_CompositeFirmwareVersion_String,Prop_ConfigurationIncludesLighthouse20Features_Bool,Prop_AdditionalSystemReportData_String,Prop_DongleVersion_Uint64,Prop_VendorSpecific_Reserved_Start,Prop_ImuFactoryAccelerometerScale_Vector3,Prop_Identifiable_Bool,Prop_FieldOfViewLeftDegrees_Float,Prop_OverrideContainer_Uint64,Prop_ImuFactoryAccelerometerBias_Vector3,Prop_AdditionalDeviceSettingsPath_String,Prop_ImuFactoryGyroScale_Vector3,Prop_CameraStreamFormat_Int32,Prop_AudioBridgeFirmwareVersion_Uint64,Prop_InputProfilePath_String,Prop_MinimumIpdStepMeters_Float,Prop_RegisteredDeviceType_String,Prop_DriverRequestsReducedRendering_Bool,Prop_ResourceRoot_String,Prop_DriverIsDrawingControllers_Bool,Prop_ViveSystemButtonFixRequired_Bool,Prop_DistortionMeshResolution_Int32,Prop_Firmware_ForceUpdateRequired_Bool,Prop_CameraToHeadTransforms_Matrix34_Array,Prop_DriverVersion_String,Prop_DoNotApplyPrediction_Bool,Prop_HasCamera_Bool,Prop_NamedIconPathTrackingReferenceDeviceOff_String,Prop_DeviceClass_Int32,Prop_NamedIconPathControllerRightDeviceOff_String,Prop_Firmware_ProgrammingTarget_String,Prop_ExpectedTrackingReferenceCount_Int32,Prop_ContainsProximitySensor_Bool,Prop_DriverProvidedChaperonePath_String,Prop_CanUnifyCoordinateSystemWithHmd_Bool,Prop_LensCenterLeftV_Float,Prop_LensCenterLeftU_Float,Prop_DisplayGCImage_String,Prop_DisplayGCPrescale_Float,Prop_DisplayGCScale_Float,Prop_DisplayGCOffset_Float,Prop_DisplayGCType_Int32,Prop_CameraToHeadTransform_Matrix34,Prop_EdidProductID_Int32,Prop_DisplayGCBlackClamp_Float,Prop_DisplayMCImageRight_String,Prop_DisplayMCImageLeft_String,Prop_EdidVendorID_Int32,Prop_DisplayMCScale_Float,Prop_DisplayMCOffset_Float,Prop_DisplayMCType_Int32,Prop_IsOnDesktop_Bool,Prop_DisplayFirmwareVersion_Uint64,Prop_PreviousUniverseId_Uint64,Prop_CurrentUniverseId_Uint64,Prop_UserIpdMeters_Float,Prop_DisplayFrequency_Float,Prop_SecondsFromVsyncToPhotons_Float,Prop_ReportsTimeSinceVSync_Bool,Prop_ControllerRoleHint_Int32,Prop_Axis4Type_Int32,Prop_Axis3Type_Int32,Prop_Axis2Type_Int32,Prop_Axis1Type_Int32,Prop_Axis0Type_Int32,Prop_SupportedButtons_Uint64,Prop_AttachedDeviceId_String,Prop_Nonce_Int32,Prop_CanWirelessIdentify_Bool,Prop_ModeLabel_String,Prop_TrackingRangeMaximumMeters_Float,Prop_TrackingRangeMinimumMeters_Float,Prop_FieldOfViewBottomDegrees_Float,Prop_FieldOfViewTopDegrees_Float,Prop_FieldOfViewRightDegrees_Float,Prop_DriverRequestedMuraFeather_OuterTop_Int32,Prop_DriverRequestedMuraFeather_OuterRight_Int32,Prop_DriverRequestedMuraFeather_OuterLeft_Int32,Prop_DriverRequestedMuraFeather_InnerBottom_Int32,Prop_DriverRequestedMuraFeather_InnerTop_Int32,Prop_DriverRequestedMuraFeather_InnerRight_Int32,Prop_DriverRequestedMuraFeather_InnerLeft_Int32,Prop_DriverRequestedMuraCorrectionMode_Int32,Prop_NamedIconPathDeviceStandbyAlert_String,Prop_NamedIconPathDeviceAlertLow_String,Prop_NamedIconPathDeviceStandby_String,Prop_NamedIconPathDeviceNotReady_String,Prop_NamedIconPathDeviceReadyAlert_String,Prop_NamedIconPathDeviceReady_String,Prop_NamedIconPathDeviceSearchingAlert_String,Prop_NamedIconPathDeviceSearching_String,Prop_NamedIconPathDeviceOff_String,Prop_IconPathName_String,Prop_HasSpatialAnchorsSupport_Bool,Prop_HasVirtualDisplayComponent_Bool,Prop_HasDriverDirectModeComponent_Bool,Prop_HasCameraComponent_Bool,Prop_HasControllerComponent_Bool,Prop_HasDisplayComponent_Bool,Prop_InstallPath_String,Prop_UserConfigPath_String,Prop_ControllerHandSelectionPriority_Int32,Prop_ControllerType_String,Prop_TrackedDeviceProperty_Max,Prop_DashboardLayoutPathName_String,Prop_VendorSpecific_Reserved_End,Prop_DisplayColorMultRight_Vector3,Prop_DisplaySupportsMultipleFramerates_Bool,Prop_ParentContainer,Prop_DisplayHiddenArea_Binary_End,Prop_HmdProvidesDisplaySettings_Bool,Prop_DriverProvidedChaperoneVisibility_Bool,Prop_HmdTrackingStyle_Int32,Prop_ExpectedControllerType_String,Prop_CameraDistortionCoefficients_Float_Array,Prop_CameraDistortionFunction_Int32_Array,Prop_BootloaderVersion_Uint64,Prop_Invalid,};
 
 static const char * const ETrackedDeviceProperty_string_table[] =
-{"Prop_NamedIconPathControllerLeftDeviceOff_String","Prop_DeviceCanPowerOff_Bool","Prop_ExpectedControllerCount_Int32","Prop_DeviceProvidesBatteryStatus_Bool","Prop_WillDriftInYaw_Bool","Prop_BlockServerShutdown_Bool","Prop_CameraFirmwareDescription_String","Prop_ImageBridgeFirmwareVersion_Uint64","Prop_NeverTracked_Bool","Prop_DriverRequestsApplicationPause_Bool","Prop_ParentDriver_Uint64","Prop_DisplayHiddenArea_Binary_Start","Prop_RadioVersion_Uint64","Prop_VRCVersion_Uint64","Prop_GraphicsAdapterLuid_Uint64","Prop_DisplayDebugMode_Bool","Prop_FPGAVersion_Uint64","Prop_FirmwareVersion_Uint64","Prop_DriverDirectModeSendsVsyncEvents_Bool","Prop_SecondsFromPhotonsToVblank_Float","Prop_HardwareRevision_Uint64","Prop_Firmware_ManualUpdateURL_String","Prop_DisplayMCImageData_Binary","Prop_DisplayMCImageNumChannels_Int32","Prop_Firmware_ManualUpdate_Bool","Prop_Firmware_UpdateAvailable_Bool","Prop_DisplayMCImageHeight_Int32","Prop_DisplayMCImageWidth_Int32","Prop_StatusDisplayTransform_Matrix34","Prop_DeviceBatteryPercentage_Float","Prop_DisplayAllowNightMode_Bool","Prop_DisplaySuppressed_Bool","Prop_DeviceIsCharging_Bool","Prop_DeviceIsWireless_Bool","Prop_ScreenshotVerticalFieldOfViewDegrees_Float","Prop_ScreenshotHorizontalFieldOfViewDegrees_Float","Prop_ConnectedWirelessDongle_String","Prop_AllWirelessDongleDescriptions_String","Prop_CameraCompatibilityMode_Int32","Prop_AudioFirmwareVersion_Uint64","Prop_HardwareRevision_String","Prop_TrackingFirmwareVersion_String","Prop_DisplayHardwareVersion_Uint64","Prop_DisplayBootloaderVersion_Uint64","Prop_ManufacturerName_String","Prop_RenderModelName_String","Prop_DisplayFPGAVersion_Uint64","Prop_CameraFirmwareVersion_Uint64","Prop_SerialNumber_String","Prop_ModelNumber_String","Prop_UserHeadToEyeDepthMeters_Float","Prop_LensCenterRightV_Float","Prop_TrackingSystemName_String","Prop_DriverRequestedMuraFeather_OuterBottom_Int32","Prop_LensCenterRightU_Float","Prop_AdditionalRadioFeatures_Uint64","Prop_CompositeFirmwareVersion_String","Prop_ConfigurationIncludesLighthouse20Features_Bool","Prop_AdditionalSystemReportData_String","Prop_ImuFactoryAccelerometerScale_Vector3","Prop_Identifiable_Bool","Prop_DongleVersion_Uint64","Prop_FieldOfViewLeftDegrees_Float","Prop_ImuFactoryAccelerometerBias_Vector3","Prop_AdditionalDeviceSettingsPath_String","Prop_ImuFactoryGyroScale_Vector3","Prop_CameraStreamFormat_Int32","Prop_ImuFactoryGyroBias_Vector3","Prop_CameraFrameLayout_Int32","Prop_ImuToHeadTransform_Matrix34","Prop_NumCameras_Int32","Prop_AudioBridgeFirmwareVersion_Uint64","Prop_InputProfilePath_String","Prop_MinimumIpdStepMeters_Float","Prop_RegisteredDeviceType_String","Prop_DriverRequestsReducedRendering_Bool","Prop_ResourceRoot_String","Prop_DriverIsDrawingControllers_Bool","Prop_ViveSystemButtonFixRequired_Bool","Prop_DistortionMeshResolution_Int32","Prop_Firmware_ForceUpdateRequired_Bool","Prop_CameraToHeadTransforms_Matrix34_Array","Prop_DriverVersion_String","Prop_DoNotApplyPrediction_Bool","Prop_HasCamera_Bool","Prop_NamedIconPathTrackingReferenceDeviceOff_String","Prop_DeviceClass_Int32","Prop_NamedIconPathControllerRightDeviceOff_String","Prop_Firmware_ProgrammingTarget_String","Prop_ExpectedTrackingReferenceCount_Int32","Prop_ContainsProximitySensor_Bool","Prop_DriverProvidedChaperonePath_String","Prop_CanUnifyCoordinateSystemWithHmd_Bool","Prop_LensCenterLeftV_Float","Prop_LensCenterLeftU_Float","Prop_DisplayGCImage_String","Prop_DisplayGCPrescale_Float","Prop_DisplayGCScale_Float","Prop_DisplayGCOffset_Float","Prop_DisplayGCType_Int32","Prop_CameraToHeadTransform_Matrix34","Prop_EdidProductID_Int32","Prop_DisplayGCBlackClamp_Float","Prop_DisplayMCImageRight_String","Prop_DisplayMCImageLeft_String","Prop_EdidVendorID_Int32","Prop_DisplayMCScale_Float","Prop_DisplayMCOffset_Float","Prop_DisplayMCType_Int32","Prop_IsOnDesktop_Bool","Prop_DisplayFirmwareVersion_Uint64","Prop_PreviousUniverseId_Uint64","Prop_CurrentUniverseId_Uint64","Prop_UserIpdMeters_Float","Prop_DisplayFrequency_Float","Prop_SecondsFromVsyncToPhotons_Float","Prop_ReportsTimeSinceVSync_Bool","Prop_ControllerRoleHint_Int32","Prop_Axis4Type_Int32","Prop_Axis3Type_Int32","Prop_Axis2Type_Int32","Prop_Axis1Type_Int32","Prop_Axis0Type_Int32","Prop_SupportedButtons_Uint64","Prop_AttachedDeviceId_String","Prop_Nonce_Int32","Prop_CanWirelessIdentify_Bool","Prop_ModeLabel_String","Prop_TrackingRangeMaximumMeters_Float","Prop_TrackingRangeMinimumMeters_Float","Prop_FieldOfViewBottomDegrees_Float","Prop_FieldOfViewTopDegrees_Float","Prop_FieldOfViewRightDegrees_Float","Prop_DriverRequestedMuraFeather_OuterTop_Int32","Prop_DriverRequestedMuraFeather_OuterRight_Int32","Prop_DriverRequestedMuraFeather_OuterLeft_Int32","Prop_DriverRequestedMuraFeather_InnerBottom_Int32","Prop_DriverRequestedMuraFeather_InnerTop_Int32","Prop_DriverRequestedMuraFeather_InnerRight_Int32","Prop_DriverRequestedMuraFeather_InnerLeft_Int32","Prop_DriverRequestedMuraCorrectionMode_Int32","Prop_NamedIconPathDeviceAlertLow_String","Prop_NamedIconPathDeviceStandby_String","Prop_NamedIconPathDeviceNotReady_String","Prop_NamedIconPathDeviceReadyAlert_String","Prop_NamedIconPathDeviceReady_String","Prop_NamedIconPathDeviceSearchingAlert_String","Prop_NamedIconPathDeviceSearching_String","Prop_NamedIconPathDeviceOff_String","Prop_IconPathName_String","Prop_HasSpatialAnchorsSupport_Bool","Prop_HasVirtualDisplayComponent_Bool","Prop_HasDriverDirectModeComponent_Bool","Prop_HasCameraComponent_Bool","Prop_HasControllerComponent_Bool","Prop_HasDisplayComponent_Bool","Prop_InstallPath_String","Prop_UserConfigPath_String","Prop_ControllerHandSelectionPriority_Int32","Prop_LegacyInputProfile_String","Prop_ControllerType_String","Prop_TrackedDeviceProperty_Max","Prop_VendorSpecific_Reserved_End","Prop_VendorSpecific_Reserved_Start","Prop_ParentContainer","Prop_DisplayHiddenArea_Binary_End","Prop_ExpectedControllerType_String","Prop_CameraDistortionCoefficients_Float_Array","Prop_CameraDistortionFunction_Int32_Array","Prop_CameraWhiteBalance_Vector4_Array","Prop_BootloaderVersion_Uint64","Prop_Invalid",};
+{"Prop_NamedIconPathControllerLeftDeviceOff_String","Prop_DeviceCanPowerOff_Bool","Prop_ExpectedControllerCount_Int32","Prop_DeviceProvidesBatteryStatus_Bool","Prop_WillDriftInYaw_Bool","Prop_BlockServerShutdown_Bool","Prop_CameraFirmwareDescription_String","Prop_ImageBridgeFirmwareVersion_Uint64","Prop_NeverTracked_Bool","Prop_ImuFactoryGyroBias_Vector3","Prop_CameraFrameLayout_Int32","Prop_DisplayHiddenArea_Binary_Start","Prop_ImuToHeadTransform_Matrix34","Prop_NumCameras_Int32","Prop_DriverRequestsApplicationPause_Bool","Prop_ParentDriver_Uint64","Prop_RadioVersion_Uint64","Prop_VRCVersion_Uint64","Prop_GraphicsAdapterLuid_Uint64","Prop_DisplayDebugMode_Bool","Prop_FPGAVersion_Uint64","Prop_FirmwareVersion_Uint64","Prop_DriverDirectModeSendsVsyncEvents_Bool","Prop_SecondsFromPhotonsToVblank_Float","Prop_HardwareRevision_Uint64","Prop_Firmware_ManualUpdateURL_String","Prop_DisplayMCImageData_Binary","Prop_DisplayMCImageNumChannels_Int32","Prop_Firmware_ManualUpdate_Bool","Prop_Firmware_UpdateAvailable_Bool","Prop_DisplayMCImageHeight_Int32","Prop_DisplayMCImageWidth_Int32","Prop_StatusDisplayTransform_Matrix34","Prop_DeviceBatteryPercentage_Float","Prop_DisplayAllowNightMode_Bool","Prop_DisplaySuppressed_Bool","Prop_DeviceIsCharging_Bool","Prop_DeviceIsWireless_Bool","Prop_ScreenshotVerticalFieldOfViewDegrees_Float","Prop_ScreenshotHorizontalFieldOfViewDegrees_Float","Prop_ConnectedWirelessDongle_String","Prop_AllWirelessDongleDescriptions_String","Prop_CameraCompatibilityMode_Int32","Prop_AudioFirmwareVersion_Uint64","Prop_HardwareRevision_String","Prop_TrackingFirmwareVersion_String","Prop_DisplayHardwareVersion_Uint64","Prop_DisplayBootloaderVersion_Uint64","Prop_ManufacturerName_String","Prop_RenderModelName_String","Prop_DisplayFPGAVersion_Uint64","Prop_CameraFirmwareVersion_Uint64","Prop_SerialNumber_String","Prop_ModelNumber_String","Prop_UserHeadToEyeDepthMeters_Float","Prop_LensCenterRightV_Float","Prop_TrackingSystemName_String","Prop_DriverRequestedMuraFeather_OuterBottom_Int32","Prop_LensCenterRightU_Float","Prop_DisplayColorMultLeft_Vector3","Prop_DisplayAvailableFrameRates_Float_Array","Prop_CameraWhiteBalance_Vector4_Array","Prop_Firmware_RemindUpdate_Bool","Prop_AdditionalRadioFeatures_Uint64","Prop_CompositeFirmwareVersion_String","Prop_ConfigurationIncludesLighthouse20Features_Bool","Prop_AdditionalSystemReportData_String","Prop_DongleVersion_Uint64","Prop_VendorSpecific_Reserved_Start","Prop_ImuFactoryAccelerometerScale_Vector3","Prop_Identifiable_Bool","Prop_FieldOfViewLeftDegrees_Float","Prop_OverrideContainer_Uint64","Prop_ImuFactoryAccelerometerBias_Vector3","Prop_AdditionalDeviceSettingsPath_String","Prop_ImuFactoryGyroScale_Vector3","Prop_CameraStreamFormat_Int32","Prop_AudioBridgeFirmwareVersion_Uint64","Prop_InputProfilePath_String","Prop_MinimumIpdStepMeters_Float","Prop_RegisteredDeviceType_String","Prop_DriverRequestsReducedRendering_Bool","Prop_ResourceRoot_String","Prop_DriverIsDrawingControllers_Bool","Prop_ViveSystemButtonFixRequired_Bool","Prop_DistortionMeshResolution_Int32","Prop_Firmware_ForceUpdateRequired_Bool","Prop_CameraToHeadTransforms_Matrix34_Array","Prop_DriverVersion_String","Prop_DoNotApplyPrediction_Bool","Prop_HasCamera_Bool","Prop_NamedIconPathTrackingReferenceDeviceOff_String","Prop_DeviceClass_Int32","Prop_NamedIconPathControllerRightDeviceOff_String","Prop_Firmware_ProgrammingTarget_String","Prop_ExpectedTrackingReferenceCount_Int32","Prop_ContainsProximitySensor_Bool","Prop_DriverProvidedChaperonePath_String","Prop_CanUnifyCoordinateSystemWithHmd_Bool","Prop_LensCenterLeftV_Float","Prop_LensCenterLeftU_Float","Prop_DisplayGCImage_String","Prop_DisplayGCPrescale_Float","Prop_DisplayGCScale_Float","Prop_DisplayGCOffset_Float","Prop_DisplayGCType_Int32","Prop_CameraToHeadTransform_Matrix34","Prop_EdidProductID_Int32","Prop_DisplayGCBlackClamp_Float","Prop_DisplayMCImageRight_String","Prop_DisplayMCImageLeft_String","Prop_EdidVendorID_Int32","Prop_DisplayMCScale_Float","Prop_DisplayMCOffset_Float","Prop_DisplayMCType_Int32","Prop_IsOnDesktop_Bool","Prop_DisplayFirmwareVersion_Uint64","Prop_PreviousUniverseId_Uint64","Prop_CurrentUniverseId_Uint64","Prop_UserIpdMeters_Float","Prop_DisplayFrequency_Float","Prop_SecondsFromVsyncToPhotons_Float","Prop_ReportsTimeSinceVSync_Bool","Prop_ControllerRoleHint_Int32","Prop_Axis4Type_Int32","Prop_Axis3Type_Int32","Prop_Axis2Type_Int32","Prop_Axis1Type_Int32","Prop_Axis0Type_Int32","Prop_SupportedButtons_Uint64","Prop_AttachedDeviceId_String","Prop_Nonce_Int32","Prop_CanWirelessIdentify_Bool","Prop_ModeLabel_String","Prop_TrackingRangeMaximumMeters_Float","Prop_TrackingRangeMinimumMeters_Float","Prop_FieldOfViewBottomDegrees_Float","Prop_FieldOfViewTopDegrees_Float","Prop_FieldOfViewRightDegrees_Float","Prop_DriverRequestedMuraFeather_OuterTop_Int32","Prop_DriverRequestedMuraFeather_OuterRight_Int32","Prop_DriverRequestedMuraFeather_OuterLeft_Int32","Prop_DriverRequestedMuraFeather_InnerBottom_Int32","Prop_DriverRequestedMuraFeather_InnerTop_Int32","Prop_DriverRequestedMuraFeather_InnerRight_Int32","Prop_DriverRequestedMuraFeather_InnerLeft_Int32","Prop_DriverRequestedMuraCorrectionMode_Int32","Prop_NamedIconPathDeviceStandbyAlert_String","Prop_NamedIconPathDeviceAlertLow_String","Prop_NamedIconPathDeviceStandby_String","Prop_NamedIconPathDeviceNotReady_String","Prop_NamedIconPathDeviceReadyAlert_String","Prop_NamedIconPathDeviceReady_String","Prop_NamedIconPathDeviceSearchingAlert_String","Prop_NamedIconPathDeviceSearching_String","Prop_NamedIconPathDeviceOff_String","Prop_IconPathName_String","Prop_HasSpatialAnchorsSupport_Bool","Prop_HasVirtualDisplayComponent_Bool","Prop_HasDriverDirectModeComponent_Bool","Prop_HasCameraComponent_Bool","Prop_HasControllerComponent_Bool","Prop_HasDisplayComponent_Bool","Prop_InstallPath_String","Prop_UserConfigPath_String","Prop_ControllerHandSelectionPriority_Int32","Prop_ControllerType_String","Prop_TrackedDeviceProperty_Max","Prop_DashboardLayoutPathName_String","Prop_VendorSpecific_Reserved_End","Prop_DisplayColorMultRight_Vector3","Prop_DisplaySupportsMultipleFramerates_Bool","Prop_ParentContainer","Prop_DisplayHiddenArea_Binary_End","Prop_HmdProvidesDisplaySettings_Bool","Prop_DriverProvidedChaperoneVisibility_Bool","Prop_HmdTrackingStyle_Int32","Prop_ExpectedControllerType_String","Prop_CameraDistortionCoefficients_Float_Array","Prop_CameraDistortionFunction_Int32_Array","Prop_BootloaderVersion_Uint64","Prop_Invalid",};
 
 const char* ETrackedDevicePropertyToString(vr::ETrackedDeviceProperty e)
 {
   static const unsigned char LUT[] =
     {
-       80, 172, 172,   0,   1,  91,  89,   2,   0,  87,
-       85,  83,  81,  79,  77,   9,  75,  73,  71,   7,
-       69,  67,  65,  63,  59, 169,  57,  55, 169, 168,
-      167, 166, 172, 172, 172,  96,  95, 172, 172,  96,
-      172, 172, 138, 172, 172, 172, 172, 172, 172, 172,
-      172, 172, 172, 172, 172, 172, 172, 172, 172, 172,
-      172, 172, 172, 172, 172, 172,  81, 172, 172,  80,
-      172, 172, 172, 172, 172, 172, 172, 172, 172, 172,
-      172, 172, 172, 172, 172, 172, 172, 172, 172, 172,
-      172, 172, 172, 105, 104, 103, 172, 172, 172, 172,
-      172, 172, 172, 172, 172, 172, 172, 172, 172, 172,
-      172, 172, 172, 172, 172, 172, 172,  94,  93,  92,
-       91,  90,  89,  88,  87, 172, 172, 172, 172, 172,
-      172, 172, 172, 172, 172, 172, 172, 172, 172, 172,
-      172, 142, 141, 140, 139, 138, 137, 136, 135, 134,
-      172, 172, 172, 172, 172, 172, 172, 140, 139, 138,
-      137, 136, 135, 134, 133,  53, 123, 122, 121, 120,
-      119, 118, 117, 116, 172, 172, 172, 172, 172, 172,
-      172, 172, 172, 172, 172, 172, 172, 172, 172,  41,
-       40,  39,  38,  37,  36,  35,  34, 172, 172, 172,
-      172, 172, 172, 172, 172, 172, 172, 172, 172, 172,
-      172, 172, 172, 114, 113, 112, 111, 110, 109, 108,
-      107, 106, 105, 104, 103, 102, 101, 100,  99,  98,
-       97,  96,  95,  94,  93,  92,  91,  52,  49,  48,
-       45,   4,  44,  41,  40,  37,  36,  33,  32,  29,
-       28,  25,  24,  21,  20,  17,  16,  13,  12,  61,
+       84, 182, 182,   0,   1,  97,  95,   2,   0,  93,
+       91,  89,  87,  85,  83,  14,  81,  79,  77,   7,
+       12,   9,  75,  73,  69, 179,  65,  63,  61, 179,
+      178, 177, 176, 175, 174, 161, 160,  60, 171,  59,
+      170, 182, 141, 182, 182, 182, 182, 168, 182, 182,
+      182, 182, 182, 182, 182, 182, 182, 182, 182, 182,
+      182, 182, 182, 182, 182, 182,  84, 182, 182,  83,
+      182, 182, 182, 182, 182, 182, 182, 182, 182, 182,
+      182, 182, 182, 182, 182, 182, 182, 182, 182, 182,
+      182, 182, 182, 103, 182, 102, 182, 182, 182, 182,
+      182, 182, 182, 182, 182, 182, 182, 182, 182, 182,
+      182, 182, 182, 182, 182, 182, 182,  91,  90,  89,
+       88,  87,  86,  85,  84, 182, 182, 182, 182, 182,
+      182, 182, 182, 182, 182, 182, 182, 182, 182, 182,
+      182, 149, 148, 147, 146, 145, 144, 143, 142, 141,
+      140, 182, 182, 182, 182, 182, 182, 146, 145, 144,
+      143, 142, 141, 140, 139,  57, 124, 123, 122, 121,
+      120, 119, 118, 117, 182, 182, 182, 182, 182, 182,
+      182, 182, 182, 182, 182, 182, 182, 182, 182,  41,
+       40,  39,  38,  37,  36,  35,  34, 182, 182, 182,
+      182, 182, 182, 182, 182, 182, 182, 182, 182, 182,
+      182, 182, 182, 120, 119, 118, 117, 116, 115, 114,
+      113, 112, 111, 110, 109, 108, 107, 106, 105, 104,
+      103, 102, 101, 100,  99,  98,  97,  56,  53,  52,
+       49,   4,  48,  45,  44,  41,  40,  37,  36,  33,
+       32,  29,  28,  25,  24,  21,  20,  17,  16,  67,
         5
     };
    int offset = LUT[(unsigned char)(((unsigned int)e & 0xFF00) >> 8)] + LUT[(unsigned char)e+5];
@@ -207,6 +171,19 @@ const char *ETrackedPropertyErrorToString(vr::ETrackedPropertyError e)
 }
 #endif // OPENVR_STRINGS_DISABLE_PASSTHRU
 
+const char *EHmdTrackingStyleToString(vr::EHmdTrackingStyle e)
+{
+  static const char * const EHmdTrackingStyle_strings[] =
+  {
+  "HmdTrackingStyle_Unknown","HmdTrackingStyle_Lighthouse","HmdTrackingStyle_OutsideInCameras","HmdTrackingStyle_InsideOutCameras"
+  };
+
+  int offset = (int)e;
+  if (offset < 0 || offset >= sizeof(EHmdTrackingStyle_strings)/sizeof(EHmdTrackingStyle_strings[0]))
+     return nullptr;
+  return EHmdTrackingStyle_strings[offset];
+}
+
 const char *EVRSubmitFlagsToString(vr::EVRSubmitFlags e)
 {
   static const char * const EVRSubmitFlags_strings[] =
@@ -222,53 +199,57 @@ const char *EVRSubmitFlagsToString(vr::EVRSubmitFlags e)
 
 const char *EVRStateToString(vr::EVRState e)
 {
-  static const char * const EVRState_strings[] =
-  {
-  "VRState_Undefined","VRState_Off","VRState_Searching","VRState_Searching_Alert","VRState_Ready","VRState_Ready_Alert","VRState_NotReady","VRState_Standby","VRState_Ready_Alert_Low"
-  };
-
-  int offset = (int)e - (-1);
-  if (offset < 0 || offset >= sizeof(EVRState_strings)/sizeof(EVRState_strings[0]))
-     return nullptr;
-  return EVRState_strings[offset];
+ switch(e)
+ {
+   case (VRState_Undefined) : return "VRState_Undefined";
+   case (VRState_Off) : return "VRState_Off";
+   case (VRState_Searching) : return "VRState_Searching";
+   case (VRState_Searching_Alert) : return "VRState_Searching_Alert";
+   case (VRState_Ready) : return "VRState_Ready";
+   case (VRState_Ready_Alert) : return "VRState_Ready_Alert";
+   case (VRState_NotReady) : return "VRState_NotReady";
+   case (VRState_Standby) : return "VRState_Standby";
+   case (VRState_Ready_Alert_Low) : return "VRState_Ready_Alert_Low";
+   default: return nullptr;
+ }
 }
 #ifdef OPENVR_STRINGS_DISABLE_PASSTHRU
 
 static const vr::EVREventType EVREventType_check_table[] =
-{VREvent_DualAnalog_Cancel,VREvent_DualAnalog_ModeSwitch2,VREvent_None,VREvent_OverlayGamepadFocusGained,VREvent_DualAnalog_ModeSwitch1,VREvent_HideKeyboard,VREvent_DualAnalog_Move,VREvent_ShowKeyboard,VREvent_DualAnalog_Untouch,VREvent_ImageLoaded,VREvent_DualAnalog_Touch,VREvent_RenderToast,VREvent_DualAnalog_Unpress,VREvent_ResetDashboard,VREvent_DualAnalog_Press,VREvent_OverlaySharedTextureChanged,VREvent_OverlayGamepadFocusLost,VREvent_DashboardOverlayCreated,VREvent_ConsoleClosed,VREvent_ConsoleOpened,VREvent_Input_BindingLoadFailed,VREvent_Input_HapticVibration,VREvent_SwitchGamepadFocus,VREvent_TrackedDeviceRoleChanged,VREvent_TrackedDeviceActivated,VREvent_DismissedWarningsSectionSettingChanged,VREvent_NullSectionSettingChanged,VREvent_LighthouseSectionSettingChanged,VREvent_SteamVRSectionSettingChanged,VREvent_SystemReport_Started,VREvent_EnableHomeAppSettingsHaveChanged,VREvent_ReloadOverlays,VREvent_TrackedCamera_EditingSurface,VREvent_AudioSettingsHaveChanged,VREvent_SpatialAnchors_RequestDescriptorUpdate,VREvent_StatusUpdate,VREvent_SpatialAnchors_RequestPoseUpdate,VREvent_DashboardRequested,VREvent_SpatialAnchors_DescriptorUpdated,VREvent_Notification_Destroyed,VREvent_Notification_BeginInteraction,VREvent_Notification_Hidden,VREvent_SubmitScreenshotToDashboard,VREvent_Notification_Shown,VREvent_ScreenshotFailed,VREvent_RoomViewShown,VREvent_ScreenshotTaken,VREvent_SpatialAnchors_PoseUpdated,VREvent_ImageFailed,VREvent_DashboardDeactivated,VREvent_DashboardActivated,VREvent_OverlayHidden,VREvent_OverlayShown,VREvent_MCImageUpdated,VREvent_TrackedCamera_ResumeVideoStream,VREvent_RequestScreenshot,VREvent_TrackedCamera_PauseVideoStream,VREvent_TrackedCamera_StopVideoStream,VREvent_TrackedCamera_StartVideoStream,VREvent_ButtonUntouch,VREvent_ButtonTouch,VREvent_ButtonUnpress,VREvent_ButtonPress,VREvent_RestartRequested,VREvent_DriverRequestedQuit,VREvent_QuitAcknowledged,VREvent_Compositor_DisplayDisconnected,VREvent_QuitAborted_UserPrompt,VREvent_ProcessQuit,VREvent_Quit,VREvent_WebInterface_InstallDriverCompleted,VREvent_ScreenshotTriggered,VREvent_KeyboardDone,VREvent_KeyboardCharInput,VREvent_KeyboardClosed,VREvent_Input_BindingsUpdated,VREvent_Input_TrackerActivated,VREvent_Input_ProgressUpdate,VREvent_Input_ActionManifestLoadFailed,VREvent_Input_ActionManifestReloaded,VREvent_Input_BindingLoadSuccessful,VREvent_ShowRenderModels,VREvent_HideRenderModels,VREvent_ActionBindingReloaded,VREvent_SceneApplicationUsingWrongGraphicsAdapter,VREvent_SceneApplicationSecondaryRenderingStarted,VREvent_InputFocusChanged,VREvent_SceneFocusChanged,VREvent_SceneApplicationChanged,VREvent_SceneFocusGained,VREvent_SceneFocusLost,VREvent_InputFocusReleased,VREvent_InputFocusCaptured,VREvent_Compositor_ApplicationResumed,VREvent_Compositor_ApplicationNotResponding,VREvent_Compositor_HDCPError,VREvent_Compositor_DisplayReconnected,VREvent_Compositor_ChaperoneBoundsHidden,VREvent_Compositor_ChaperoneBoundsShown,VREvent_Compositor_MirrorWindowHidden,VREvent_Compositor_MirrorWindowShown,VREvent_MessageOverlayCloseRequested,VREvent_MessageOverlay_Closed,VREvent_WirelessReconnect,VREvent_WirelessDisconnect,VREvent_PropertyChanged,VREvent_LensDistortionChanged,VREvent_WatchdogWakeUpRequested,VREvent_LeaveStandbyMode,VREvent_EnterStandbyMode,VREvent_IpdChanged,VREvent_TrackedDeviceUserInteractionEnded,VREvent_TrackedDeviceUserInteractionStarted,VREvent_TrackedDeviceUpdated,VREvent_TrackedDeviceDeactivated,VREvent_LastKnownSectionSettingChanged,VREvent_TrackersSectionSettingChanged,VREvent_WebInterfaceSectionSettingChanged,VREvent_DashboardSectionSettingChanged,VREvent_PerfSectionSettingChanged,VREvent_KeyboardSectionSettingChanged,VREvent_NotificationsSectionSettingChanged,VREvent_UserInterfaceSectionSettingChanged,VREvent_PowerSettingsHaveChanged,VREvent_EnvironmentSettingsHaveChanged,VREvent_ModelSkinSettingsHaveChanged,VREvent_ReprojectionSettingHasChanged,VREvent_CameraSettingsHaveChanged,VREvent_BackgroundSettingHasChanged,VREvent_FirmwareUpdateFinished,VREvent_FirmwareUpdateStarted,VREvent_PerformanceTest_FidelityLevel,VREvent_PerformanceTest_DisableCapture,VREvent_PerformanceTest_EnableCapture,VREvent_ScrollSmooth,VREvent_OverlayFocusChanged,VREvent_TouchPadMove,VREvent_ScrollDiscrete,VREvent_FocusLeave,VREvent_FocusEnter,VREvent_MouseButtonUp,VREvent_MouseButtonDown,VREvent_MouseMove,VREvent_ShowUI,VREvent_VendorSpecific_Reserved_Start,VREvent_ChaperoneFlushCache,VREvent_SeatedZeroPoseReset,VREvent_ChaperoneSettingsHaveChanged,VREvent_ChaperoneTempDataHasChanged,VREvent_ChaperoneUniverseHasChanged,VREvent_ChaperoneDataHasChanged,VREvent_VendorSpecific_Reserved_End,VREvent_ProcessDisconnected,VREvent_ProcessConnected,VREvent_ApplicationTransitionNewAppLaunchComplete,VREvent_ApplicationMimeTypeLoad,VREvent_ApplicationListUpdated,VREvent_ApplicationTransitionNewAppStarted,VREvent_ApplicationTransitionAborted,VREvent_ApplicationTransitionStarted,VREvent_ShowDevTools,VREvent_RoomViewHidden,VREvent_PrimaryDashboardDeviceChanged,VREvent_ScreenshotProgressToDashboard,};
+{VREvent_DualAnalog_Cancel,VREvent_DualAnalog_ModeSwitch2,VREvent_None,VREvent_OverlayGamepadFocusGained,VREvent_DualAnalog_ModeSwitch1,VREvent_HideKeyboard,VREvent_DualAnalog_Move,VREvent_ShowKeyboard,VREvent_DualAnalog_Untouch,VREvent_ImageLoaded,VREvent_DualAnalog_Touch,VREvent_RenderToast,VREvent_DualAnalog_Unpress,VREvent_ResetDashboard,VREvent_DualAnalog_Press,VREvent_OverlaySharedTextureChanged,VREvent_OverlayGamepadFocusLost,VREvent_DashboardOverlayCreated,VREvent_ConsoleClosed,VREvent_ConsoleOpened,VREvent_Input_BindingLoadFailed,VREvent_Input_HapticVibration,VREvent_SwitchGamepadFocus,VREvent_TrackedDeviceRoleChanged,VREvent_TrackedDeviceActivated,VREvent_DismissedWarningsSectionSettingChanged,VREvent_NullSectionSettingChanged,VREvent_LighthouseSectionSettingChanged,VREvent_SteamVRSectionSettingChanged,VREvent_SystemReport_Started,VREvent_EnableHomeAppSettingsHaveChanged,VREvent_ReloadOverlays,VREvent_ChaperoneRoomSetupFinished,VREvent_AudioSettingsHaveChanged,VREvent_ShowUI,VREvent_TrackedCamera_EditingSurface,VREvent_SpatialAnchors_RequestDescriptorUpdate,VREvent_SpatialAnchors_RequestPoseUpdate,VREvent_SpatialAnchors_DescriptorUpdated,VREvent_Notification_Destroyed,VREvent_Notification_BeginInteraction,VREvent_Notification_Hidden,VREvent_SpatialAnchors_PoseUpdated,VREvent_Notification_Shown,VREvent_SubmitScreenshotToDashboard,VREvent_ScreenshotFailed,VREvent_ScreenshotTaken,VREvent_StatusUpdate,VREvent_RoomViewShown,VREvent_VendorSpecific_Reserved_Start,VREvent_RequestScreenshot,VREvent_ImageFailed,VREvent_DashboardRequested,VREvent_DashboardDeactivated,VREvent_DashboardActivated,VREvent_OverlayHidden,VREvent_OverlayShown,VREvent_MCImageUpdated,VREvent_TrackedCamera_ResumeVideoStream,VREvent_TrackedCamera_PauseVideoStream,VREvent_TrackedCamera_StopVideoStream,VREvent_TrackedCamera_StartVideoStream,VREvent_Monitor_HideHeadsetView,VREvent_Monitor_ShowHeadsetView,VREvent_ButtonUntouch,VREvent_ButtonTouch,VREvent_ButtonUnpress,VREvent_ButtonPress,VREvent_RestartRequested,VREvent_DriverRequestedQuit,VREvent_QuitAcknowledged,VREvent_QuitAborted_UserPrompt,VREvent_ProcessQuit,VREvent_Quit,VREvent_WebInterface_InstallDriverCompleted,VREvent_ScreenshotTriggered,VREvent_KeyboardDone,VREvent_KeyboardCharInput,VREvent_KeyboardClosed,VREvent_Input_BindingsUpdated,VREvent_Input_TrackerActivated,VREvent_Compositor_DisplayDisconnected,VREvent_Input_ProgressUpdate,VREvent_Input_ActionManifestLoadFailed,VREvent_Input_ActionManifestReloaded,VREvent_Input_BindingLoadSuccessful,VREvent_ShowRenderModels,VREvent_HideRenderModels,VREvent_ActionBindingReloaded,VREvent_SceneApplicationUsingWrongGraphicsAdapter,VREvent_SceneApplicationSecondaryRenderingStarted,VREvent_InputFocusChanged,VREvent_SceneFocusChanged,VREvent_SceneApplicationChanged,VREvent_SceneFocusGained,VREvent_SceneFocusLost,VREvent_InputFocusReleased,VREvent_InputFocusCaptured,VREvent_Compositor_OutOfVideoMemory,VREvent_Compositor_ApplicationResumed,VREvent_Compositor_ApplicationNotResponding,VREvent_Compositor_HDCPError,VREvent_Compositor_DisplayReconnected,VREvent_Compositor_ChaperoneBoundsHidden,VREvent_Compositor_ChaperoneBoundsShown,VREvent_MessageOverlayCloseRequested,VREvent_MessageOverlay_Closed,VREvent_WirelessReconnect,VREvent_WirelessDisconnect,VREvent_PropertyChanged,VREvent_LensDistortionChanged,VREvent_WatchdogWakeUpRequested,VREvent_LeaveStandbyMode,VREvent_EnterStandbyMode,VREvent_IpdChanged,VREvent_TrackedDeviceUserInteractionEnded,VREvent_TrackedDeviceUserInteractionStarted,VREvent_TrackedDeviceUpdated,VREvent_TrackedDeviceDeactivated,VREvent_LastKnownSectionSettingChanged,VREvent_TrackersSectionSettingChanged,VREvent_WebInterfaceSectionSettingChanged,VREvent_DashboardSectionSettingChanged,VREvent_PerfSectionSettingChanged,VREvent_KeyboardSectionSettingChanged,VREvent_NotificationsSectionSettingChanged,VREvent_UserInterfaceSectionSettingChanged,VREvent_PowerSettingsHaveChanged,VREvent_EnvironmentSettingsHaveChanged,VREvent_ModelSkinSettingsHaveChanged,VREvent_ReprojectionSettingHasChanged,VREvent_CameraSettingsHaveChanged,VREvent_BackgroundSettingHasChanged,VREvent_FirmwareUpdateFinished,VREvent_FirmwareUpdateStarted,VREvent_PerformanceTest_FidelityLevel,VREvent_PerformanceTest_DisableCapture,VREvent_PerformanceTest_EnableCapture,VREvent_ScrollSmooth,VREvent_OverlayFocusChanged,VREvent_TouchPadMove,VREvent_ScrollDiscrete,VREvent_FocusLeave,VREvent_FocusEnter,VREvent_MouseButtonUp,VREvent_MouseButtonDown,VREvent_MouseMove,VREvent_ChaperoneRoomSetupStarting,VREvent_ChaperoneFlushCache,VREvent_SeatedZeroPoseReset,VREvent_ChaperoneSettingsHaveChanged,VREvent_ChaperoneTempDataHasChanged,VREvent_ChaperoneUniverseHasChanged,VREvent_ChaperoneDataHasChanged,VREvent_VendorSpecific_Reserved_End,VREvent_ProcessDisconnected,VREvent_ProcessConnected,VREvent_ApplicationTransitionNewAppLaunchComplete,VREvent_ApplicationMimeTypeLoad,VREvent_ApplicationListUpdated,VREvent_ApplicationTransitionNewAppStarted,VREvent_ApplicationTransitionAborted,VREvent_ApplicationTransitionStarted,VREvent_ShowDevTools,VREvent_RoomViewHidden,VREvent_PrimaryDashboardDeviceChanged,VREvent_ScreenshotProgressToDashboard,};
 
 static const char * const EVREventType_string_table[] =
-{"VREvent_DualAnalog_Cancel","VREvent_DualAnalog_ModeSwitch2","VREvent_None","VREvent_OverlayGamepadFocusGained","VREvent_DualAnalog_ModeSwitch1","VREvent_HideKeyboard","VREvent_DualAnalog_Move","VREvent_ShowKeyboard","VREvent_DualAnalog_Untouch","VREvent_ImageLoaded","VREvent_DualAnalog_Touch","VREvent_RenderToast","VREvent_DualAnalog_Unpress","VREvent_ResetDashboard","VREvent_DualAnalog_Press","VREvent_OverlaySharedTextureChanged","VREvent_OverlayGamepadFocusLost","VREvent_DashboardOverlayCreated","VREvent_ConsoleClosed","VREvent_ConsoleOpened","VREvent_Input_BindingLoadFailed","VREvent_Input_HapticVibration","VREvent_SwitchGamepadFocus","VREvent_TrackedDeviceRoleChanged","VREvent_TrackedDeviceActivated","VREvent_DismissedWarningsSectionSettingChanged","VREvent_NullSectionSettingChanged","VREvent_LighthouseSectionSettingChanged","VREvent_SteamVRSectionSettingChanged","VREvent_SystemReport_Started","VREvent_EnableHomeAppSettingsHaveChanged","VREvent_ReloadOverlays","VREvent_TrackedCamera_EditingSurface","VREvent_AudioSettingsHaveChanged","VREvent_SpatialAnchors_RequestDescriptorUpdate","VREvent_StatusUpdate","VREvent_SpatialAnchors_RequestPoseUpdate","VREvent_DashboardRequested","VREvent_SpatialAnchors_DescriptorUpdated","VREvent_Notification_Destroyed","VREvent_Notification_BeginInteraction","VREvent_Notification_Hidden","VREvent_SubmitScreenshotToDashboard","VREvent_Notification_Shown","VREvent_ScreenshotFailed","VREvent_RoomViewShown","VREvent_ScreenshotTaken","VREvent_SpatialAnchors_PoseUpdated","VREvent_ImageFailed","VREvent_DashboardDeactivated","VREvent_DashboardActivated","VREvent_OverlayHidden","VREvent_OverlayShown","VREvent_MCImageUpdated","VREvent_TrackedCamera_ResumeVideoStream","VREvent_RequestScreenshot","VREvent_TrackedCamera_PauseVideoStream","VREvent_TrackedCamera_StopVideoStream","VREvent_TrackedCamera_StartVideoStream","VREvent_ButtonUntouch","VREvent_ButtonTouch","VREvent_ButtonUnpress","VREvent_ButtonPress","VREvent_RestartRequested","VREvent_DriverRequestedQuit","VREvent_QuitAcknowledged","VREvent_Compositor_DisplayDisconnected","VREvent_QuitAborted_UserPrompt","VREvent_ProcessQuit","VREvent_Quit","VREvent_WebInterface_InstallDriverCompleted","VREvent_ScreenshotTriggered","VREvent_KeyboardDone","VREvent_KeyboardCharInput","VREvent_KeyboardClosed","VREvent_Input_BindingsUpdated","VREvent_Input_TrackerActivated","VREvent_Input_ProgressUpdate","VREvent_Input_ActionManifestLoadFailed","VREvent_Input_ActionManifestReloaded","VREvent_Input_BindingLoadSuccessful","VREvent_ShowRenderModels","VREvent_HideRenderModels","VREvent_ActionBindingReloaded","VREvent_SceneApplicationUsingWrongGraphicsAdapter","VREvent_SceneApplicationSecondaryRenderingStarted","VREvent_InputFocusChanged","VREvent_SceneFocusChanged","VREvent_SceneApplicationChanged","VREvent_SceneFocusGained","VREvent_SceneFocusLost","VREvent_InputFocusReleased","VREvent_InputFocusCaptured","VREvent_Compositor_ApplicationResumed","VREvent_Compositor_ApplicationNotResponding","VREvent_Compositor_HDCPError","VREvent_Compositor_DisplayReconnected","VREvent_Compositor_ChaperoneBoundsHidden","VREvent_Compositor_ChaperoneBoundsShown","VREvent_Compositor_MirrorWindowHidden","VREvent_Compositor_MirrorWindowShown","VREvent_MessageOverlayCloseRequested","VREvent_MessageOverlay_Closed","VREvent_WirelessReconnect","VREvent_WirelessDisconnect","VREvent_PropertyChanged","VREvent_LensDistortionChanged","VREvent_WatchdogWakeUpRequested","VREvent_LeaveStandbyMode","VREvent_EnterStandbyMode","VREvent_IpdChanged","VREvent_TrackedDeviceUserInteractionEnded","VREvent_TrackedDeviceUserInteractionStarted","VREvent_TrackedDeviceUpdated","VREvent_TrackedDeviceDeactivated","VREvent_LastKnownSectionSettingChanged","VREvent_TrackersSectionSettingChanged","VREvent_WebInterfaceSectionSettingChanged","VREvent_DashboardSectionSettingChanged","VREvent_PerfSectionSettingChanged","VREvent_KeyboardSectionSettingChanged","VREvent_NotificationsSectionSettingChanged","VREvent_UserInterfaceSectionSettingChanged","VREvent_PowerSettingsHaveChanged","VREvent_EnvironmentSettingsHaveChanged","VREvent_ModelSkinSettingsHaveChanged","VREvent_ReprojectionSettingHasChanged","VREvent_CameraSettingsHaveChanged","VREvent_BackgroundSettingHasChanged","VREvent_FirmwareUpdateFinished","VREvent_FirmwareUpdateStarted","VREvent_PerformanceTest_FidelityLevel","VREvent_PerformanceTest_DisableCapture","VREvent_PerformanceTest_EnableCapture","VREvent_ScrollSmooth","VREvent_OverlayFocusChanged","VREvent_TouchPadMove","VREvent_ScrollDiscrete","VREvent_FocusLeave","VREvent_FocusEnter","VREvent_MouseButtonUp","VREvent_MouseButtonDown","VREvent_MouseMove","VREvent_ShowUI","VREvent_VendorSpecific_Reserved_Start","VREvent_ChaperoneFlushCache","VREvent_SeatedZeroPoseReset","VREvent_ChaperoneSettingsHaveChanged","VREvent_ChaperoneTempDataHasChanged","VREvent_ChaperoneUniverseHasChanged","VREvent_ChaperoneDataHasChanged","VREvent_VendorSpecific_Reserved_End","VREvent_ProcessDisconnected","VREvent_ProcessConnected","VREvent_ApplicationTransitionNewAppLaunchComplete","VREvent_ApplicationMimeTypeLoad","VREvent_ApplicationListUpdated","VREvent_ApplicationTransitionNewAppStarted","VREvent_ApplicationTransitionAborted","VREvent_ApplicationTransitionStarted","VREvent_ShowDevTools","VREvent_RoomViewHidden","VREvent_PrimaryDashboardDeviceChanged","VREvent_ScreenshotProgressToDashboard",};
+{"VREvent_DualAnalog_Cancel","VREvent_DualAnalog_ModeSwitch2","VREvent_None","VREvent_OverlayGamepadFocusGained","VREvent_DualAnalog_ModeSwitch1","VREvent_HideKeyboard","VREvent_DualAnalog_Move","VREvent_ShowKeyboard","VREvent_DualAnalog_Untouch","VREvent_ImageLoaded","VREvent_DualAnalog_Touch","VREvent_RenderToast","VREvent_DualAnalog_Unpress","VREvent_ResetDashboard","VREvent_DualAnalog_Press","VREvent_OverlaySharedTextureChanged","VREvent_OverlayGamepadFocusLost","VREvent_DashboardOverlayCreated","VREvent_ConsoleClosed","VREvent_ConsoleOpened","VREvent_Input_BindingLoadFailed","VREvent_Input_HapticVibration","VREvent_SwitchGamepadFocus","VREvent_TrackedDeviceRoleChanged","VREvent_TrackedDeviceActivated","VREvent_DismissedWarningsSectionSettingChanged","VREvent_NullSectionSettingChanged","VREvent_LighthouseSectionSettingChanged","VREvent_SteamVRSectionSettingChanged","VREvent_SystemReport_Started","VREvent_EnableHomeAppSettingsHaveChanged","VREvent_ReloadOverlays","VREvent_ChaperoneRoomSetupFinished","VREvent_AudioSettingsHaveChanged","VREvent_ShowUI","VREvent_TrackedCamera_EditingSurface","VREvent_SpatialAnchors_RequestDescriptorUpdate","VREvent_SpatialAnchors_RequestPoseUpdate","VREvent_SpatialAnchors_DescriptorUpdated","VREvent_Notification_Destroyed","VREvent_Notification_BeginInteraction","VREvent_Notification_Hidden","VREvent_SpatialAnchors_PoseUpdated","VREvent_Notification_Shown","VREvent_SubmitScreenshotToDashboard","VREvent_ScreenshotFailed","VREvent_ScreenshotTaken","VREvent_StatusUpdate","VREvent_RoomViewShown","VREvent_VendorSpecific_Reserved_Start","VREvent_RequestScreenshot","VREvent_ImageFailed","VREvent_DashboardRequested","VREvent_DashboardDeactivated","VREvent_DashboardActivated","VREvent_OverlayHidden","VREvent_OverlayShown","VREvent_MCImageUpdated","VREvent_TrackedCamera_ResumeVideoStream","VREvent_TrackedCamera_PauseVideoStream","VREvent_TrackedCamera_StopVideoStream","VREvent_TrackedCamera_StartVideoStream","VREvent_Monitor_HideHeadsetView","VREvent_Monitor_ShowHeadsetView","VREvent_ButtonUntouch","VREvent_ButtonTouch","VREvent_ButtonUnpress","VREvent_ButtonPress","VREvent_RestartRequested","VREvent_DriverRequestedQuit","VREvent_QuitAcknowledged","VREvent_QuitAborted_UserPrompt","VREvent_ProcessQuit","VREvent_Quit","VREvent_WebInterface_InstallDriverCompleted","VREvent_ScreenshotTriggered","VREvent_KeyboardDone","VREvent_KeyboardCharInput","VREvent_KeyboardClosed","VREvent_Input_BindingsUpdated","VREvent_Input_TrackerActivated","VREvent_Compositor_DisplayDisconnected","VREvent_Input_ProgressUpdate","VREvent_Input_ActionManifestLoadFailed","VREvent_Input_ActionManifestReloaded","VREvent_Input_BindingLoadSuccessful","VREvent_ShowRenderModels","VREvent_HideRenderModels","VREvent_ActionBindingReloaded","VREvent_SceneApplicationUsingWrongGraphicsAdapter","VREvent_SceneApplicationSecondaryRenderingStarted","VREvent_InputFocusChanged","VREvent_SceneFocusChanged","VREvent_SceneApplicationChanged","VREvent_SceneFocusGained","VREvent_SceneFocusLost","VREvent_InputFocusReleased","VREvent_InputFocusCaptured","VREvent_Compositor_OutOfVideoMemory","VREvent_Compositor_ApplicationResumed","VREvent_Compositor_ApplicationNotResponding","VREvent_Compositor_HDCPError","VREvent_Compositor_DisplayReconnected","VREvent_Compositor_ChaperoneBoundsHidden","VREvent_Compositor_ChaperoneBoundsShown","VREvent_MessageOverlayCloseRequested","VREvent_MessageOverlay_Closed","VREvent_WirelessReconnect","VREvent_WirelessDisconnect","VREvent_PropertyChanged","VREvent_LensDistortionChanged","VREvent_WatchdogWakeUpRequested","VREvent_LeaveStandbyMode","VREvent_EnterStandbyMode","VREvent_IpdChanged","VREvent_TrackedDeviceUserInteractionEnded","VREvent_TrackedDeviceUserInteractionStarted","VREvent_TrackedDeviceUpdated","VREvent_TrackedDeviceDeactivated","VREvent_LastKnownSectionSettingChanged","VREvent_TrackersSectionSettingChanged","VREvent_WebInterfaceSectionSettingChanged","VREvent_DashboardSectionSettingChanged","VREvent_PerfSectionSettingChanged","VREvent_KeyboardSectionSettingChanged","VREvent_NotificationsSectionSettingChanged","VREvent_UserInterfaceSectionSettingChanged","VREvent_PowerSettingsHaveChanged","VREvent_EnvironmentSettingsHaveChanged","VREvent_ModelSkinSettingsHaveChanged","VREvent_ReprojectionSettingHasChanged","VREvent_CameraSettingsHaveChanged","VREvent_BackgroundSettingHasChanged","VREvent_FirmwareUpdateFinished","VREvent_FirmwareUpdateStarted","VREvent_PerformanceTest_FidelityLevel","VREvent_PerformanceTest_DisableCapture","VREvent_PerformanceTest_EnableCapture","VREvent_ScrollSmooth","VREvent_OverlayFocusChanged","VREvent_TouchPadMove","VREvent_ScrollDiscrete","VREvent_FocusLeave","VREvent_FocusEnter","VREvent_MouseButtonUp","VREvent_MouseButtonDown","VREvent_MouseMove","VREvent_ChaperoneRoomSetupStarting","VREvent_ChaperoneFlushCache","VREvent_SeatedZeroPoseReset","VREvent_ChaperoneSettingsHaveChanged","VREvent_ChaperoneTempDataHasChanged","VREvent_ChaperoneUniverseHasChanged","VREvent_ChaperoneDataHasChanged","VREvent_VendorSpecific_Reserved_End","VREvent_ProcessDisconnected","VREvent_ProcessConnected","VREvent_ApplicationTransitionNewAppLaunchComplete","VREvent_ApplicationMimeTypeLoad","VREvent_ApplicationListUpdated","VREvent_ApplicationTransitionNewAppStarted","VREvent_ApplicationTransitionAborted","VREvent_ApplicationTransitionStarted","VREvent_ShowDevTools","VREvent_RoomViewHidden","VREvent_PrimaryDashboardDeviceChanged","VREvent_ScreenshotProgressToDashboard",};
 
 const char* EVREventTypeToString(vr::EVREventType e)
 {
   static const unsigned char LUT[] =
     {
-        1,   0,  15,   2,  56,  33,   2,   7,  40,  31,
-       29,  27, 148, 147,  30, 146, 128, 145, 164, 164,
-      126, 125, 124, 123, 122, 121, 120, 119, 164, 164,
-      164,  76, 148, 147, 146, 145, 144, 143, 164,  16,
-      164, 164, 164, 164, 142, 141, 140, 139, 138, 137,
-      136, 135,  31, 134, 164, 164, 164, 164, 164, 164,
-      164, 164, 164, 164, 131, 130, 129, 164, 164, 164,
-      164, 164, 164, 164, 164, 164,  74,  73,  75, 164,
-      164, 164, 126, 125, 124, 123, 122, 121,  28,  26,
-       25,  24, 120, 119, 118, 117, 116, 115, 114, 113,
-       23, 113, 112, 111, 110, 109, 108, 107,  22, 106,
-      105, 104, 103, 102, 100,  99, 164, 164, 164, 164,
-       67,  66, 164, 164, 164, 164, 164, 164, 164, 164,
-       65,  64,  33,  63,  62,  61,  60, 164, 164, 164,
-      164, 164, 164, 164,  92,  91,  90,  89,  88,  87,
-       86,  85,  84,  83,  82,  81, 164, 164, 164, 164,
-      164, 164, 164, 164,  19,  18,  78,  77,  76,  75,
-       74,  73, 164, 164, 164, 164,  18,  17,  16, 164,
-      164, 164,  68, 164, 164, 164, 164, 164,  54,  53,
-       52,  50,  49,  48, 164, 164, 164, 164, 164, 164,
-       61,  60,  59,  58, 164, 164, 164, 164, 164, 164,
-      164, 164, 164, 164, 164, 164, 164, 164, 164, 164,
-       25,  24,  23,  21, 164, 164, 164, 164, 164, 164,
-      164, 164,  51, 164, 164, 164, 164, 164, 164, 164,
-      164, 164, 164, 164,  52,  51,  50,  49, 164,  37,
+        1,   0,  15,   2,  60,  36,   2,   7,  35,  31,
+       30,  29, 151, 150,  33, 149,  19, 148, 167, 167,
+      126, 125, 124, 123, 122, 121, 120, 119, 167, 167,
+      167,  77, 151, 150, 149, 148, 147, 146, 145,  30,
+      167, 167, 167, 167, 146, 145, 144, 143, 142, 141,
+      140, 139,  31, 138, 167, 167, 167, 167, 167, 167,
+      167, 167, 167, 167, 135, 134, 133, 167, 167, 167,
+      167, 167, 167, 167, 167, 167,  74,  73,  77, 167,
+      167, 167, 130, 129, 128, 127, 126, 125,  28,  26,
+       25,  24, 124, 123, 122, 121, 120, 119, 118, 117,
+       23, 117, 116, 115, 114, 113, 112, 111,  22, 110,
+      109, 108, 107, 106, 104, 103, 167, 167, 167, 167,
+      167, 167, 167, 167, 167, 167, 167, 167, 167, 167,
+       68,  67,  45,  66,  65,  64,  63,  62, 167, 167,
+      167, 167, 167, 167,  97,  96,  95,  94,  93,  92,
+       91,  90,  89,  88,  87,  86, 167, 167, 167, 167,
+      167, 167, 167, 167,  19,  18,  83,  82,  81,  80,
+       78,  77, 167, 167, 167, 167,  18,  17,  16, 167,
+      167, 167,  72, 167, 167, 167, 167, 167,  58,  57,
+       56,  55,  54,  53, 167, 167, 167, 167, 167, 167,
+       66,  65,  64,  63, 167, 167, 167, 167,  56,  55,
+      167, 167, 167, 167, 167, 167, 167, 167, 167, 167,
+       25,  24,  23,  22, 167, 167, 167, 167, 167, 167,
+      167, 167,  55, 167, 167, 167, 167, 167, 167, 167,
+      167, 167, 167, 167,  56,  55,  54,  53, 167,  52,
        13,  11,   9,   7,   5,   3
     };
    int offset = LUT[(unsigned char)(((unsigned int)e & 0xFF00) >> 8)] + LUT[(unsigned char)e];
@@ -311,35 +292,30 @@ const char *EVRButtonIdToString(vr::EVRButtonId e)
 
 const char *EVRMouseButtonToString(vr::EVRMouseButton e)
 {
-  static const char * const EVRMouseButton_strings[] =
-  {
-  "VRMouseButton_Left","VRMouseButton_Right",nullptr,"VRMouseButton_Middle"
-  };
-
-  int offset = (int)e - (1);
-  if (offset < 0 || offset >= sizeof(EVRMouseButton_strings)/sizeof(EVRMouseButton_strings[0]))
-     return nullptr;
-  return EVRMouseButton_strings[offset];
+ switch(e)
+ {
+   case (VRMouseButton_Left) : return "VRMouseButton_Left";
+   case (VRMouseButton_Right) : return "VRMouseButton_Right";
+   case (VRMouseButton_Middle) : return "VRMouseButton_Middle";
+   default: return nullptr;
+ }
 }
 
 const char *EDualAnalogWhichToString(vr::EDualAnalogWhich e)
 {
-  static const char * const EDualAnalogWhich_strings[] =
-  {
-  "k_EDualAnalog_Left","k_EDualAnalog_Right"
-  };
-
-  int offset = (int)e;
-  if (offset < 0 || offset >= sizeof(EDualAnalogWhich_strings)/sizeof(EDualAnalogWhich_strings[0]))
-     return nullptr;
-  return EDualAnalogWhich_strings[offset];
+ switch(e)
+ {
+   case (k_EDualAnalog_Left) : return "k_EDualAnalog_Left";
+   case (k_EDualAnalog_Right) : return "k_EDualAnalog_Right";
+   default: return nullptr;
+ }
 }
 
 const char *EShowUITypeToString(vr::EShowUIType e)
 {
   static const char * const EShowUIType_strings[] =
   {
-  "ShowUI_ControllerBinding","ShowUI_ManageTrackers","ShowUI_QuickStart","ShowUI_Pairing","ShowUI_Settings"
+  "ShowUI_ControllerBinding","ShowUI_ManageTrackers",nullptr,"ShowUI_Pairing","ShowUI_Settings","ShowUI_DebugCommands"
   };
 
   int offset = (int)e;
@@ -468,15 +444,13 @@ const char *EVRApplicationTypeToString(vr::EVRApplicationType e)
 
 const char *EVRFirmwareErrorToString(vr::EVRFirmwareError e)
 {
-  static const char * const EVRFirmwareError_strings[] =
-  {
-  "VRFirmwareError_None","VRFirmwareError_Success","VRFirmwareError_Fail"
-  };
-
-  int offset = (int)e;
-  if (offset < 0 || offset >= sizeof(EVRFirmwareError_strings)/sizeof(EVRFirmwareError_strings[0]))
-     return nullptr;
-  return EVRFirmwareError_strings[offset];
+ switch(e)
+ {
+   case (VRFirmwareError_None) : return "VRFirmwareError_None";
+   case (VRFirmwareError_Success) : return "VRFirmwareError_Success";
+   case (VRFirmwareError_Fail) : return "VRFirmwareError_Fail";
+   default: return nullptr;
+ }
 }
 
 const char *EVRNotificationErrorToString(vr::EVRNotificationError e)
@@ -504,54 +478,53 @@ const char *EVRSkeletalMotionRangeToString(vr::EVRSkeletalMotionRange e)
 
 const char *EVRSkeletalTrackingLevelToString(vr::EVRSkeletalTrackingLevel e)
 {
-  static const char * const EVRSkeletalTrackingLevel_strings[] =
-  {
-  "VRSkeletalTracking_Estimated","VRSkeletalTracking_Partial","VRSkeletalTracking_Full","VRSkeletalTrackingLevel_Count"
-  };
-
-  int offset = (int)e;
-  if (offset < 0 || offset >= sizeof(EVRSkeletalTrackingLevel_strings)/sizeof(EVRSkeletalTrackingLevel_strings[0]))
-     return nullptr;
-  return EVRSkeletalTrackingLevel_strings[offset];
+ switch(e)
+ {
+   case (VRSkeletalTracking_Estimated) : return "VRSkeletalTracking_Estimated";
+   case (VRSkeletalTracking_Partial) : return "VRSkeletalTracking_Partial";
+   case (VRSkeletalTracking_Full) : return "VRSkeletalTracking_Full";
+   case (VRSkeletalTrackingLevel_Count) : return "VRSkeletalTrackingLevel_Count";
+   default: return nullptr;
+ }
 }
 #ifdef OPENVR_STRINGS_DISABLE_PASSTHRU
 
 static const vr::EVRInitError EVRInitError_check_table[] =
-{VRInitError_VendorSpecific_WindowsNotInDevMode,VRInitError_Unknown,VRInitError_None,VRInitError_Compositor_CreateLayerGraphicsTextureIndexConstantBuffer,VRInitError_Driver_TrackedDeviceInterfaceUnknown,VRInitError_Compositor_CreateReadableSceneTextureIndexConstantBuffer,VRInitError_Driver_HmdDisplayNotFound,VRInitError_Compositor_CreateComputeHmdPoseConstantBuffer,VRInitError_Driver_HmdDisplayMirrored,VRInitError_Compositor_CreateLayerComputeSceneTextureIndexConstantBuffer,VRInitError_Driver_HmdDriverIdOutOfBounds,VRInitError_Compositor_CreateSceneTextureIndexConstantBuffer,VRInitError_Driver_CalibrationInvalid,VRInitError_Compositor_CreateOverlayConstantBuffer,VRInitError_Driver_NotCalibrated,VRInitError_Compositor_CreateSharedFrameInfoConstantBuffer,VRInitError_Driver_HmdInUse,VRInitError_Compositor_CreateHmdPoseStagingConstantBuffer,VRInitError_Driver_RuntimeOutOfDate,VRInitError_Compositor_CreateHmdPoseConstantBuffer,VRInitError_Driver_NotLoaded,VRInitError_Compositor_CreateConstantBuffer,VRInitError_Driver_HmdUnknown,VRInitError_Compositor_CreateDistortionSurfaces,VRInitError_Driver_Unknown,VRInitError_Compositor_CreateFlushTexture,VRInitError_Driver_Failed,VRInitError_LastError,VRInitError_VendorSpecific_UnableToConnectToOculusRuntime,VRInitError_Steam_SteamInstallationNotFound,VRInitError_Compositor_CreateLastFrameRenderTexture,VRInitError_Compositor_CreateMirrorTextures,VRInitError_Compositor_CreateTextIndexBuffer,VRInitError_Compositor_CreateTextVertexBuffer,VRInitError_Compositor_CreateOverlayVertextBuffer,VRInitError_Compositor_CreateOverlayIndexBuffer,VRInitError_Compositor_ShareFallbackSyncTexture,VRInitError_Compositor_CreateFallbackSyncTexture,VRInitError_Compositor_OpenDriverDirectModeResolveTextures,VRInitError_Compositor_CreateDriverDirectModeResolveTextures,VRInitError_Compositor_CreateComputeResolveRenderTextures,VRInitError_Compositor_CreateResolveRenderTextures,VRInitError_Compositor_CreateMSAARenderTextures,VRInitError_Compositor_CreatePixelSimUBO,VRInitError_Compositor_CreatePanelMaskConstantBuffer,VRInitError_Compositor_CreateGeomConstantBuffer,VRInitError_Compositor_CreateLayerComputeTextureIndexConstantBuffer,VRInitError_Compositor_CreateDepthStencilStateNoDepth,VRInitError_Compositor_CreateDepthStencilStateNoWrite,VRInitError_Compositor_CreateDepthStencilState,VRInitError_Compositor_CreateBlendStateMaskB,VRInitError_Compositor_CreateBlendStateMaskG,VRInitError_Compositor_CreateBlendStateMaskR,VRInitError_Compositor_CreateAlphaBlendState,VRInitError_Compositor_CreateBlendState,VRInitError_Compositor_CreateNoBlendState,VRInitError_Compositor_CreateFontSamplerState,VRInitError_Compositor_CreatePanoramaSamplerState,VRInitError_Compositor_CreateOverlaySamplerState,VRInitError_Compositor_CreateAnisoSamplerState,VRInitError_Compositor_CreateClampToBorderSamplerState,VRInitError_Compositor_CreateSamplerState,VRInitError_Compositor_CreateWireframeRasterizerState,VRInitError_Compositor_CreateRasterizerState,VRInitError_Compositor_UpdateDisplayFrequency,VRInitError_Compositor_InvalidHmdPropertyContainer,VRInitError_Compositor_FailedToCreateDirectModeDisplay,VRInitError_Compositor_NvAPISetDisplayMode,VRInitError_Compositor_FailedToCreateNvAPIRenderTargets,VRInitError_Compositor_SelectDisplayMode,VRInitError_Compositor_FailedToGetDXGIDeviceInterface,VRInitError_Compositor_FailedToCreateDXGI2RenderTarget,VRInitError_Compositor_FailedtoGetDXGI2BackBuffer,VRInitError_Compositor_FailedToCreateDXGI2SwapChain,VRInitError_Compositor_FailedToCreateRenderTarget,VRInitError_Compositor_FailedToGetBackBuffer,VRInitError_Compositor_FailedToCreateSwapChain,VRInitError_Compositor_FailedToFindDisplayMode,VRInitError_Compositor_D3D11RendererInitializationFailed,VRInitError_Compositor_InvalidDeviceProvided,VRInitError_Compositor_InvalidOutputDesktop,VRInitError_Compositor_InvalidHmdAttachment,VRInitError_Compositor_InvalidAdapterDesktop,VRInitError_Compositor_DXGIFactoryQueryFailed,VRInitError_Compositor_DXGIFactoryCreateFailed,VRInitError_Compositor_DXGIFactoryInterfaceIsNull,VRInitError_Compositor_RendererInitializationFailed,VRInitError_Compositor_DisplayFrequencyFailure,VRInitError_Compositor_DistortInterfaceIsNull,VRInitError_Compositor_FailedToShowWindow,VRInitError_Compositor_SettingsInterfaceIsNull,VRInitError_Compositor_CreateFullscreenWindowFailed,VRInitError_Compositor_PropertiesInterfaceIsNull,VRInitError_Compositor_MessageOverlaySharedStateInitFailure,VRInitError_Compositor_ResourceManagerClientIsNull,VRInitError_Compositor_NotificationManagerIsNull,VRInitError_Compositor_SharedStateIsNull,VRInitError_Compositor_UnableToCreateDevice,VRInitError_Compositor_ScreenshotsInitFailed,VRInitError_Compositor_OverlayInitFailed,VRInitError_Compositor_FirmwareRequiresUpdate,VRInitError_Compositor_D3D11HardwareRequired,VRInitError_Compositor_Failed,VRInitError_Init_AlreadyRunning,VRInitError_Init_TrackerManagerInitFailed,VRInitError_Init_VRWebHelperStartupFailed,VRInitError_Init_USBServiceBusy,VRInitError_Init_FirmwareRecoveryBusy,VRInitError_Init_FirmwareUpdateBusy,VRInitError_Init_RebootingBusy,VRInitError_Init_VRHomeStartupFailed,VRInitError_Init_VRHomeNotFound,VRInitError_Init_VRDashboardStartupFailed,VRInitError_Init_VRDashboardNotFound,VRInitError_Init_WatchdogDisabledInSettings,VRInitError_Init_NotAvailableToWatchdogApps,VRInitError_Init_InvalidApplicationType,VRInitError_Init_LowPowerWatchdogNotSupported,VRInitError_Init_VRMonitorStartupFailed,VRInitError_Init_VRMonitorNotFound,VRInitError_Init_HmdNotFoundPresenceFailed,VRInitError_Init_HmdDriverIdIsNone,VRInitError_Init_Internal,VRInitError_Init_NotAvailableToUtilityApps,VRInitError_Init_NotSupportedWithCompositor,VRInitError_Init_NoServerForBackgroundApp,VRInitError_Init_TooManyObjects,VRInitError_Init_ShuttingDown,VRInitError_Init_SettingsInitFailed,VRInitError_Init_AnotherAppLaunching,VRInitError_Init_InitCanceledByUser,VRInitError_Init_Retry,VRInitError_Init_AppInfoInitFailed,VRInitError_Init_PathRegistryNotWritable,VRInitError_Init_NoLogPath,VRInitError_Init_NoConfigPath,VRInitError_Init_PathRegistryNotFound,VRInitError_Init_NotInitialized,VRInitError_Init_HmdNotFound,VRInitError_Init_UserConfigDirectoryInvalid,VRInitError_Init_InvalidInterface,VRInitError_Init_InterfaceNotFound,VRInitError_Init_FactoryNotFound,VRInitError_Init_FileNotFound,VRInitError_Init_VRClientDLLNotFound,VRInitError_Init_InstallationCorrupt,VRInitError_Init_InstallationNotFound,VRInitError_VendorSpecific_HmdFound_ConfigFailedSanityCheck,VRInitError_VendorSpecific_HmdFound_UserDataError,VRInitError_VendorSpecific_HmdFound_UserDataAddressRange,VRInitError_VendorSpecific_HmdFound_UnableToGetUserDataNext,VRInitError_VendorSpecific_HmdFound_UnableToGetUserDataStart,VRInitError_VendorSpecific_HmdFound_UnableToSendUserDataStart,VRInitError_VendorSpecific_HmdFound_CantReadFirmwareVersion,VRInitError_VendorSpecific_HmdFound_UnableToInitZLib,VRInitError_VendorSpecific_HmdFound_ConfigTooSmall,VRInitError_VendorSpecific_HmdFound_ConfigTooBig,VRInitError_VendorSpecific_HmdFound_NoStoredConfig,VRInitError_VendorSpecific_HmdFound_UnableToRequestConfigStart,VRInitError_VendorSpecific_HmdFound_CantOpenDevice,VRInitError_IPC_ConnectFailedAfterMultipleAttempts,VRInitError_IPC_CompositorInvalidConnectResponse,VRInitError_IPC_CompositorConnectFailed,VRInitError_IPC_Failed,VRInitError_IPC_MutexInitFailed,VRInitError_IPC_CompositorInitFailed,VRInitError_IPC_SharedStateInitFailed,VRInitError_IPC_ConnectFailed,VRInitError_IPC_ServerInitFailed,};
+{VRInitError_VendorSpecific_WindowsNotInDevMode,VRInitError_Unknown,VRInitError_None,VRInitError_Compositor_CreateLayerGraphicsTextureIndexConstantBuffer,VRInitError_Driver_TrackedDeviceInterfaceUnknown,VRInitError_Compositor_CreateReadableSceneTextureIndexConstantBuffer,VRInitError_Driver_HmdDisplayNotFound,VRInitError_Compositor_CreateGeomConstantBuffer,VRInitError_Driver_HmdDisplayNotFoundLaptop,VRInitError_Compositor_CreateComputeHmdPoseConstantBuffer,VRInitError_Driver_HmdDisplayMirrored,VRInitError_Compositor_CreateLayerComputeSceneTextureIndexConstantBuffer,VRInitError_Driver_HmdDriverIdOutOfBounds,VRInitError_Compositor_CreateSceneTextureIndexConstantBuffer,VRInitError_Driver_CalibrationInvalid,VRInitError_Compositor_CreateOverlayConstantBuffer,VRInitError_Driver_NotCalibrated,VRInitError_Compositor_CreateSharedFrameInfoConstantBuffer,VRInitError_Driver_HmdInUse,VRInitError_Compositor_CreateHmdPoseStagingConstantBuffer,VRInitError_Driver_RuntimeOutOfDate,VRInitError_Compositor_CreateHmdPoseConstantBuffer,VRInitError_Driver_NotLoaded,VRInitError_Compositor_CreateConstantBuffer,VRInitError_Driver_HmdUnknown,VRInitError_Compositor_CreateDistortionSurfaces,VRInitError_Driver_Unknown,VRInitError_Compositor_CreateFlushTexture,VRInitError_Driver_Failed,VRInitError_Compositor_D3D11HardwareRequired,VRInitError_Init_PropertyManagerInitFailed,VRInitError_Compositor_Failed,VRInitError_Init_FailedForVrMonitor,VRInitError_LastError,VRInitError_VendorSpecific_UnableToConnectToOculusRuntime,VRInitError_Steam_SteamInstallationNotFound,VRInitError_Compositor_FailedToCreateVirtualDisplayBackbuffer,VRInitError_Compositor_CreateMirrorOverlay,VRInitError_Compositor_CreateLastFrameRenderTexture,VRInitError_Compositor_CreateMirrorTextures,VRInitError_Compositor_CreateTextIndexBuffer,VRInitError_Compositor_CreateTextVertexBuffer,VRInitError_Compositor_CreateOverlayVertextBuffer,VRInitError_Compositor_CreateOverlayIndexBuffer,VRInitError_Compositor_ShareFallbackSyncTexture,VRInitError_Compositor_CreateFallbackSyncTexture,VRInitError_Compositor_OpenDriverDirectModeResolveTextures,VRInitError_Compositor_CreateDriverDirectModeResolveTextures,VRInitError_Compositor_CreateComputeResolveRenderTextures,VRInitError_Compositor_CreateResolveRenderTextures,VRInitError_Compositor_CreateMSAARenderTextures,VRInitError_Compositor_CreatePixelSimUBO,VRInitError_Compositor_CreatePanelMaskConstantBuffer,VRInitError_Compositor_CreateLayerComputeTextureIndexConstantBuffer,VRInitError_Compositor_CreateDepthStencilStateNoDepth,VRInitError_Compositor_CreateDepthStencilStateNoWrite,VRInitError_Compositor_CreateDepthStencilState,VRInitError_Compositor_CreateBlendStateMaskB,VRInitError_Compositor_CreateBlendStateMaskG,VRInitError_Compositor_CreateBlendStateMaskR,VRInitError_Compositor_CreateAlphaBlendState,VRInitError_Compositor_CreateBlendState,VRInitError_Compositor_CreateNoBlendState,VRInitError_Compositor_CreateFontSamplerState,VRInitError_Compositor_CreatePanoramaSamplerState,VRInitError_Compositor_CreateOverlaySamplerState,VRInitError_Compositor_CreateAnisoSamplerState,VRInitError_Compositor_CreateClampToBorderSamplerState,VRInitError_Compositor_CreateSamplerState,VRInitError_Compositor_CreateWireframeRasterizerState,VRInitError_Compositor_CreateRasterizerState,VRInitError_Compositor_UpdateDisplayFrequency,VRInitError_Compositor_InvalidHmdPropertyContainer,VRInitError_Compositor_FailedToCreateDirectModeDisplay,VRInitError_Compositor_NvAPISetDisplayMode,VRInitError_Compositor_FailedToCreateNvAPIRenderTargets,VRInitError_Compositor_SelectDisplayMode,VRInitError_Compositor_FailedToGetDXGIDeviceInterface,VRInitError_Compositor_FailedToCreateDXGI2RenderTarget,VRInitError_Compositor_FailedtoGetDXGI2BackBuffer,VRInitError_Compositor_FailedToCreateDXGI2SwapChain,VRInitError_Compositor_FailedToCreateRenderTarget,VRInitError_Compositor_FailedToGetBackBuffer,VRInitError_Compositor_FailedToCreateSwapChain,VRInitError_Compositor_FailedToFindDisplayMode,VRInitError_Compositor_D3D11RendererInitializationFailed,VRInitError_Compositor_InvalidDeviceProvided,VRInitError_Compositor_InvalidOutputDesktop,VRInitError_Compositor_InvalidHmdAttachment,VRInitError_Compositor_InvalidAdapterDesktop,VRInitError_Compositor_DXGIFactoryQueryFailed,VRInitError_Compositor_DXGIFactoryCreateFailed,VRInitError_Compositor_DXGIFactoryInterfaceIsNull,VRInitError_Compositor_RendererInitializationFailed,VRInitError_Compositor_DisplayFrequencyFailure,VRInitError_Compositor_DistortInterfaceIsNull,VRInitError_Compositor_FailedToShowWindow,VRInitError_Compositor_SettingsInterfaceIsNull,VRInitError_Compositor_CreateFullscreenWindowFailed,VRInitError_Compositor_PropertiesInterfaceIsNull,VRInitError_Compositor_MessageOverlaySharedStateInitFailure,VRInitError_Compositor_ResourceManagerClientIsNull,VRInitError_Compositor_NotificationManagerIsNull,VRInitError_Compositor_SharedStateIsNull,VRInitError_Compositor_UnableToCreateDevice,VRInitError_Compositor_ScreenshotsInitFailed,VRInitError_Compositor_OverlayInitFailed,VRInitError_Compositor_FirmwareRequiresUpdate,VRInitError_Init_AlreadyRunning,VRInitError_Init_TrackerManagerInitFailed,VRInitError_Init_VRWebHelperStartupFailed,VRInitError_Init_USBServiceBusy,VRInitError_Init_FirmwareRecoveryBusy,VRInitError_Init_FirmwareUpdateBusy,VRInitError_Init_RebootingBusy,VRInitError_Init_VRHomeStartupFailed,VRInitError_Init_VRHomeNotFound,VRInitError_Init_VRDashboardStartupFailed,VRInitError_Init_VRDashboardNotFound,VRInitError_Init_WatchdogDisabledInSettings,VRInitError_Init_NotAvailableToWatchdogApps,VRInitError_Init_InvalidApplicationType,VRInitError_Init_LowPowerWatchdogNotSupported,VRInitError_Init_VRMonitorStartupFailed,VRInitError_Init_VRMonitorNotFound,VRInitError_Init_HmdNotFoundPresenceFailed,VRInitError_Init_HmdDriverIdIsNone,VRInitError_Init_Internal,VRInitError_Init_NotAvailableToUtilityApps,VRInitError_Init_NotSupportedWithCompositor,VRInitError_Init_NoServerForBackgroundApp,VRInitError_Init_TooManyObjects,VRInitError_Init_ShuttingDown,VRInitError_Init_SettingsInitFailed,VRInitError_Init_AnotherAppLaunching,VRInitError_Init_InitCanceledByUser,VRInitError_Init_Retry,VRInitError_Init_AppInfoInitFailed,VRInitError_Init_PathRegistryNotWritable,VRInitError_Init_NoLogPath,VRInitError_Init_NoConfigPath,VRInitError_Init_PathRegistryNotFound,VRInitError_Init_NotInitialized,VRInitError_Init_HmdNotFound,VRInitError_Init_UserConfigDirectoryInvalid,VRInitError_Init_InvalidInterface,VRInitError_Init_InterfaceNotFound,VRInitError_Init_FactoryNotFound,VRInitError_Init_FileNotFound,VRInitError_Init_VRClientDLLNotFound,VRInitError_Init_InstallationCorrupt,VRInitError_Init_InstallationNotFound,VRInitError_VendorSpecific_OculusRuntimeBadInstall,VRInitError_VendorSpecific_HmdFound_ConfigFailedSanityCheck,VRInitError_VendorSpecific_HmdFound_UserDataError,VRInitError_VendorSpecific_HmdFound_UserDataAddressRange,VRInitError_VendorSpecific_HmdFound_UnableToGetUserDataNext,VRInitError_VendorSpecific_HmdFound_UnableToGetUserDataStart,VRInitError_VendorSpecific_HmdFound_UnableToSendUserDataStart,VRInitError_VendorSpecific_HmdFound_CantReadFirmwareVersion,VRInitError_VendorSpecific_HmdFound_UnableToInitZLib,VRInitError_VendorSpecific_HmdFound_ConfigTooSmall,VRInitError_VendorSpecific_HmdFound_ConfigTooBig,VRInitError_VendorSpecific_HmdFound_NoStoredConfig,VRInitError_VendorSpecific_HmdFound_UnableToRequestConfigStart,VRInitError_VendorSpecific_HmdFound_CantOpenDevice,VRInitError_IPC_NamespaceUnavailable,VRInitError_IPC_ConnectFailedAfterTargetExited,VRInitError_IPC_ConnectFailedAfterMultipleAttempts,VRInitError_IPC_CompositorInvalidConnectResponse,VRInitError_IPC_CompositorConnectFailed,VRInitError_IPC_Failed,VRInitError_IPC_MutexInitFailed,VRInitError_IPC_CompositorInitFailed,VRInitError_IPC_SharedStateInitFailed,VRInitError_IPC_ConnectFailed,VRInitError_IPC_ServerInitFailed,};
 
 static const char * const EVRInitError_string_table[] =
-{"VRInitError_VendorSpecific_WindowsNotInDevMode","VRInitError_Unknown","VRInitError_None","VRInitError_Compositor_CreateLayerGraphicsTextureIndexConstantBuffer","VRInitError_Driver_TrackedDeviceInterfaceUnknown","VRInitError_Compositor_CreateReadableSceneTextureIndexConstantBuffer","VRInitError_Driver_HmdDisplayNotFound","VRInitError_Compositor_CreateComputeHmdPoseConstantBuffer","VRInitError_Driver_HmdDisplayMirrored","VRInitError_Compositor_CreateLayerComputeSceneTextureIndexConstantBuffer","VRInitError_Driver_HmdDriverIdOutOfBounds","VRInitError_Compositor_CreateSceneTextureIndexConstantBuffer","VRInitError_Driver_CalibrationInvalid","VRInitError_Compositor_CreateOverlayConstantBuffer","VRInitError_Driver_NotCalibrated","VRInitError_Compositor_CreateSharedFrameInfoConstantBuffer","VRInitError_Driver_HmdInUse","VRInitError_Compositor_CreateHmdPoseStagingConstantBuffer","VRInitError_Driver_RuntimeOutOfDate","VRInitError_Compositor_CreateHmdPoseConstantBuffer","VRInitError_Driver_NotLoaded","VRInitError_Compositor_CreateConstantBuffer","VRInitError_Driver_HmdUnknown","VRInitError_Compositor_CreateDistortionSurfaces","VRInitError_Driver_Unknown","VRInitError_Compositor_CreateFlushTexture","VRInitError_Driver_Failed","VRInitError_LastError","VRInitError_VendorSpecific_UnableToConnectToOculusRuntime","VRInitError_Steam_SteamInstallationNotFound","VRInitError_Compositor_CreateLastFrameRenderTexture","VRInitError_Compositor_CreateMirrorTextures","VRInitError_Compositor_CreateTextIndexBuffer","VRInitError_Compositor_CreateTextVertexBuffer","VRInitError_Compositor_CreateOverlayVertextBuffer","VRInitError_Compositor_CreateOverlayIndexBuffer","VRInitError_Compositor_ShareFallbackSyncTexture","VRInitError_Compositor_CreateFallbackSyncTexture","VRInitError_Compositor_OpenDriverDirectModeResolveTextures","VRInitError_Compositor_CreateDriverDirectModeResolveTextures","VRInitError_Compositor_CreateComputeResolveRenderTextures","VRInitError_Compositor_CreateResolveRenderTextures","VRInitError_Compositor_CreateMSAARenderTextures","VRInitError_Compositor_CreatePixelSimUBO","VRInitError_Compositor_CreatePanelMaskConstantBuffer","VRInitError_Compositor_CreateGeomConstantBuffer","VRInitError_Compositor_CreateLayerComputeTextureIndexConstantBuffer","VRInitError_Compositor_CreateDepthStencilStateNoDepth","VRInitError_Compositor_CreateDepthStencilStateNoWrite","VRInitError_Compositor_CreateDepthStencilState","VRInitError_Compositor_CreateBlendStateMaskB","VRInitError_Compositor_CreateBlendStateMaskG","VRInitError_Compositor_CreateBlendStateMaskR","VRInitError_Compositor_CreateAlphaBlendState","VRInitError_Compositor_CreateBlendState","VRInitError_Compositor_CreateNoBlendState","VRInitError_Compositor_CreateFontSamplerState","VRInitError_Compositor_CreatePanoramaSamplerState","VRInitError_Compositor_CreateOverlaySamplerState","VRInitError_Compositor_CreateAnisoSamplerState","VRInitError_Compositor_CreateClampToBorderSamplerState","VRInitError_Compositor_CreateSamplerState","VRInitError_Compositor_CreateWireframeRasterizerState","VRInitError_Compositor_CreateRasterizerState","VRInitError_Compositor_UpdateDisplayFrequency","VRInitError_Compositor_InvalidHmdPropertyContainer","VRInitError_Compositor_FailedToCreateDirectModeDisplay","VRInitError_Compositor_NvAPISetDisplayMode","VRInitError_Compositor_FailedToCreateNvAPIRenderTargets","VRInitError_Compositor_SelectDisplayMode","VRInitError_Compositor_FailedToGetDXGIDeviceInterface","VRInitError_Compositor_FailedToCreateDXGI2RenderTarget","VRInitError_Compositor_FailedtoGetDXGI2BackBuffer","VRInitError_Compositor_FailedToCreateDXGI2SwapChain","VRInitError_Compositor_FailedToCreateRenderTarget","VRInitError_Compositor_FailedToGetBackBuffer","VRInitError_Compositor_FailedToCreateSwapChain","VRInitError_Compositor_FailedToFindDisplayMode","VRInitError_Compositor_D3D11RendererInitializationFailed","VRInitError_Compositor_InvalidDeviceProvided","VRInitError_Compositor_InvalidOutputDesktop","VRInitError_Compositor_InvalidHmdAttachment","VRInitError_Compositor_InvalidAdapterDesktop","VRInitError_Compositor_DXGIFactoryQueryFailed","VRInitError_Compositor_DXGIFactoryCreateFailed","VRInitError_Compositor_DXGIFactoryInterfaceIsNull","VRInitError_Compositor_RendererInitializationFailed","VRInitError_Compositor_DisplayFrequencyFailure","VRInitError_Compositor_DistortInterfaceIsNull","VRInitError_Compositor_FailedToShowWindow","VRInitError_Compositor_SettingsInterfaceIsNull","VRInitError_Compositor_CreateFullscreenWindowFailed","VRInitError_Compositor_PropertiesInterfaceIsNull","VRInitError_Compositor_MessageOverlaySharedStateInitFailure","VRInitError_Compositor_ResourceManagerClientIsNull","VRInitError_Compositor_NotificationManagerIsNull","VRInitError_Compositor_SharedStateIsNull","VRInitError_Compositor_UnableToCreateDevice","VRInitError_Compositor_ScreenshotsInitFailed","VRInitError_Compositor_OverlayInitFailed","VRInitError_Compositor_FirmwareRequiresUpdate","VRInitError_Compositor_D3D11HardwareRequired","VRInitError_Compositor_Failed","VRInitError_Init_AlreadyRunning","VRInitError_Init_TrackerManagerInitFailed","VRInitError_Init_VRWebHelperStartupFailed","VRInitError_Init_USBServiceBusy","VRInitError_Init_FirmwareRecoveryBusy","VRInitError_Init_FirmwareUpdateBusy","VRInitError_Init_RebootingBusy","VRInitError_Init_VRHomeStartupFailed","VRInitError_Init_VRHomeNotFound","VRInitError_Init_VRDashboardStartupFailed","VRInitError_Init_VRDashboardNotFound","VRInitError_Init_WatchdogDisabledInSettings","VRInitError_Init_NotAvailableToWatchdogApps","VRInitError_Init_InvalidApplicationType","VRInitError_Init_LowPowerWatchdogNotSupported","VRInitError_Init_VRMonitorStartupFailed","VRInitError_Init_VRMonitorNotFound","VRInitError_Init_HmdNotFoundPresenceFailed","VRInitError_Init_HmdDriverIdIsNone","VRInitError_Init_Internal","VRInitError_Init_NotAvailableToUtilityApps","VRInitError_Init_NotSupportedWithCompositor","VRInitError_Init_NoServerForBackgroundApp","VRInitError_Init_TooManyObjects","VRInitError_Init_ShuttingDown","VRInitError_Init_SettingsInitFailed","VRInitError_Init_AnotherAppLaunching","VRInitError_Init_InitCanceledByUser","VRInitError_Init_Retry","VRInitError_Init_AppInfoInitFailed","VRInitError_Init_PathRegistryNotWritable","VRInitError_Init_NoLogPath","VRInitError_Init_NoConfigPath","VRInitError_Init_PathRegistryNotFound","VRInitError_Init_NotInitialized","VRInitError_Init_HmdNotFound","VRInitError_Init_UserConfigDirectoryInvalid","VRInitError_Init_InvalidInterface","VRInitError_Init_InterfaceNotFound","VRInitError_Init_FactoryNotFound","VRInitError_Init_FileNotFound","VRInitError_Init_VRClientDLLNotFound","VRInitError_Init_InstallationCorrupt","VRInitError_Init_InstallationNotFound","VRInitError_VendorSpecific_HmdFound_ConfigFailedSanityCheck","VRInitError_VendorSpecific_HmdFound_UserDataError","VRInitError_VendorSpecific_HmdFound_UserDataAddressRange","VRInitError_VendorSpecific_HmdFound_UnableToGetUserDataNext","VRInitError_VendorSpecific_HmdFound_UnableToGetUserDataStart","VRInitError_VendorSpecific_HmdFound_UnableToSendUserDataStart","VRInitError_VendorSpecific_HmdFound_CantReadFirmwareVersion","VRInitError_VendorSpecific_HmdFound_UnableToInitZLib","VRInitError_VendorSpecific_HmdFound_ConfigTooSmall","VRInitError_VendorSpecific_HmdFound_ConfigTooBig","VRInitError_VendorSpecific_HmdFound_NoStoredConfig","VRInitError_VendorSpecific_HmdFound_UnableToRequestConfigStart","VRInitError_VendorSpecific_HmdFound_CantOpenDevice","VRInitError_IPC_ConnectFailedAfterMultipleAttempts","VRInitError_IPC_CompositorInvalidConnectResponse","VRInitError_IPC_CompositorConnectFailed","VRInitError_IPC_Failed","VRInitError_IPC_MutexInitFailed","VRInitError_IPC_CompositorInitFailed","VRInitError_IPC_SharedStateInitFailed","VRInitError_IPC_ConnectFailed","VRInitError_IPC_ServerInitFailed",};
+{"VRInitError_VendorSpecific_WindowsNotInDevMode","VRInitError_Unknown","VRInitError_None","VRInitError_Compositor_CreateLayerGraphicsTextureIndexConstantBuffer","VRInitError_Driver_TrackedDeviceInterfaceUnknown","VRInitError_Compositor_CreateReadableSceneTextureIndexConstantBuffer","VRInitError_Driver_HmdDisplayNotFound","VRInitError_Compositor_CreateGeomConstantBuffer","VRInitError_Driver_HmdDisplayNotFoundLaptop","VRInitError_Compositor_CreateComputeHmdPoseConstantBuffer","VRInitError_Driver_HmdDisplayMirrored","VRInitError_Compositor_CreateLayerComputeSceneTextureIndexConstantBuffer","VRInitError_Driver_HmdDriverIdOutOfBounds","VRInitError_Compositor_CreateSceneTextureIndexConstantBuffer","VRInitError_Driver_CalibrationInvalid","VRInitError_Compositor_CreateOverlayConstantBuffer","VRInitError_Driver_NotCalibrated","VRInitError_Compositor_CreateSharedFrameInfoConstantBuffer","VRInitError_Driver_HmdInUse","VRInitError_Compositor_CreateHmdPoseStagingConstantBuffer","VRInitError_Driver_RuntimeOutOfDate","VRInitError_Compositor_CreateHmdPoseConstantBuffer","VRInitError_Driver_NotLoaded","VRInitError_Compositor_CreateConstantBuffer","VRInitError_Driver_HmdUnknown","VRInitError_Compositor_CreateDistortionSurfaces","VRInitError_Driver_Unknown","VRInitError_Compositor_CreateFlushTexture","VRInitError_Driver_Failed","VRInitError_Compositor_D3D11HardwareRequired","VRInitError_Init_PropertyManagerInitFailed","VRInitError_Compositor_Failed","VRInitError_Init_FailedForVrMonitor","VRInitError_LastError","VRInitError_VendorSpecific_UnableToConnectToOculusRuntime","VRInitError_Steam_SteamInstallationNotFound","VRInitError_Compositor_FailedToCreateVirtualDisplayBackbuffer","VRInitError_Compositor_CreateMirrorOverlay","VRInitError_Compositor_CreateLastFrameRenderTexture","VRInitError_Compositor_CreateMirrorTextures","VRInitError_Compositor_CreateTextIndexBuffer","VRInitError_Compositor_CreateTextVertexBuffer","VRInitError_Compositor_CreateOverlayVertextBuffer","VRInitError_Compositor_CreateOverlayIndexBuffer","VRInitError_Compositor_ShareFallbackSyncTexture","VRInitError_Compositor_CreateFallbackSyncTexture","VRInitError_Compositor_OpenDriverDirectModeResolveTextures","VRInitError_Compositor_CreateDriverDirectModeResolveTextures","VRInitError_Compositor_CreateComputeResolveRenderTextures","VRInitError_Compositor_CreateResolveRenderTextures","VRInitError_Compositor_CreateMSAARenderTextures","VRInitError_Compositor_CreatePixelSimUBO","VRInitError_Compositor_CreatePanelMaskConstantBuffer","VRInitError_Compositor_CreateLayerComputeTextureIndexConstantBuffer","VRInitError_Compositor_CreateDepthStencilStateNoDepth","VRInitError_Compositor_CreateDepthStencilStateNoWrite","VRInitError_Compositor_CreateDepthStencilState","VRInitError_Compositor_CreateBlendStateMaskB","VRInitError_Compositor_CreateBlendStateMaskG","VRInitError_Compositor_CreateBlendStateMaskR","VRInitError_Compositor_CreateAlphaBlendState","VRInitError_Compositor_CreateBlendState","VRInitError_Compositor_CreateNoBlendState","VRInitError_Compositor_CreateFontSamplerState","VRInitError_Compositor_CreatePanoramaSamplerState","VRInitError_Compositor_CreateOverlaySamplerState","VRInitError_Compositor_CreateAnisoSamplerState","VRInitError_Compositor_CreateClampToBorderSamplerState","VRInitError_Compositor_CreateSamplerState","VRInitError_Compositor_CreateWireframeRasterizerState","VRInitError_Compositor_CreateRasterizerState","VRInitError_Compositor_UpdateDisplayFrequency","VRInitError_Compositor_InvalidHmdPropertyContainer","VRInitError_Compositor_FailedToCreateDirectModeDisplay","VRInitError_Compositor_NvAPISetDisplayMode","VRInitError_Compositor_FailedToCreateNvAPIRenderTargets","VRInitError_Compositor_SelectDisplayMode","VRInitError_Compositor_FailedToGetDXGIDeviceInterface","VRInitError_Compositor_FailedToCreateDXGI2RenderTarget","VRInitError_Compositor_FailedtoGetDXGI2BackBuffer","VRInitError_Compositor_FailedToCreateDXGI2SwapChain","VRInitError_Compositor_FailedToCreateRenderTarget","VRInitError_Compositor_FailedToGetBackBuffer","VRInitError_Compositor_FailedToCreateSwapChain","VRInitError_Compositor_FailedToFindDisplayMode","VRInitError_Compositor_D3D11RendererInitializationFailed","VRInitError_Compositor_InvalidDeviceProvided","VRInitError_Compositor_InvalidOutputDesktop","VRInitError_Compositor_InvalidHmdAttachment","VRInitError_Compositor_InvalidAdapterDesktop","VRInitError_Compositor_DXGIFactoryQueryFailed","VRInitError_Compositor_DXGIFactoryCreateFailed","VRInitError_Compositor_DXGIFactoryInterfaceIsNull","VRInitError_Compositor_RendererInitializationFailed","VRInitError_Compositor_DisplayFrequencyFailure","VRInitError_Compositor_DistortInterfaceIsNull","VRInitError_Compositor_FailedToShowWindow","VRInitError_Compositor_SettingsInterfaceIsNull","VRInitError_Compositor_CreateFullscreenWindowFailed","VRInitError_Compositor_PropertiesInterfaceIsNull","VRInitError_Compositor_MessageOverlaySharedStateInitFailure","VRInitError_Compositor_ResourceManagerClientIsNull","VRInitError_Compositor_NotificationManagerIsNull","VRInitError_Compositor_SharedStateIsNull","VRInitError_Compositor_UnableToCreateDevice","VRInitError_Compositor_ScreenshotsInitFailed","VRInitError_Compositor_OverlayInitFailed","VRInitError_Compositor_FirmwareRequiresUpdate","VRInitError_Init_AlreadyRunning","VRInitError_Init_TrackerManagerInitFailed","VRInitError_Init_VRWebHelperStartupFailed","VRInitError_Init_USBServiceBusy","VRInitError_Init_FirmwareRecoveryBusy","VRInitError_Init_FirmwareUpdateBusy","VRInitError_Init_RebootingBusy","VRInitError_Init_VRHomeStartupFailed","VRInitError_Init_VRHomeNotFound","VRInitError_Init_VRDashboardStartupFailed","VRInitError_Init_VRDashboardNotFound","VRInitError_Init_WatchdogDisabledInSettings","VRInitError_Init_NotAvailableToWatchdogApps","VRInitError_Init_InvalidApplicationType","VRInitError_Init_LowPowerWatchdogNotSupported","VRInitError_Init_VRMonitorStartupFailed","VRInitError_Init_VRMonitorNotFound","VRInitError_Init_HmdNotFoundPresenceFailed","VRInitError_Init_HmdDriverIdIsNone","VRInitError_Init_Internal","VRInitError_Init_NotAvailableToUtilityApps","VRInitError_Init_NotSupportedWithCompositor","VRInitError_Init_NoServerForBackgroundApp","VRInitError_Init_TooManyObjects","VRInitError_Init_ShuttingDown","VRInitError_Init_SettingsInitFailed","VRInitError_Init_AnotherAppLaunching","VRInitError_Init_InitCanceledByUser","VRInitError_Init_Retry","VRInitError_Init_AppInfoInitFailed","VRInitError_Init_PathRegistryNotWritable","VRInitError_Init_NoLogPath","VRInitError_Init_NoConfigPath","VRInitError_Init_PathRegistryNotFound","VRInitError_Init_NotInitialized","VRInitError_Init_HmdNotFound","VRInitError_Init_UserConfigDirectoryInvalid","VRInitError_Init_InvalidInterface","VRInitError_Init_InterfaceNotFound","VRInitError_Init_FactoryNotFound","VRInitError_Init_FileNotFound","VRInitError_Init_VRClientDLLNotFound","VRInitError_Init_InstallationCorrupt","VRInitError_Init_InstallationNotFound","VRInitError_VendorSpecific_OculusRuntimeBadInstall","VRInitError_VendorSpecific_HmdFound_ConfigFailedSanityCheck","VRInitError_VendorSpecific_HmdFound_UserDataError","VRInitError_VendorSpecific_HmdFound_UserDataAddressRange","VRInitError_VendorSpecific_HmdFound_UnableToGetUserDataNext","VRInitError_VendorSpecific_HmdFound_UnableToGetUserDataStart","VRInitError_VendorSpecific_HmdFound_UnableToSendUserDataStart","VRInitError_VendorSpecific_HmdFound_CantReadFirmwareVersion","VRInitError_VendorSpecific_HmdFound_UnableToInitZLib","VRInitError_VendorSpecific_HmdFound_ConfigTooSmall","VRInitError_VendorSpecific_HmdFound_ConfigTooBig","VRInitError_VendorSpecific_HmdFound_NoStoredConfig","VRInitError_VendorSpecific_HmdFound_UnableToRequestConfigStart","VRInitError_VendorSpecific_HmdFound_CantOpenDevice","VRInitError_IPC_NamespaceUnavailable","VRInitError_IPC_ConnectFailedAfterTargetExited","VRInitError_IPC_ConnectFailedAfterMultipleAttempts","VRInitError_IPC_CompositorInvalidConnectResponse","VRInitError_IPC_CompositorConnectFailed","VRInitError_IPC_Failed","VRInitError_IPC_MutexInitFailed","VRInitError_IPC_CompositorInitFailed","VRInitError_IPC_SharedStateInitFailed","VRInitError_IPC_ConnectFailed","VRInitError_IPC_ServerInitFailed",};
 
 const char* EVRInitErrorToString(vr::EVRInitError e)
 {
   static const unsigned char LUT[] =
     {
-        1,   0, 169,   0,  74, 169, 169,  24, 169, 169,
-      169, 169, 169, 169, 169, 169, 169, 169, 169, 169,
-      169, 169, 169, 169, 169, 169, 169, 169, 169, 169,
-      169, 169, 169, 169, 169, 169, 169, 169, 169, 169,
-      169, 169, 169, 169, 168, 167, 166, 165, 164, 163,
-      162, 161, 160, 169, 169, 169, 169, 169, 169, 169,
-      169, 169, 169, 169, 169, 169, 169, 169, 169, 169,
-      169, 169, 169, 169, 169, 169, 169,  85,  84,  83,
-       82,  81,  80,  79,  78,  77,  76,  75,  74,  73,
-      169, 169, 169, 169, 169, 169, 169, 169, 169, 169,
-      145, 144, 143, 142, 141, 140, 139, 138, 137, 136,
-      135, 134, 133, 132, 131, 130, 129, 128, 127, 126,
-      125, 124, 123, 122, 121, 120, 119, 118, 117, 116,
-      115, 114, 113, 112, 111, 110, 109, 108, 107, 106,
-      105, 104, 103, 102, 102, 101, 100,  99,  98,  97,
-       96,  95,  94,  93,  92,  91,  90,  89,  88,  87,
+        1,   0, 177,   0,  76, 177, 177,  30, 177, 177,
+      177, 177, 177, 177, 177, 177, 177, 177, 177, 177,
+      177, 177, 177, 177, 177, 177, 177, 177, 177, 177,
+      177, 177, 177, 177, 177, 177, 177, 177, 177, 177,
+      177, 177, 177, 177, 176, 175, 174, 173, 172, 171,
+      170, 169, 168, 167, 166, 177, 177, 177, 177, 177,
+      177, 177, 177, 177, 177, 177, 177, 177, 177, 177,
+      177, 177, 177, 177, 177, 177, 177,  89,  88,  87,
        86,  85,  84,  83,  82,  81,  80,  79,  78,  77,
-       76,  75,  74,  73,  72,  71,  70,  69,  68,  67,
-       66,  65,  64,  63,  62,  61,  60,  59,  58,  57,
-       56,  55,  54,  53,  52,  51,  50,  49,  48,  47,
-       25,  23,  21,  19,  17,  15,  13,  11,   5,   3,
-       46,   9,   7,  45,  44,  43,  42,  41,  40,  39,
-       38,  37,  36,  35,  34,  33,  32,  31,  30, 169,
-      169, 169,  28,   0, 169, 169, 169, 169, 169, 169,
-      169, 169, 169, 169, 169, 169, 169, 169, 169, 169,
-      169, 169, 169, 169, 169, 169
+       76, 177, 177, 177, 177, 177, 177, 177, 177, 177,
+      150, 149, 148, 147, 146, 145, 144, 143, 142, 141,
+      140, 139, 138, 137, 136, 135, 134, 133, 132, 131,
+      130, 129, 128, 127, 126, 125, 124, 123, 122, 121,
+      120, 119, 118, 117, 116, 115, 114, 113, 112, 111,
+      110, 109, 108, 107,  31,  29, 107, 106, 105, 104,
+      103, 102, 101, 100,  99,  98,  97,  96,  95,  94,
+       93,  92,  91,  90,  89,  88,  87,  86,  85,  84,
+       83,  82,  81,  80,  79,  78,  77,  76,  75,  74,
+       73,  72,  71,  70,  69,  68,  67,  66,  65,  64,
+       63,  62,  61,  60,  59,  58,  57,  56,  55,  54,
+       27,  25,  23,  21,  19,  17,  15,  13,   5,   3,
+       53,  11,   9,   7,  52,  51,  50,  49,  48,  47,
+       46,  45,  44,  43,  42,  41,  40,  39,  38,  37,
+       36, 177,  34,   0, 177, 177, 177, 177, 177, 177,
+      177, 177, 177, 177, 177, 177, 177, 177, 177, 177,
+      177, 177, 177, 177, 177, 177
     };
    int offset = LUT[(unsigned char)(((unsigned int)e & 0xFF00) >> 8)] + LUT[(unsigned char)e];
    if (offset < (sizeof(EVRInitError_check_table) / sizeof(EVRInitError_check_table[0])) &&
@@ -590,50 +563,17 @@ const char *EVRScreenshotPropertyFilenamesToString(vr::EVRScreenshotPropertyFile
 }
 #ifdef OPENVR_STRINGS_DISABLE_PASSTHRU
 
-static const vr::EVRTrackedCameraError EVRTrackedCameraError_check_table[] =
-{VRTrackedCameraError_InvalidFrameBufferSize,VRTrackedCameraError_InvalidArgument,VRTrackedCameraError_NoFrameAvailable,VRTrackedCameraError_SharedTextureFailure,VRTrackedCameraError_FailedToGetGLTextureId,VRTrackedCameraError_InvalidSharedTextureHandle,VRTrackedCameraError_InvalidGLTextureId,VRTrackedCameraError_StreamSetupFailure,VRTrackedCameraError_FrameBufferingFailure,VRTrackedCameraError_SharedMemoryFailure,VRTrackedCameraError_NotSupportedForThisDevice,VRTrackedCameraError_IPCFailure,VRTrackedCameraError_OutOfHandles,VRTrackedCameraError_InvalidFrameHeaderVersion,VRTrackedCameraError_InvalidHandle,VRTrackedCameraError_OperationFailed,VRTrackedCameraError_None,};
-
-static const char * const EVRTrackedCameraError_string_table[] =
-{"VRTrackedCameraError_InvalidFrameBufferSize","VRTrackedCameraError_InvalidArgument","VRTrackedCameraError_NoFrameAvailable","VRTrackedCameraError_SharedTextureFailure","VRTrackedCameraError_FailedToGetGLTextureId","VRTrackedCameraError_InvalidSharedTextureHandle","VRTrackedCameraError_InvalidGLTextureId","VRTrackedCameraError_StreamSetupFailure","VRTrackedCameraError_FrameBufferingFailure","VRTrackedCameraError_SharedMemoryFailure","VRTrackedCameraError_NotSupportedForThisDevice","VRTrackedCameraError_IPCFailure","VRTrackedCameraError_OutOfHandles","VRTrackedCameraError_InvalidFrameHeaderVersion","VRTrackedCameraError_InvalidHandle","VRTrackedCameraError_OperationFailed","VRTrackedCameraError_None",};
-
-const char* EVRTrackedCameraErrorToString(vr::EVRTrackedCameraError e)
+const char *EVRTrackedCameraErrorToString(vr::EVRTrackedCameraError e)
 {
-  static const unsigned char LUT[] =
-    {
-      16, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      15, 14, 13, 12, 11, 10,  9,  8,  7,  6,
-       5,  4,  3,  2,  1,  0, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17, 17, 17, 17, 17,
-      17, 17, 17, 17, 17, 17
-    };
-   int offset = LUT[(unsigned char)e];
-   if (offset < (sizeof(EVRTrackedCameraError_check_table) / sizeof(EVRTrackedCameraError_check_table[0])) &&
-      (e == EVRTrackedCameraError_check_table[offset]))
-   {
-      return EVRTrackedCameraError_string_table[offset];
-   }
-   return nullptr;
+  static const char * const EVRTrackedCameraError_strings[] =
+  {
+  "VRTrackedCameraError_None",nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,"VRTrackedCameraError_OperationFailed","VRTrackedCameraError_InvalidHandle","VRTrackedCameraError_InvalidFrameHeaderVersion","VRTrackedCameraError_OutOfHandles","VRTrackedCameraError_IPCFailure","VRTrackedCameraError_NotSupportedForThisDevice","VRTrackedCameraError_SharedMemoryFailure","VRTrackedCameraError_FrameBufferingFailure","VRTrackedCameraError_StreamSetupFailure","VRTrackedCameraError_InvalidGLTextureId","VRTrackedCameraError_InvalidSharedTextureHandle","VRTrackedCameraError_FailedToGetGLTextureId","VRTrackedCameraError_SharedTextureFailure","VRTrackedCameraError_NoFrameAvailable","VRTrackedCameraError_InvalidArgument","VRTrackedCameraError_InvalidFrameBufferSize"
+  };
+
+  int offset = (int)e;
+  if (offset < 0 || offset >= sizeof(EVRTrackedCameraError_strings)/sizeof(EVRTrackedCameraError_strings[0]))
+     return nullptr;
+  return EVRTrackedCameraError_strings[offset];
 }
 #endif // OPENVR_STRINGS_DISABLE_PASSTHRU
 
@@ -678,15 +618,13 @@ const char *EVRDistortionFunctionTypeToString(vr::EVRDistortionFunctionType e)
 
 const char *EVSyncToString(vr::EVSync e)
 {
-  static const char * const EVSync_strings[] =
-  {
-  "VSync_None","VSync_WaitRender","VSync_NoWaitRender"
-  };
-
-  int offset = (int)e;
-  if (offset < 0 || offset >= sizeof(EVSync_strings)/sizeof(EVSync_strings[0]))
-     return nullptr;
-  return EVSync_strings[offset];
+ switch(e)
+ {
+   case (VSync_None) : return "VSync_None";
+   case (VSync_WaitRender) : return "VSync_WaitRender";
+   case (VSync_NoWaitRender) : return "VSync_NoWaitRender";
+   default: return nullptr;
+ }
 }
 
 const char *EVRMuraCorrectionModeToString(vr::EVRMuraCorrectionMode e)
@@ -764,7 +702,7 @@ const char *EVRApplicationPropertyToString(vr::EVRApplicationProperty e)
 {
   static const char * const EVRApplicationProperty_strings[] =
   {
-  "VRApplicationProperty_Name_String",nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,"VRApplicationProperty_LaunchType_String","VRApplicationProperty_WorkingDirectory_String","VRApplicationProperty_BinaryPath_String","VRApplicationProperty_Arguments_String","VRApplicationProperty_URL_String",nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,"VRApplicationProperty_Description_String","VRApplicationProperty_NewsURL_String","VRApplicationProperty_ImagePath_String","VRApplicationProperty_Source_String","VRApplicationProperty_ActionManifestURL_String",nullptr,nullptr,nullptr,nullptr,nullptr,"VRApplicationProperty_IsDashboardOverlay_Bool","VRApplicationProperty_IsTemplate_Bool","VRApplicationProperty_IsInstanced_Bool","VRApplicationProperty_IsInternal_Bool","VRApplicationProperty_WantsCompositorPauseInStandby_Bool",nullptr,nullptr,nullptr,nullptr,nullptr,"VRApplicationProperty_LastLaunchTime_Uint64"
+  "VRApplicationProperty_Name_String",nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,"VRApplicationProperty_LaunchType_String","VRApplicationProperty_WorkingDirectory_String","VRApplicationProperty_BinaryPath_String","VRApplicationProperty_Arguments_String","VRApplicationProperty_URL_String",nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,"VRApplicationProperty_Description_String","VRApplicationProperty_NewsURL_String","VRApplicationProperty_ImagePath_String","VRApplicationProperty_Source_String","VRApplicationProperty_ActionManifestURL_String",nullptr,nullptr,nullptr,nullptr,nullptr,"VRApplicationProperty_IsDashboardOverlay_Bool","VRApplicationProperty_IsTemplate_Bool","VRApplicationProperty_IsInstanced_Bool","VRApplicationProperty_IsInternal_Bool","VRApplicationProperty_WantsCompositorPauseInStandby_Bool","VRApplicationProperty_IsHidden_Bool",nullptr,nullptr,nullptr,nullptr,"VRApplicationProperty_LastLaunchTime_Uint64"
   };
 
   int offset = (int)e;
@@ -786,149 +724,79 @@ const char *EVRApplicationTransitionStateToString(vr::EVRApplicationTransitionSt
   return EVRApplicationTransitionState_strings[offset];
 }
 
-static const vr::ChaperoneCalibrationState ChaperoneCalibrationState_check_table[] =
-{ChaperoneCalibrationState_Error_CollisionBoundsInvalid,ChaperoneCalibrationState_Error_PlayAreaInvalid,ChaperoneCalibrationState_Error_BaseStationConflict,ChaperoneCalibrationState_Error_BaseStationUninitialized,ChaperoneCalibrationState_Error,ChaperoneCalibrationState_Warning_SeatedBoundsInvalid,ChaperoneCalibrationState_Warning_BaseStationRemoved,ChaperoneCalibrationState_Warning_BaseStationMayHaveMoved,ChaperoneCalibrationState_Warning,ChaperoneCalibrationState_OK,};
-
-static const char * const ChaperoneCalibrationState_string_table[] =
-{"ChaperoneCalibrationState_Error_CollisionBoundsInvalid","ChaperoneCalibrationState_Error_PlayAreaInvalid","ChaperoneCalibrationState_Error_BaseStationConflict","ChaperoneCalibrationState_Error_BaseStationUninitialized","ChaperoneCalibrationState_Error","ChaperoneCalibrationState_Warning_SeatedBoundsInvalid","ChaperoneCalibrationState_Warning_BaseStationRemoved","ChaperoneCalibrationState_Warning_BaseStationMayHaveMoved","ChaperoneCalibrationState_Warning","ChaperoneCalibrationState_OK",};
-
-const char* ChaperoneCalibrationStateToString(vr::ChaperoneCalibrationState e)
-{
-  static const unsigned char LUT[] =
-    {
-     10, 9,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-      8, 7, 6, 5,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-      4, 3, 2, 1, 0,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10,10,10,10,10,
-     10,10,10,10,10,10
-    };
-   int offset = LUT[(unsigned char)e];
-   if (offset < (sizeof(ChaperoneCalibrationState_check_table) / sizeof(ChaperoneCalibrationState_check_table[0])) &&
-      (e == ChaperoneCalibrationState_check_table[offset]))
-   {
-      return ChaperoneCalibrationState_string_table[offset];
-   }
-   return nullptr;
-}
-
-const char *EChaperoneConfigFileToString(vr::EChaperoneConfigFile e)
+const char *ChaperoneCalibrationStateToString(vr::ChaperoneCalibrationState e)
 {
  switch(e)
  {
-   case (EChaperoneConfigFile_Live) : return "EChaperoneConfigFile_Live";
-   case (EChaperoneConfigFile_Temp) : return "EChaperoneConfigFile_Temp";
+   case (ChaperoneCalibrationState_OK) : return "ChaperoneCalibrationState_OK";
+   case (ChaperoneCalibrationState_Warning) : return "ChaperoneCalibrationState_Warning";
+   case (ChaperoneCalibrationState_Warning_BaseStationMayHaveMoved) : return "ChaperoneCalibrationState_Warning_BaseStationMayHaveMoved";
+   case (ChaperoneCalibrationState_Warning_BaseStationRemoved) : return "ChaperoneCalibrationState_Warning_BaseStationRemoved";
+   case (ChaperoneCalibrationState_Warning_SeatedBoundsInvalid) : return "ChaperoneCalibrationState_Warning_SeatedBoundsInvalid";
+   case (ChaperoneCalibrationState_Error) : return "ChaperoneCalibrationState_Error";
+   case (ChaperoneCalibrationState_Error_BaseStationUninitialized) : return "ChaperoneCalibrationState_Error_BaseStationUninitialized";
+   case (ChaperoneCalibrationState_Error_BaseStationConflict) : return "ChaperoneCalibrationState_Error_BaseStationConflict";
+   case (ChaperoneCalibrationState_Error_PlayAreaInvalid) : return "ChaperoneCalibrationState_Error_PlayAreaInvalid";
+   case (ChaperoneCalibrationState_Error_CollisionBoundsInvalid) : return "ChaperoneCalibrationState_Error_CollisionBoundsInvalid";
    default: return nullptr;
  }
 }
 
-static const vr::EChaperoneImportFlags EChaperoneImportFlags_check_table[] =
-{EChaperoneImport_BoundsOnly,};
-
-static const char * const EChaperoneImportFlags_string_table[] =
-{"EChaperoneImport_BoundsOnly",};
-
-const char* EChaperoneImportFlagsToString(vr::EChaperoneImportFlags e)
+const char *EChaperoneConfigFileToString(vr::EChaperoneConfigFile e)
 {
-   int offset = 0;
-   if (offset < (sizeof(EChaperoneImportFlags_check_table) / sizeof(EChaperoneImportFlags_check_table[0])) &&
-      (e == EChaperoneImportFlags_check_table[offset]))
-   {
-      return EChaperoneImportFlags_string_table[offset];
-   }
-   return nullptr;
+  static const char * const EChaperoneConfigFile_strings[] =
+  {
+  "EChaperoneConfigFile_Live","EChaperoneConfigFile_Temp"
+  };
+
+  int offset = (int)e - (1);
+  if (offset < 0 || offset >= sizeof(EChaperoneConfigFile_strings)/sizeof(EChaperoneConfigFile_strings[0]))
+     return nullptr;
+  return EChaperoneConfigFile_strings[offset];
 }
 
-static const vr::EVRCompositorError EVRCompositorError_check_table[] =
-{VRCompositorError_InvalidBounds,VRCompositorError_AlreadySubmitted,VRCompositorError_IndexOutOfRange,VRCompositorError_SharedTexturesNotSupported,VRCompositorError_TextureUsesUnsupportedFormat,VRCompositorError_TextureIsOnWrongDevice,VRCompositorError_IsNotSceneApplication,VRCompositorError_InvalidTexture,VRCompositorError_DoNotHaveFocus,VRCompositorError_IncompatibleVersion,VRCompositorError_RequestFailed,VRCompositorError_None,};
-
-static const char * const EVRCompositorError_string_table[] =
-{"VRCompositorError_InvalidBounds","VRCompositorError_AlreadySubmitted","VRCompositorError_IndexOutOfRange","VRCompositorError_SharedTexturesNotSupported","VRCompositorError_TextureUsesUnsupportedFormat","VRCompositorError_TextureIsOnWrongDevice","VRCompositorError_IsNotSceneApplication","VRCompositorError_InvalidTexture","VRCompositorError_DoNotHaveFocus","VRCompositorError_IncompatibleVersion","VRCompositorError_RequestFailed","VRCompositorError_None",};
-
-const char* EVRCompositorErrorToString(vr::EVRCompositorError e)
+const char *EChaperoneImportFlagsToString(vr::EChaperoneImportFlags e)
 {
-  static const unsigned char LUT[] =
-    {
-      11, 10, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-       9,  8,  7,  6,  5,  4,  3,  2,  1,  0,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12, 12, 12, 12, 12,
-      12, 12, 12, 12, 12, 12
-    };
-   int offset = LUT[(unsigned char)e];
-   if (offset < (sizeof(EVRCompositorError_check_table) / sizeof(EVRCompositorError_check_table[0])) &&
-      (e == EVRCompositorError_check_table[offset]))
-   {
-      return EVRCompositorError_string_table[offset];
-   }
-   return nullptr;
+ switch(e)
+ {
+   case (EChaperoneImport_BoundsOnly) : return "EChaperoneImport_BoundsOnly";
+   default: return nullptr;
+ }
+}
+
+const char *EVRCompositorErrorToString(vr::EVRCompositorError e)
+{
+  static const char * const EVRCompositorError_strings[] =
+  {
+  "VRCompositorError_None","VRCompositorError_RequestFailed",nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,"VRCompositorError_IncompatibleVersion","VRCompositorError_DoNotHaveFocus","VRCompositorError_InvalidTexture","VRCompositorError_IsNotSceneApplication","VRCompositorError_TextureIsOnWrongDevice","VRCompositorError_TextureUsesUnsupportedFormat","VRCompositorError_SharedTexturesNotSupported","VRCompositorError_IndexOutOfRange","VRCompositorError_AlreadySubmitted","VRCompositorError_InvalidBounds"
+  };
+
+  int offset = (int)e;
+  if (offset < 0 || offset >= sizeof(EVRCompositorError_strings)/sizeof(EVRCompositorError_strings[0]))
+     return nullptr;
+  return EVRCompositorError_strings[offset];
 }
 
 const char *EVRCompositorTimingModeToString(vr::EVRCompositorTimingMode e)
 {
-  static const char * const EVRCompositorTimingMode_strings[] =
-  {
-  "VRCompositorTimingMode_Implicit","VRCompositorTimingMode_Explicit_RuntimePerformsPostPresentHandoff","VRCompositorTimingMode_Explicit_ApplicationPerformsPostPresentHandoff"
-  };
-
-  int offset = (int)e;
-  if (offset < 0 || offset >= sizeof(EVRCompositorTimingMode_strings)/sizeof(EVRCompositorTimingMode_strings[0]))
-     return nullptr;
-  return EVRCompositorTimingMode_strings[offset];
+ switch(e)
+ {
+   case (VRCompositorTimingMode_Implicit) : return "VRCompositorTimingMode_Implicit";
+   case (VRCompositorTimingMode_Explicit_RuntimePerformsPostPresentHandoff) : return "VRCompositorTimingMode_Explicit_RuntimePerformsPostPresentHandoff";
+   case (VRCompositorTimingMode_Explicit_ApplicationPerformsPostPresentHandoff) : return "VRCompositorTimingMode_Explicit_ApplicationPerformsPostPresentHandoff";
+   default: return nullptr;
+ }
 }
 
 const char *VROverlayInputMethodToString(vr::VROverlayInputMethod e)
 {
-  static const char * const VROverlayInputMethod_strings[] =
-  {
-  "VROverlayInputMethod_None","VROverlayInputMethod_Mouse","VROverlayInputMethod_DualAnalog"
-  };
-
-  int offset = (int)e;
-  if (offset < 0 || offset >= sizeof(VROverlayInputMethod_strings)/sizeof(VROverlayInputMethod_strings[0]))
-     return nullptr;
-  return VROverlayInputMethod_strings[offset];
+ switch(e)
+ {
+   case (VROverlayInputMethod_None) : return "VROverlayInputMethod_None";
+   case (VROverlayInputMethod_Mouse) : return "VROverlayInputMethod_Mouse";
+   case (VROverlayInputMethod_DualAnalog) : return "VROverlayInputMethod_DualAnalog";
+   default: return nullptr;
+ }
 }
 
 const char *VROverlayTransformTypeToString(vr::VROverlayTransformType e)
@@ -948,7 +816,7 @@ const char *VROverlayFlagsToString(vr::VROverlayFlags e)
 {
   static const char * const VROverlayFlags_strings[] =
   {
-  "VROverlayFlags_None","VROverlayFlags_Curved","VROverlayFlags_RGSS4X","VROverlayFlags_NoDashboardTab","VROverlayFlags_AcceptsGamepadEvents","VROverlayFlags_ShowGamepadFocus","VROverlayFlags_SendVRDiscreteScrollEvents","VROverlayFlags_SendVRTouchpadEvents","VROverlayFlags_ShowTouchPadScrollWheel","VROverlayFlags_TransferOwnershipToInternalProcess","VROverlayFlags_SideBySide_Parallel","VROverlayFlags_SideBySide_Crossed","VROverlayFlags_Panorama","VROverlayFlags_StereoPanorama","VROverlayFlags_SortWithNonSceneOverlays","VROverlayFlags_VisibleInDashboard","VROverlayFlags_MakeOverlaysInteractiveIfVisible","VROverlayFlags_SendVRSmoothScrollEvents"
+  "VROverlayFlags_None",nullptr,nullptr,"VROverlayFlags_NoDashboardTab","VROverlayFlags_AcceptsGamepadEvents","VROverlayFlags_ShowGamepadFocus","VROverlayFlags_SendVRDiscreteScrollEvents","VROverlayFlags_SendVRTouchpadEvents","VROverlayFlags_ShowTouchPadScrollWheel","VROverlayFlags_TransferOwnershipToInternalProcess","VROverlayFlags_SideBySide_Parallel","VROverlayFlags_SideBySide_Crossed","VROverlayFlags_Panorama","VROverlayFlags_StereoPanorama","VROverlayFlags_SortWithNonSceneOverlays","VROverlayFlags_VisibleInDashboard","VROverlayFlags_MakeOverlaysInteractiveIfVisible","VROverlayFlags_SendVRSmoothScrollEvents","VROverlayFlags_ProtectedContent","VROverlayFlags_Max"
   };
 
   int offset = (int)e;
@@ -985,15 +853,12 @@ const char *EGamepadTextInputModeToString(vr::EGamepadTextInputMode e)
 
 const char *EGamepadTextInputLineModeToString(vr::EGamepadTextInputLineMode e)
 {
-  static const char * const EGamepadTextInputLineMode_strings[] =
-  {
-  "k_EGamepadTextInputLineModeSingleLine","k_EGamepadTextInputLineModeMultipleLines"
-  };
-
-  int offset = (int)e;
-  if (offset < 0 || offset >= sizeof(EGamepadTextInputLineMode_strings)/sizeof(EGamepadTextInputLineMode_strings[0]))
-     return nullptr;
-  return EGamepadTextInputLineMode_strings[offset];
+ switch(e)
+ {
+   case (k_EGamepadTextInputLineModeSingleLine) : return "k_EGamepadTextInputLineModeSingleLine";
+   case (k_EGamepadTextInputLineModeMultipleLines) : return "k_EGamepadTextInputLineModeMultipleLines";
+   default: return nullptr;
+ }
 }
 
 const char *EOverlayDirectionToString(vr::EOverlayDirection e)
@@ -1018,52 +883,27 @@ const char *EVROverlayIntersectionMaskPrimitiveTypeToString(vr::EVROverlayInters
    default: return nullptr;
  }
 }
+
 #ifdef OPENVR_STRINGS_DISABLE_PASSTHRU
-
-static const vr::EVRRenderModelError EVRRenderModelError_check_table[] =
-{VRRenderModelError_NotSupported,VRRenderModelError_InvalidTexture,VRRenderModelError_Loading,VRRenderModelError_NotEnoughTexCoords,VRRenderModelError_NotEnoughNormals,VRRenderModelError_BufferTooSmall,VRRenderModelError_MultipleTextures,VRRenderModelError_TooManyVertices,VRRenderModelError_MultipleShapes,VRRenderModelError_NoShapes,VRRenderModelError_InvalidModel,VRRenderModelError_InvalidArg,VRRenderModelError_None,};
-
-static const char * const EVRRenderModelError_string_table[] =
-{"VRRenderModelError_NotSupported","VRRenderModelError_InvalidTexture","VRRenderModelError_Loading","VRRenderModelError_NotEnoughTexCoords","VRRenderModelError_NotEnoughNormals","VRRenderModelError_BufferTooSmall","VRRenderModelError_MultipleTextures","VRRenderModelError_TooManyVertices","VRRenderModelError_MultipleShapes","VRRenderModelError_NoShapes","VRRenderModelError_InvalidModel","VRRenderModelError_InvalidArg","VRRenderModelError_None",};
-
-const char* EVRRenderModelErrorToString(vr::EVRRenderModelError e)
+const char *EVRRenderModelErrorToString(vr::EVRRenderModelError e)
 {
-  static const unsigned char LUT[] =
-    {
-      12, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 11, 10,  9,  8,  7,  6,
-       5,  4,  3, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-       2, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13,  1, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-       0, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13, 13, 13, 13, 13,
-      13, 13, 13, 13, 13, 13
-    };
-   int offset = LUT[(unsigned char)e];
-   if (offset < (sizeof(EVRRenderModelError_check_table) / sizeof(EVRRenderModelError_check_table[0])) &&
-      (e == EVRRenderModelError_check_table[offset]))
-   {
-      return EVRRenderModelError_string_table[offset];
-   }
-   return nullptr;
+ switch(e)
+ {
+   case (VRRenderModelError_None) : return "VRRenderModelError_None";
+   case (VRRenderModelError_Loading) : return "VRRenderModelError_Loading";
+   case (VRRenderModelError_NotSupported) : return "VRRenderModelError_NotSupported";
+   case (VRRenderModelError_InvalidArg) : return "VRRenderModelError_InvalidArg";
+   case (VRRenderModelError_InvalidModel) : return "VRRenderModelError_InvalidModel";
+   case (VRRenderModelError_NoShapes) : return "VRRenderModelError_NoShapes";
+   case (VRRenderModelError_MultipleShapes) : return "VRRenderModelError_MultipleShapes";
+   case (VRRenderModelError_TooManyVertices) : return "VRRenderModelError_TooManyVertices";
+   case (VRRenderModelError_MultipleTextures) : return "VRRenderModelError_MultipleTextures";
+   case (VRRenderModelError_BufferTooSmall) : return "VRRenderModelError_BufferTooSmall";
+   case (VRRenderModelError_NotEnoughNormals) : return "VRRenderModelError_NotEnoughNormals";
+   case (VRRenderModelError_NotEnoughTexCoords) : return "VRRenderModelError_NotEnoughTexCoords";
+   case (VRRenderModelError_InvalidTexture) : return "VRRenderModelError_InvalidTexture";
+   default: return nullptr;
+ }
 }
 #endif // OPENVR_STRINGS_DISABLE_PASSTHRU
 
@@ -1093,50 +933,17 @@ const char *EVRNotificationTypeToString(vr::EVRNotificationType e)
   return EVRNotificationType_strings[offset];
 }
 
-static const vr::EVRNotificationStyle EVRNotificationStyle_check_table[] =
-{EVRNotificationStyle_Contact_Active,EVRNotificationStyle_Contact_Enabled,EVRNotificationStyle_Contact_Disabled,EVRNotificationStyle_Application,EVRNotificationStyle_None,};
-
-static const char * const EVRNotificationStyle_string_table[] =
-{"EVRNotificationStyle_Contact_Active","EVRNotificationStyle_Contact_Enabled","EVRNotificationStyle_Contact_Disabled","EVRNotificationStyle_Application","EVRNotificationStyle_None",};
-
-const char* EVRNotificationStyleToString(vr::EVRNotificationStyle e)
+const char *EVRNotificationStyleToString(vr::EVRNotificationStyle e)
 {
-  static const unsigned char LUT[] =
-    {
-      4, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      3, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      2, 1, 0, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5, 5, 5, 5, 5,
-      5, 5, 5, 5, 5, 5
-    };
-   int offset = LUT[(unsigned char)e];
-   if (offset < (sizeof(EVRNotificationStyle_check_table) / sizeof(EVRNotificationStyle_check_table[0])) &&
-      (e == EVRNotificationStyle_check_table[offset]))
-   {
-      return EVRNotificationStyle_string_table[offset];
-   }
-   return nullptr;
+  static const char * const EVRNotificationStyle_strings[] =
+  {
+  "EVRNotificationStyle_None",nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,"EVRNotificationStyle_Application",nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,"EVRNotificationStyle_Contact_Disabled","EVRNotificationStyle_Contact_Enabled","EVRNotificationStyle_Contact_Active"
+  };
+
+  int offset = (int)e;
+  if (offset < 0 || offset >= sizeof(EVRNotificationStyle_strings)/sizeof(EVRNotificationStyle_strings[0]))
+     return nullptr;
+  return EVRNotificationStyle_strings[offset];
 }
 #ifdef OPENVR_STRINGS_DISABLE_PASSTHRU
 
@@ -1156,28 +963,26 @@ const char *EVRSettingsErrorToString(vr::EVRSettingsError e)
 
 const char *EVRScreenshotErrorToString(vr::EVRScreenshotError e)
 {
-  static const char * const EVRScreenshotError_strings[] =
-  {
-  "VRScreenshotError_None","VRScreenshotError_RequestFailed",nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,nullptr,"VRScreenshotError_IncompatibleVersion","VRScreenshotError_NotFound","VRScreenshotError_BufferTooSmall",nullptr,nullptr,nullptr,nullptr,nullptr,"VRScreenshotError_ScreenshotAlreadyInProgress"
-  };
-
-  int offset = (int)e;
-  if (offset < 0 || offset >= sizeof(EVRScreenshotError_strings)/sizeof(EVRScreenshotError_strings[0]))
-     return nullptr;
-  return EVRScreenshotError_strings[offset];
+ switch(e)
+ {
+   case (VRScreenshotError_None) : return "VRScreenshotError_None";
+   case (VRScreenshotError_RequestFailed) : return "VRScreenshotError_RequestFailed";
+   case (VRScreenshotError_IncompatibleVersion) : return "VRScreenshotError_IncompatibleVersion";
+   case (VRScreenshotError_NotFound) : return "VRScreenshotError_NotFound";
+   case (VRScreenshotError_BufferTooSmall) : return "VRScreenshotError_BufferTooSmall";
+   case (VRScreenshotError_ScreenshotAlreadyInProgress) : return "VRScreenshotError_ScreenshotAlreadyInProgress";
+   default: return nullptr;
+ }
 }
 
 const char *EVRSkeletalTransformSpaceToString(vr::EVRSkeletalTransformSpace e)
 {
-  static const char * const EVRSkeletalTransformSpace_strings[] =
-  {
-  "VRSkeletalTransformSpace_Model","VRSkeletalTransformSpace_Parent"
-  };
-
-  int offset = (int)e;
-  if (offset < 0 || offset >= sizeof(EVRSkeletalTransformSpace_strings)/sizeof(EVRSkeletalTransformSpace_strings[0]))
-     return nullptr;
-  return EVRSkeletalTransformSpace_strings[offset];
+ switch(e)
+ {
+   case (VRSkeletalTransformSpace_Model) : return "VRSkeletalTransformSpace_Model";
+   case (VRSkeletalTransformSpace_Parent) : return "VRSkeletalTransformSpace_Parent";
+   default: return nullptr;
+ }
 }
 
 const char *EVRSkeletalReferencePoseToString(vr::EVRSkeletalReferencePose e)
@@ -1217,6 +1022,16 @@ const char *EVRFingerSplayToString(vr::EVRFingerSplay e)
   if (offset < 0 || offset >= sizeof(EVRFingerSplay_strings)/sizeof(EVRFingerSplay_strings[0]))
      return nullptr;
   return EVRFingerSplay_strings[offset];
+}
+
+const char *EVRSummaryTypeToString(vr::EVRSummaryType e)
+{
+ switch(e)
+ {
+   case (VRSummaryType_FromAnimation) : return "VRSummaryType_FromAnimation";
+   case (VRSummaryType_FromDevice) : return "VRSummaryType_FromDevice";
+   default: return nullptr;
+ }
 }
 
 const char *EVRInputFilterCancelTypeToString(vr::EVRInputFilterCancelType e)
@@ -1268,4 +1083,13 @@ const char *EIOBufferModeToString(vr::EIOBufferMode e)
  }
 }
 
+const char *EVRDebugErrorToString(vr::EVRDebugError e)
+{
+ switch(e)
+ {
+   case (VRDebugError_Success) : return "VRDebugError_Success";
+   case (VRDebugError_BadParameter) : return "VRDebugError_BadParameter";
+   default: return nullptr;
+ }
 }
+}	
