@@ -154,17 +154,16 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
 
     case VREvent_InputFocusCaptured:                        return EDT_EventDetails_Process;
     case VREvent_InputFocusReleased:                        return EDT_EventDetails_Process;
-    case VREvent_SceneFocusLost:                            return EDT_EventDetails_Process;
-    case VREvent_SceneFocusGained:                          return EDT_EventDetails_Process;
     case VREvent_SceneApplicationChanged:                   return EDT_EventDetails_Process;
     case VREvent_SceneFocusChanged:                         return EDT_EventDetails_Process;
     case VREvent_InputFocusChanged:                         return EDT_EventDetails_Process;
-    case VREvent_SceneApplicationSecondaryRenderingStarted: return EDT_EventDetails_Process;
     case VREvent_SceneApplicationUsingWrongGraphicsAdapter: return EDT_EventDetails_Process;
     case VREvent_ActionBindingReloaded:                     return EDT_EventDetails_Process;
 
     case VREvent_HideRenderModels:                          return EDT_EventDetails_None;
     case VREvent_ShowRenderModels:                          return EDT_EventDetails_None;
+
+	case VREvent_SceneApplicationStateChanged:              return EDT_EventDetails_None;
 
     case VREvent_ConsoleOpened:                             return EDT_EventDetails_None; // guess
     case VREvent_ConsoleClosed:                             return EDT_EventDetails_None;
@@ -208,7 +207,6 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
 
     case VREvent_Quit:                                      return EDT_EventDetails_Process;
     case VREvent_ProcessQuit:                               return EDT_EventDetails_Process;
-    case VREvent_QuitAborted_UserPrompt:                    return EDT_EventDetails_Process;
     case VREvent_QuitAcknowledged:                          return EDT_EventDetails_Process;
     case VREvent_DriverRequestedQuit:                       return EDT_EventDetails_Process;
 	case VREvent_RestartRequested:                          return EDT_EventDetails_Process;
@@ -258,13 +256,9 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
     case VREvent_KeyboardCharInput:                         return EDT_EventDetails_Keyboard; // logical guess
     case VREvent_KeyboardDone:                              return EDT_EventDetails_None;
 
-    case VREvent_ApplicationTransitionStarted:              return EDT_EventDetails_None;
-    case VREvent_ApplicationTransitionAborted:              return EDT_EventDetails_None;
-    case VREvent_ApplicationTransitionNewAppStarted:        return EDT_EventDetails_ApplicationLaunch; // logical guess
     case VREvent_ApplicationListUpdated:                    return EDT_EventDetails_None;
     case VREvent_ApplicationMimeTypeLoad:                   return EDT_EventDetails_None;
-    case VREvent_ApplicationTransitionNewAppLaunchComplete: return EDT_EventDetails_None;
-	case VREvent_ProcessConnected:                          return EDT_EventDetails_None;
+    case VREvent_ProcessConnected:                          return EDT_EventDetails_None;
 	case VREvent_ProcessDisconnected:                       return EDT_EventDetails_None;
 
     //case VREvent_Compositor_MirrorWindowShown:              return EDT_EventDetails_None;
@@ -277,6 +271,7 @@ static EventDetailsType event_details_for_event_type(uint32_t event_type)
 	case VREvent_Compositor_ApplicationNotResponding:       return EDT_EventDetails_None;
 	case VREvent_Compositor_ApplicationResumed:             return EDT_EventDetails_None;
 	case VREvent_Compositor_OutOfVideoMemory:               return EDT_EventDetails_None;
+	case VREvent_Compositor_DisplayModeNotSupported:        return EDT_EventDetails_None;
 
     case VREvent_TrackedCamera_StartVideoStream:            return EDT_EventDetails_None;
     case VREvent_TrackedCamera_StopVideoStream:             return EDT_EventDetails_None;

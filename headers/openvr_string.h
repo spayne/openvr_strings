@@ -127,7 +127,7 @@ namespace openvr_string
 	const char *EVRTrackedCameraFrameTypeToString(vr::EVRTrackedCameraFrameType e);
 	const char *EVRDistortionFunctionTypeToString(vr::EVRDistortionFunctionType e);
 	const char *EVRApplicationPropertyToString(vr::EVRApplicationProperty e);
-	const char *EVRApplicationTransitionStateToString(vr::EVRApplicationTransitionState e);
+	const char *EVRSceneApplicationStateToString(vr::EVRSceneApplicationState e);
 	const char *EChaperoneConfigFileToString(vr::EChaperoneConfigFile e);
 	const char *EChaperoneImportFlagsToString(vr::EChaperoneImportFlags e);
 	const char *VROverlayInputMethodToString(vr::VROverlayInputMethod e);
@@ -136,7 +136,6 @@ namespace openvr_string
 	const char *VRMessageOverlayResponseToString(vr::VRMessageOverlayResponse e);
 	const char *EGamepadTextInputModeToString(vr::EGamepadTextInputMode e);
 	const char *EGamepadTextInputLineModeToString(vr::EGamepadTextInputLineMode e);
-	const char *EOverlayDirectionToString(vr::EOverlayDirection e);
 	const char *EVROverlayIntersectionMaskPrimitiveTypeToString(vr::EVROverlayIntersectionMaskPrimitiveType e);
 	const char *EVRComponentPropertyToString(vr::EVRComponentProperty e);
 	const char *EVRNotificationTypeToString(vr::EVRNotificationType e);
@@ -214,7 +213,7 @@ namespace openvr_string
 	inline const char *GetAsString(vr::EVRTrackedCameraFrameType e) { return EVRTrackedCameraFrameTypeToString(e); }
 	inline const char *GetAsString(vr::EVRDistortionFunctionType e) { return EVRDistortionFunctionTypeToString(e); }
 	inline const char *GetAsString(vr::EVRApplicationProperty e) { return EVRApplicationPropertyToString(e); }
-	inline const char *GetAsString(vr::EVRApplicationTransitionState e) { return EVRApplicationTransitionStateToString(e); }
+	inline const char *GetAsString(vr::EVRSceneApplicationState e) { return EVRSceneApplicationStateToString(e); }
 	inline const char *GetAsString(vr::EChaperoneConfigFile e) { return EChaperoneConfigFileToString(e); }
 	inline const char *GetAsString(vr::EChaperoneImportFlags e) { return EChaperoneImportFlagsToString(e); }
 	inline const char *GetAsString(vr::VROverlayInputMethod e) { return VROverlayInputMethodToString(e); }
@@ -223,7 +222,6 @@ namespace openvr_string
 	inline const char *GetAsString(vr::VRMessageOverlayResponse e) { return VRMessageOverlayResponseToString(e); }
 	inline const char *GetAsString(vr::EGamepadTextInputMode e) { return EGamepadTextInputModeToString(e); }
 	inline const char *GetAsString(vr::EGamepadTextInputLineMode e) { return EGamepadTextInputLineModeToString(e); }
-	inline const char *GetAsString(vr::EOverlayDirection e) { return EOverlayDirectionToString(e); }
 	inline const char *GetAsString(vr::EVROverlayIntersectionMaskPrimitiveType e) { return EVROverlayIntersectionMaskPrimitiveTypeToString(e); }
 	inline const char *GetAsString(vr::EVRComponentProperty e) { return EVRComponentPropertyToString(e); }
 	inline const char *GetAsString(vr::EVRNotificationType e) { return EVRNotificationTypeToString(e); }
